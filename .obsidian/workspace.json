@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "66242bf586912643",
+        "id": "e134f61e8145d829",
         "type": "tabs",
         "children": [
           {
-            "id": "868cdf2f854437f0",
+            "id": "4b95a3a6417a2d7e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "diagrams/Validations.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "daeef615d82386ee",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "OpenFloorPlan.md",
+                "file": "diagrams/Entities.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenFloorPlan.md",
+                "file": "diagrams/Entities.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenFloorPlan.md",
+                "file": "diagrams/Entities.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenFloorPlan.md"
+                "file": "diagrams/Entities.md"
               }
             }
           }
@@ -156,26 +143,28 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "vscode-editor:Create Code File": false
     }
   },
-  "active": "daeef615d82386ee",
+  "active": "132caac6469d3069",
   "lastOpenFiles": [
+    "diagrams/Matrimony.png",
+    "diagrams/Matrimony.png.crdownload",
     "diagrams/Matrimony.drawio.crswap",
-    "diagrams/Matrimony.drawio",
-    "Matrimony/MatrimonyApiService/Entities",
-    "Matrimony/MatrimonyApiService/obj/rider.project.restore.info",
-    "Matrimony/MatrimonyApiService/obj/0497a6e9-1358-4dbf-9855-ea546739083e.tmp",
-    "Matrimony/MatrimonyApiService/obj/a8601124-526d-4e00-8263-7aa97db20887.tmp",
-    "Matrimony/MatrimonyApiService/obj/rider.project.model.nuget.info",
-    "Matrimony/MatrimonyApiService/obj/project.packagespec.json",
-    "Matrimony/MatrimonyApiService/obj/Container/ContainerName.cache",
-    "Matrimony/MatrimonyApiService/obj/Container/ContainerId.cache",
-    "Matrimony/MatrimonyApiService/obj/Container/ContainerRunContext.cache",
-    "diagrams/Validations.md",
+    "diagrams/Entities.md",
     "OpenFloorPlan.md",
+    "diagrams/Validations.md",
+    "README.md",
+    "Matrimony/MatrimonyApiService/Entities/User.cs~",
+    "Matrimony/MatrimonyApiService/Entities/Membership.cs~",
+    "Matrimony/MatrimonyApiService/Entities/Address.cs",
+    "Matrimony/MatrimonyApiService/Entities/ProfileView.cs",
+    "Matrimony/MatrimonyApiService/Entities/Preference.cs",
+    "Matrimony/MatrimonyApiService/Entities/Match.cs",
+    "Matrimony/MatrimonyApiService/Entities/Message.cs",
+    "Matrimony/MatrimonyApiService/Entities/Staff.cs",
     "diagrams/Matrimony Final.png",
-    "diagrams/Matrimony.drawio.png",
-    "README.md"
+    "diagrams/Matrimony.drawio.png"
   ]
 }

@@ -1,16 +1,3 @@
-
-# Service Func
----
-1. User -> can manager multiple profiles ( as with relation )
-2. MemberShip of (Basic & Premium). Premium -> chat (without sharing creds) & profile view
-3. Preference -> cumulative set of preference and segrigates results
-4. A match is generated and shared between two, if both accepted can share profiles.
-5. Staff -> Background staffs Admin and Employees
-6. Premium -> ( 25 profile chats per month )
-7. CRON & startup based premium validation
-8. Free Train for basic user ( 7 days as premium user )
-## Entities
----
 - User 
 ```mermaid
 
@@ -32,6 +19,7 @@ classDiagram
 
 ```
 
+---
 
 - Profile
 ```mermaid
@@ -67,6 +55,7 @@ classDiagram
     }
 
 ```
+---
 - MemberShip
 ```mermaid
 classDiagram
@@ -78,6 +67,7 @@ classDiagram
         -IsTrail: bool
     }
 ```
+---
 - ProfileView
 ```mermaid
 classDiagram
@@ -88,6 +78,7 @@ classDiagram
         -ViewedAt: DateTime
     }
 ```
+---
 - Preference
 ```mermaid
 classDiagram
@@ -105,6 +96,7 @@ classDiagram
     }
 
 ```
+---
 - Match
 ```mermaid
 classDiagram
@@ -125,6 +117,7 @@ classDiagram
     Match "1" -- "1" Profile: ProfileTwo
 
 ```
+---
 - Message
 ```mermaid
 classDiagram
@@ -143,6 +136,7 @@ classDiagram
     Message "1" -- "1" User: Receiver
 
 ```
+---
 - Staff
 ```mermaid
 classDiagram
@@ -163,3 +157,4 @@ classDiagram
 
 ```
 
+---
