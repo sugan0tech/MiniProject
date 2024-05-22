@@ -4,18 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "a52d56bb837ea17e",
+        "id": "cd9a123f5dba4b33",
         "type": "tabs",
         "children": [
           {
-            "id": "786914e2d2bd7335",
+            "id": "67d66480a0298e3d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
+                "file": "diagrams/Matrimony Final.png"
               }
             }
           }
@@ -85,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "diagrams/Matrimony Final.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "diagrams/Matrimony Final.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "diagrams/Matrimony Final.png"
               }
             }
           }
@@ -146,11 +144,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "786914e2d2bd7335",
+  "active": "67d66480a0298e3d",
   "lastOpenFiles": [
+    "diagrams/Matrimony Final.png.crdownload",
     "diagrams/Matrimony.drawio.png",
-    "diagrams/Matrimony.drawio.png.crdownload",
+    "diagrams/Validations.md",
+    "diagrams/Matrimony Final.png",
     "diagrams/Untitled Diagram.drawio.crswap",
+    "README.md",
+    "diagrams/Matrimony.drawio.png.crdownload",
     "diagrams/Untitled Diagram.drawio",
     "diagrams",
     "New folder"
