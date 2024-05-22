@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "e134f61e8145d829",
+        "id": "f0d0da8e76fee2e9",
         "type": "tabs",
         "children": [
           {
-            "id": "4b95a3a6417a2d7e",
+            "id": "5d996996264dabb6",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "diagrams/Entities.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "diagrams/Entities.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "diagrams/Entities.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "diagrams/Entities.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -147,13 +139,13 @@
       "vscode-editor:Create Code File": false
     }
   },
-  "active": "132caac6469d3069",
+  "active": "5d996996264dabb6",
   "lastOpenFiles": [
-    "diagrams/Matrimony.png",
+    "Architecture/Entities.md",
+    "Architecture/MatrimonyERD.png",
+    "OpenFloorPlan.md",
     "diagrams/Matrimony.png.crdownload",
     "diagrams/Matrimony.drawio.crswap",
-    "diagrams/Entities.md",
-    "OpenFloorPlan.md",
     "diagrams/Validations.md",
     "README.md",
     "Matrimony/MatrimonyApiService/Entities/User.cs~",
