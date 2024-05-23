@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --source ./Matrimony
+      run: dotnet build --no-restore --source ./Matrimony/Matrimony.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal --source ./Matrimony
+      run: dotnet test --no-build --verbosity normal --source ./Matrimony/Matrimony.sln
