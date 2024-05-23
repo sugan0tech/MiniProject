@@ -1,4 +1,15 @@
 
+## Auth
+---
+### Login
+- checks if user verified 
+- then logs in and returns token
+### Logout
+- Logs out & invalidates the existing token. (black listing)
+### ResetPassword
+- automatically generates new token for new creds.
+### Register
+- Generates new account, in order to use need to be verified. 
 ---
 ## Membership
 
@@ -11,11 +22,15 @@
 ### Free Trail
 > For basic user they can enjoy a 7 day free trail with the insights of Premium Member ship features ( chats and unlimited viewers view )
 
+### Membership validation
+- Will be using middleware for membership validation for required apis. [ref](https://medium.com/@shubhadeepchat/net-core-middleware-explained-8c21bf646700)
+
 ---
 ## Match Making
 
 - With the use of user created Preference set a cumulative match results will be provided.
 - Match with Tags ( getting matches irrespective of general Preference, just using specific tags )
+- Match request to a profile
 
 ### Match Progress
 - Any one can express a match request to a profile
