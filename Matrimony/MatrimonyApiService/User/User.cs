@@ -28,6 +28,7 @@ public class User : BaseEntity
     public byte[]? Password { get; set; }
     public byte[]? HashKey { get; set; }
     public int LoginAttempts { get; set; }
-    public IEnumerable<Message.Message>? Messages { get; set; }
+    public IEnumerable<Message.Message>? MessagesSent { get; set; }
+    public IEnumerable<Message.Message>? MessagesReceived { get; set; }
     public IEnumerable<ProfileView.ProfileView>? Views { get; set; }
 }

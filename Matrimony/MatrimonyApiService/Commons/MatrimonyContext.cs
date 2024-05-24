@@ -26,10 +26,15 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         modelBuilder.Entity<User.User>().HasOne<Address.Address>(user => user.Address);
         modelBuilder.Entity<User.User>()
-            .HasMany<Message.Message>(user => user.Messages)
+            .HasMany<Message.Message>(user => user.MessagesSent)
             .WithOne(message => message.Sender)
             .HasForeignKey(message => message.SenderId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<User.User>()
+            .HasMany<Message.Message>(user => user.MessagesReceived)
+            .WithOne(message => message.Receiver)
+            .HasForeignKey(message => message.ReceiverId)
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<User.User>()
             .HasMany<ProfileView.ProfileView>(user => user.Views)
             .WithOne(view => view.Viewer)
@@ -100,7 +105,14 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #region Message
 
-        modelBuilder.Entity<Message.Message>();
+        modelBuilder.Entity<Message.Message>()
+            .HasOne<User.User>(message => message.Sender)
+            .WithMany(user => user.MessagesSent)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Message.Message>()
+            .HasOne<User.User>(message => message.Receiver)
+            .WithMany(user => user.MessagesReceived)
+            .OnDelete(DeleteBehavior.NoAction);
 
         #endregion
 
