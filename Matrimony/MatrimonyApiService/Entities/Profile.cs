@@ -1,13 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Enums;
+using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
 public class Profile
 {
     public int ProfileId { get; set; }
-    public DateTime DateOfBirth { get; set; }
+
+    public DateTime DateOfBirth
+    {
+        get => DateOfBirth;
+        set
+        {
+            DateOfBirth = value;
+            Age = DateTime.Today.Year - value.Year;
+        }
+    }
+
+    [AgeValidation(21)]
+    public int Age { get; set; }
 
     [Required(ErrorMessage = "Education is missing")]
     public string Education { get; set; }
