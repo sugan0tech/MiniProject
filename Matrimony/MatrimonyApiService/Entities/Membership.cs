@@ -4,9 +4,9 @@ using MatrimonyApiService.Enums;
 
 namespace MatrimonyApiService.Entities;
 
-public class Membership
+public class Membership : BaseEntity
 {
-    [Key] public int MembershipId { get; set; }
+    // [Key] public int MembershipId { get; set; }
     [MaxLength(20)] public string Type { get; set; }
 
     [NotMapped]

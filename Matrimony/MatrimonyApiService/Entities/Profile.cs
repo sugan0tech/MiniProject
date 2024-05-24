@@ -5,9 +5,9 @@ using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
-public class Profile
+public class Profile : BaseEntity
 {
-    public int ProfileId { get; set; }
+    // public int ProfileId { get; set; }
 
     public DateTime DateOfBirth
     {
@@ -19,8 +19,7 @@ public class Profile
         }
     }
 
-    [AgeValidation(21)]
-    public int Age { get; set; }
+    [AgeValidation(21)] public int Age { get; set; }
 
     [Required(ErrorMessage = "Education is missing")]
     [EnumTypeValidation(typeof(Education))]

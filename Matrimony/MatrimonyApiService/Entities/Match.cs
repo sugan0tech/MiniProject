@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MatrimonyApiService.Entities;
 
-public class Match
+public class Match : BaseEntity
 {
-    [Key] public int MatchId { get; set; }
+    // [Key] public int MatchId { get; set; }
     [ForeignKey("ProfileOneId")] public int ProfileOneId { get; set; }
     public Profile ProfileOne { get; set; }
     public bool? ProfileOneLike { get; set; }

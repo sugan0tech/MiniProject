@@ -1,10 +1,11 @@
 ﻿namespace MatrimonyApiService.Enums;
-    public enum Ethnicity
-    {
-        Asian,
-        Black,
-        Indian,
-        Caucasian,
-        Hispanic,
-        Other
-    }
+
+public enum Ethnicity
+{
+    Asian,
+    Black,
+    Indian,
+    Caucasian,
+    Hispanic,
+    Other
+}

@@ -2,9 +2,9 @@
 
 namespace MatrimonyApiService.Entities;
 
-public class Address
+public class Address : BaseEntity
 {
-    [Key] public int AddressId { get; set; }
+    // [Key] public int AddressId { get; set; }
     public string street { get; set; }
     public string city { get; set; }
     public string state { get; set; }

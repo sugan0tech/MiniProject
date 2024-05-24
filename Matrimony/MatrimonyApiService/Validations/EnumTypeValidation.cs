@@ -8,7 +8,9 @@ public class EnumTypeValidation(Type enumType) : ValidationAttribute
     {
         if (value == null)
             return new ValidationResult($"Failed to parse as it is null for {enumType.Name}");
-        
-        return Enum.IsDefined(enumType, value) ? ValidationResult.Success : new ValidationResult($"Failed to parse {value} as {enumType.Name}");
+
+        return Enum.IsDefined(enumType, value)
+            ? ValidationResult.Success
+            : new ValidationResult($"Failed to parse {value} as {enumType.Name}");
     }
 }

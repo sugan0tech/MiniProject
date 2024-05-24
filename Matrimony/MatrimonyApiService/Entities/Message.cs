@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MatrimonyApiService.Entities;
 
-public class Message
+public class Message : BaseEntity
 {
-    [Key] public int MessageId { get; set; }
+    // [Key] public int MessageId { get; set; }
     [ForeignKey("SenderId")] public int SenderId { get; set; }
     public User Sender { get; set; }
     [ForeignKey("ReceiverId")] public int ReceiverId { get; set; }

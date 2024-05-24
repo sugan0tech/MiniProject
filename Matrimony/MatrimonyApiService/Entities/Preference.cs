@@ -5,9 +5,9 @@ using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
-public class Preference
+public class Preference : BaseEntity
 {
-    [Key] public int PreferenceId { get; set; }
+    // [Key] public int PreferenceId { get; set; }
 
     [MaxLength(15)]
     [EnumTypeValidation(typeof(MotherTongue))]

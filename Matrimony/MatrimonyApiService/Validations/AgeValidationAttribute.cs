@@ -2,9 +2,8 @@
 
 namespace MatrimonyApiService.Validations;
 
-public class AgeValidationAttribute (int minAge): ValidationAttribute
+public class AgeValidationAttribute(int minAge) : ValidationAttribute
 {
-
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is int age)

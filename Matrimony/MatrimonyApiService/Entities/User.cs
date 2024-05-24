@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MatrimonyApiService.Entities;
 
-public class User
+public class User : BaseEntity
 {
-    [Key] public int UserId { get; set; }
+    // [Key] public int UserId { get; set; }
 
     [Required]
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")]

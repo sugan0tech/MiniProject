@@ -5,9 +5,9 @@ using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
-public class Staff
+public class Staff : BaseEntity
 {
-    [Key] public int StaffId { get; set; }
+    // [Key] public int StaffId { get; set; }
 
     [Required]
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")]
@@ -25,9 +25,8 @@ public class Staff
     public bool IsVerified { get; set; }
     public byte[] Password { get; set; }
     public byte[] HashKey { get; set; }
-    
-    [EnumTypeValidation(typeof(Role))]
-    public string Role { get; set; }
+
+    [EnumTypeValidation(typeof(Role))] public string Role { get; set; }
 
     [NotMapped]
     public Role RoleEnum
