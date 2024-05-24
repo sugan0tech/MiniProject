@@ -1,20 +1,57 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Enums;
 
 namespace MatrimonyApiService.Entities;
 
 public class Preference
 {
     [Key] public int PreferenceId { get; set; }
+
     public string MotherTongue { get; set; }
+
+    [NotMapped]
+    public MotherTongue MotherTongueEnum
+    {
+        get => Enum.Parse<MotherTongue>(MotherTongue);
+        set => MotherTongue = value.ToString();
+    }
+
     public string Religion { get; set; }
+
+    [NotMapped]
+    public Religion ReligionEnum
+    {
+        get => Enum.Parse<Religion>(Religion);
+        set => Religion = value.ToString();
+    }
+
     public string Education { get; set; }
+
+    [NotMapped]
+    public Education EducationEnum
+    {
+        get => Enum.Parse<Education>(Religion);
+        set => Religion = value.ToString();
+    }
+
     public string Occupation { get; set; }
-    public Tuple<int, int> HeightRange { get; set; }
-    public Tuple<int, int> AgeRange { get; set; }
+
+    [NotMapped]
+    public Occupation OccupationEnum
+    {
+        get => Enum.Parse<Occupation>(Occupation);
+        set => Occupation = value.ToString();
+    }
+
+    public int MinHeight { get; set; }
+    public int MaxHeight { get; set; }
+    public int MinAge { get; set; }
+    public int MaxAge { get; set; }
+
     [ForeignKey("PreferenceForProfileId")] public int PreferenceForId { get; set; }
     public Profile PreferenceFor { get; set; }
-    
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }
 }

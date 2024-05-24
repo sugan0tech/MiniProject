@@ -18,6 +18,18 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "03d3d20d0275fe1c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "OpenFloorPlan.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ]
       }
@@ -147,61 +159,25 @@
       "vscode-editor:Create Code File": false
     }
   },
-  "floating": {
-    "id": "4a6bd36716a358b2",
-    "type": "floating",
-    "children": [
-      {
-        "id": "20476d0654a19100",
-        "type": "window",
-        "children": [
-          {
-            "id": "4879d00fdf31c143",
-            "type": "tabs",
-            "children": [
-              {
-                "id": "03d3d20d0275fe1c",
-                "type": "leaf",
-                "state": {
-                  "type": "markdown",
-                  "state": {
-                    "file": "OpenFloorPlan.md",
-                    "mode": "source",
-                    "source": false
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "direction": "vertical",
-        "x": -72,
-        "y": 161,
-        "width": 854,
-        "height": 481,
-        "maximize": true,
-        "zoom": 0
-      }
-    ]
-  },
-  "active": "132caac6469d3069",
+  "active": "dd2768d1542e86ca",
   "lastOpenFiles": [
+    "Matrimony/MatrimonyApiService/Enums/MemberShip.cs",
+    "Matrimony/MatrimonyApiService/Enums/Role.cs",
+    "Matrimony/MatrimonyApiService/Enums/Education.cs",
+    "Matrimony/MatrimonyApiService/Entities/Profile.cs~",
+    "Matrimony/MatrimonyApiService/Enums/Relation.cs~",
+    "Matrimony/MatrimonyApiService/Enums/Relation.cs",
+    "Matrimony/MatrimonyApiService/Enums/Gender.cs~",
+    "Matrimony/MatrimonyApiService/Enums/Gender.cs",
+    "Matrimony/MatrimonyApiService/Enums/Ethinicity.cs",
+    "Matrimony/MatrimonyApiService/Enums/Religion.cs~",
+    "Matrimony/MatrimonyApiService/Enums/Religion.cs",
+    "OpenFloorPlan.md",
+    "Architecture/BusinessLogic.md",
     "Architecture/MatrimonyERD.png",
     "Architecture/Entities.md",
-    "Architecture/BusinessLogic.md",
-    "OpenFloorPlan.md",
-    "diagrams/Matrimony.png.crdownload",
-    "diagrams/Matrimony.drawio.crswap",
     "diagrams/Validations.md",
     "README.md",
-    "Matrimony/MatrimonyApiService/Entities/User.cs~",
-    "Matrimony/MatrimonyApiService/Entities/Membership.cs~",
-    "Matrimony/MatrimonyApiService/Entities/Address.cs",
-    "Matrimony/MatrimonyApiService/Entities/ProfileView.cs",
-    "Matrimony/MatrimonyApiService/Entities/Preference.cs",
-    "Matrimony/MatrimonyApiService/Entities/Match.cs",
-    "Matrimony/MatrimonyApiService/Entities/Message.cs",
-    "Matrimony/MatrimonyApiService/Entities/Staff.cs",
     "diagrams/Matrimony Final.png",
     "diagrams/Matrimony.drawio.png"
   ]

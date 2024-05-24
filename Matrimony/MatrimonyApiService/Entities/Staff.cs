@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Enums;
 
 namespace MatrimonyApiService.Entities;
 
 public class Staff
 {
-    
     [Key] public int StaffId { get; set; }
 
     [Required]
@@ -20,10 +20,18 @@ public class Staff
 
     [ForeignKey("AddressId")] public int AddressId;
     public Address Address;
-    
+
     public bool IsVerified { get; set; }
     public byte[] Password { get; set; }
     public byte[] HashKey { get; set; }
     public string Role { get; set; }
-    public int loginAttempts { get; set; } = 0;
+
+    [NotMapped]
+    public Role RoleEnum
+    {
+        get => Enum.Parse<Role>(Role);
+        set => Role = value.ToString();
+    }
+
+    public int loginAttempts { get; set; }
 }
