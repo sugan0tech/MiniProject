@@ -16,6 +16,12 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region Address
+
+        modelBuilder.Entity<Address.Address>();
+
+        #endregion
+
         #region User
 
         modelBuilder.Entity<User.User>().HasOne<Address.Address>(user => user.Address);
@@ -26,8 +32,8 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>()
             .HasMany<ProfileView.ProfileView>(user => user.Views)
-            .WithOne(message => message.Viewer)
-            .HasForeignKey(view => view.Viewer)
+            .WithOne(view => view.Viewer)
+            .HasForeignKey(view => view.ViewerId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>().Navigation<Address.Address>(user => user.Address).AutoInclude();
 
@@ -40,6 +46,7 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<Profile.Profile>()
             .HasOne<Membership.Membership>(profile => profile.Membership)
             .WithOne(membership => membership.Profile)
+            .HasForeignKey<Membership.Membership>(membership => membership.ProfileId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Profile.Profile>()
             .Navigation(profile => profile.Membership)
@@ -65,12 +72,7 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<Profile.Profile>()
             .HasMany<Match.Match>(profile => profile.Matches)
             .WithOne(match => match.ProfileOne)
-            .HasForeignKey(match => match.ProfileOne)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Profile.Profile>()
-            .HasMany<Match.Match>(profile => profile.Matches)
-            .WithOne(match => match.ProfileTwo)
-            .HasForeignKey(match => match.ProfileTwoId)
+            .HasForeignKey(match => match.ProfileOneId)
             .OnDelete(DeleteBehavior.Cascade);
 
         #endregion
@@ -78,8 +80,9 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
         #region Preference
 
         modelBuilder.Entity<Profile.Profile>()
-            .HasOne<Preference.Preference>()
+            .HasOne<Preference.Preference>(profile => profile.Preference)
             .WithOne(preference => preference.PreferenceFor)
+            .HasForeignKey<Preference.Preference>(preference => preference.PreferenceForId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Profile.Profile>()
             .Navigation(profile => profile.Preference)
@@ -103,21 +106,21 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #region Perference
 
-        modelBuilder.Entity<Preference.Preference>();
+        modelBuilder.Entity<Preference.Preference>()
+            .HasOne<Profile.Profile>(preference => preference.PreferenceFor)
+            .WithOne(profile => profile.Preference)
+            .HasForeignKey<Profile.Profile>(profile => profile.PreferenceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         #endregion
 
         #region Staff
 
         modelBuilder.Entity<Staff.Staff>()
-            .Navigation(staff => staff.Address)
+            .HasOne<Address.Address>(staff => staff.Address);
+        modelBuilder.Entity<Staff.Staff>()
+            .Navigation<Address.Address>(staff => staff.Address)
             .AutoInclude();
-
-        #endregion
-
-        #region Address
-
-        modelBuilder.Entity<Address.Address>();
 
         #endregion
 
@@ -129,7 +132,11 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #region Membership
 
-        modelBuilder.Entity<Membership.Membership>();
+        modelBuilder.Entity<Membership.Membership>()
+            .HasOne<Profile.Profile>(membership => membership.Profile)
+            .WithOne(profile => profile.Membership)
+            .HasForeignKey<Profile.Profile>(profile => profile.MembershipId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         #endregion
     }
