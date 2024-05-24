@@ -7,21 +7,20 @@ public class User : BaseEntity
 {
     // [Key] public int UserId { get; set; }
 
-    [Required]
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")]
     public string Email { get; set; }
 
-    [Required] public string FirstName { get; set; }
-    [Required] public string LastName { get; set; }
+    public required string FirstName { get; set; }
+    public string LastName { get; set; }
 
-    [StringLength(10, ErrorMessage = "Phone number must be of 10 numbers")]
-    public string PhoneNumber { get; set; }
+    [MaxLength(10, ErrorMessage = "Phone number must be of 10 numbers")]
+    public required string PhoneNumber { get; set; }
 
     [ForeignKey("AddressId")] public int AddressId;
-    public Address Address;
+    public Address? Address;
     public bool IsVerified { get; set; }
-    public byte[] Password { get; set; }
-    public byte[] HashKey { get; set; }
-    public int loginAttempts { get; set; } = 0;
-    public IEnumerable<Message> Messages { get; set; }
+    public byte[]? Password { get; set; }
+    public byte[]? HashKey { get; set; }
+    public int LoginAttempts { get; set; } = 0;
+    public IEnumerable<Message>? Messages { get; set; }
 }

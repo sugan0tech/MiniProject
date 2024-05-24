@@ -12,18 +12,15 @@ public class Profile : BaseEntity
     public DateTime DateOfBirth
     {
         get => DateOfBirth;
-        set
-        {
-            DateOfBirth = value;
-            Age = DateTime.Today.Year - value.Year;
-        }
+        set => Age = DateTime.Today.Year - value.Year;
     }
 
     [AgeValidation(21)] public int Age { get; set; }
 
     [Required(ErrorMessage = "Education is missing")]
     [EnumTypeValidation(typeof(Education))]
-    public string Education { get; set; }
+    [MaxLength(20)]
+    public required string Education { get; set; }
 
     [NotMapped]
     public Education EducationEnum
@@ -36,7 +33,8 @@ public class Profile : BaseEntity
 
     [Required(ErrorMessage = "Occupation is missing")]
     [EnumTypeValidation(typeof(Occupation))]
-    public string Occupation { get; set; }
+    [MaxLength(50)]
+    public required string Occupation { get; set; }
 
     [NotMapped]
     public Occupation OccupationEnum
@@ -47,7 +45,8 @@ public class Profile : BaseEntity
 
     [Required(ErrorMessage = "MaritalStatus is missing")]
     [EnumTypeValidation(typeof(MaritalStatus))]
-    public string MaritalStatus { get; set; }
+    [MaxLength(25)]
+    public required string MaritalStatus { get; set; }
 
     [NotMapped]
     public MaritalStatus MaritalStatusEnum
@@ -58,7 +57,8 @@ public class Profile : BaseEntity
 
     [Required(ErrorMessage = "MotherTongue is missing")]
     [EnumTypeValidation(typeof(MotherTongue))]
-    public string MotherTongue { get; set; }
+    [MaxLength(25)]
+    public required string MotherTongue { get; set; }
 
     [NotMapped]
     public MotherTongue MotherTongueEnum
@@ -69,7 +69,8 @@ public class Profile : BaseEntity
 
     [Required(ErrorMessage = "Religion is missing")]
     [EnumTypeValidation(typeof(Religion))]
-    public string Religion { get; set; }
+    [MaxLength(25)]
+    public required string Religion { get; set; }
 
     [NotMapped]
     public Religion ReligionEnum
@@ -80,22 +81,25 @@ public class Profile : BaseEntity
 
     [Required(ErrorMessage = "Ethinicity is missing")]
     [EnumTypeValidation(typeof(Ethnicity))]
-    public string Ethinicity { get; set; }
+    [MaxLength(25)]
+    public required string Ethnicity { get; set; }
 
     [NotMapped]
     public Ethnicity EthnicityEnum
     {
-        get => Enum.Parse<Ethnicity>(Ethinicity);
-        set => Ethinicity = value.ToString();
+        get => Enum.Parse<Ethnicity>(Ethnicity);
+        set => Ethnicity = value.ToString();
     }
 
-    public string Bio { get; set; }
+    [MaxLength(150)]
+    public string? Bio { get; set; }
     public byte[]? ProfilePicture { get; set; }
     public bool Habits { get; set; }
 
     [Required(ErrorMessage = "Gender is missing")]
     [EnumTypeValidation(typeof(Gender))]
-    public string Gender { get; set; }
+    [MaxLength(15)]
+    public required string Gender { get; set; }
 
     [NotMapped]
     public Gender GenderEnum
@@ -108,17 +112,18 @@ public class Profile : BaseEntity
     public int Height { get; set; }
 
     [ForeignKey("MembershipId")] public int MembershipId { get; set; }
-    public Membership Membership { get; set; }
+    public required Membership Membership { get; set; }
 
     [ForeignKey("ManagedById")] public int ManagedById { get; set; }
-    public User ManagedBy { get; set; }
+    public User? ManagedBy { get; set; }
 
     [ForeignKey("PrimaryId")] public int UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 
     [Required(ErrorMessage = "No mapping found for ManagedByRelation")]
     [EnumTypeValidation(typeof(Relation))]
-    public string ManagedByRelation { get; set; }
+    [MaxLength(25)]
+    public required string ManagedByRelation { get; set; }
 
     [NotMapped]
     public Relation RelationEnum
@@ -127,11 +132,11 @@ public class Profile : BaseEntity
         set => ManagedByRelation = value.ToString();
     }
 
-    public IEnumerable<ProfileView> ProfileViews { get; set; }
-    public IEnumerable<Match> Matches { get; set; }
+    public IEnumerable<ProfileView>? ProfileViews { get; set; }
+    public IEnumerable<Match>? Matches { get; set; }
 
     [ForeignKey("PreferenceId")] public int PreferenceId { get; set; }
-    public Preference Preference { get; set; }
+    public Preference? Preference { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }

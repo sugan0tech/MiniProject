@@ -4,10 +4,10 @@ using MatrimonyApiService.Enums;
 
 namespace MatrimonyApiService.Entities;
 
-public class Membership : BaseEntity
+public class Membership: BaseEntity
 {
     // [Key] public int MembershipId { get; set; }
-    [MaxLength(20)] public string Type { get; set; }
+    [MaxLength(20)] public required string Type { get; set; }
 
     [NotMapped]
     public MemberShip TypeEnum
@@ -17,9 +17,9 @@ public class Membership : BaseEntity
     }
 
     [ForeignKey("ProfileId")] public int ProfileId { get; set; }
-    public Profile Profile { get; set; }
+    public Profile? Profile { get; set; }
 
-    [MaxLength(100)] public string Description { get; set; }
+    [MaxLength(100)] public required string Description { get; set; }
     public DateTime EndsAt { get; set; }
     public bool IsTrail { get; set; }
 }
