@@ -161,6 +161,8 @@
   },
   "active": "dd2768d1542e86ca",
   "lastOpenFiles": [
+    "Matrimony/MatrimonyApiService/Validations/EnumTypeValidation.cs",
+    "Matrimony/MatrimonyApiService/Validations/EnumValidation.cs",
     "Architecture/MatrimonyERD V2.png",
     "Architecture/MatrimonyERD V1.png",
     "Architecture/BusinessLogic.md",
@@ -174,7 +176,6 @@
     "Matrimony/MatrimonyApiService/Enums/Role.cs",
     "Matrimony/MatrimonyApiService/Enums/Education.cs",
     "Matrimony/MatrimonyApiService/Entities/Profile.cs~",
-    "Matrimony/MatrimonyApiService/Enums/Relation.cs~",
     "Architecture/MatrimonyERD.png",
     "Architecture/Entities.md",
     "diagrams/Validations.md",

@@ -16,6 +16,9 @@ public class Membership
         set => Type = value.ToString();
     }
 
+    [ForeignKey("ProfileId")] public int ProfileId { get; set; }
+    public Profile Profile { get; set; }
+
     [MaxLength(100)] public string Description { get; set; }
     public DateTime EndsAt { get; set; }
     public bool IsTrail { get; set; }

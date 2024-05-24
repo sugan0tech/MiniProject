@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Enums;
+using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
@@ -24,6 +25,8 @@ public class Staff
     public bool IsVerified { get; set; }
     public byte[] Password { get; set; }
     public byte[] HashKey { get; set; }
+    
+    [EnumTypeValidation(typeof(Role))]
     public string Role { get; set; }
 
     [NotMapped]

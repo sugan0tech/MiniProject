@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Enums;
+using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Entities;
 
@@ -8,6 +9,8 @@ public class Preference
 {
     [Key] public int PreferenceId { get; set; }
 
+    [MaxLength(15)]
+    [EnumTypeValidation(typeof(MotherTongue))]
     public string MotherTongue { get; set; }
 
     [NotMapped]
@@ -17,6 +20,8 @@ public class Preference
         set => MotherTongue = value.ToString();
     }
 
+    [MaxLength(15)]
+    [EnumTypeValidation(typeof(Religion))]
     public string Religion { get; set; }
 
     [NotMapped]
@@ -26,15 +31,19 @@ public class Preference
         set => Religion = value.ToString();
     }
 
+    [MaxLength(10)]
+    [EnumTypeValidation(typeof(Education))]
     public string Education { get; set; }
 
     [NotMapped]
     public Education EducationEnum
     {
-        get => Enum.Parse<Education>(Religion);
+        get => Enum.Parse<Education>(Education);
         set => Religion = value.ToString();
     }
 
+    [MaxLength(15)]
+    [EnumTypeValidation(typeof(Occupation))]
     public string Occupation { get; set; }
 
     [NotMapped]

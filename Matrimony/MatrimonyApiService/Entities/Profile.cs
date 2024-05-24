@@ -23,6 +23,7 @@ public class Profile
     public int Age { get; set; }
 
     [Required(ErrorMessage = "Education is missing")]
+    [EnumTypeValidation(typeof(Education))]
     public string Education { get; set; }
 
     [NotMapped]
@@ -35,6 +36,7 @@ public class Profile
     public int AnnualIncome { get; set; }
 
     [Required(ErrorMessage = "Occupation is missing")]
+    [EnumTypeValidation(typeof(Occupation))]
     public string Occupation { get; set; }
 
     [NotMapped]
@@ -45,6 +47,7 @@ public class Profile
     }
 
     [Required(ErrorMessage = "MaritalStatus is missing")]
+    [EnumTypeValidation(typeof(MaritalStatus))]
     public string MaritalStatus { get; set; }
 
     [NotMapped]
@@ -55,6 +58,7 @@ public class Profile
     }
 
     [Required(ErrorMessage = "MotherTongue is missing")]
+    [EnumTypeValidation(typeof(MotherTongue))]
     public string MotherTongue { get; set; }
 
     [NotMapped]
@@ -65,6 +69,7 @@ public class Profile
     }
 
     [Required(ErrorMessage = "Religion is missing")]
+    [EnumTypeValidation(typeof(Religion))]
     public string Religion { get; set; }
 
     [NotMapped]
@@ -75,6 +80,7 @@ public class Profile
     }
 
     [Required(ErrorMessage = "Ethinicity is missing")]
+    [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethinicity { get; set; }
 
     [NotMapped]
@@ -89,6 +95,7 @@ public class Profile
     public bool Habits { get; set; }
 
     [Required(ErrorMessage = "Gender is missing")]
+    [EnumTypeValidation(typeof(Gender))]
     public string Gender { get; set; }
 
     [NotMapped]
@@ -110,6 +117,8 @@ public class Profile
     [ForeignKey("PrimaryId")] public int UserId { get; set; }
     public User User { get; set; }
 
+    [Required(ErrorMessage = "No mapping found for ManagedByRelation")]
+    [EnumTypeValidation(typeof(Relation))]
     public string ManagedByRelation { get; set; }
 
     [NotMapped]

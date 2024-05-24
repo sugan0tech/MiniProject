@@ -17,6 +17,7 @@ public class MatrimonyContext: DbContext
     public DbSet<Staff> Staves { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Match> Matches { get; set; }
+    public DbSet<Membership> Memberships { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
