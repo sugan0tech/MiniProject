@@ -2,6 +2,7 @@
 
 public enum Education
 {
+    NoEducation,
     Board,
     UG,
     PG,
