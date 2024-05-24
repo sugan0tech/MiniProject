@@ -149,6 +149,7 @@
   },
   "active": "bb25422d1e4e5bcb",
   "lastOpenFiles": [
+    "Matrimony/MatrimonyApiService/Commons/MatrimonyContext.cs~",
     "Matrimony/MatrimonyApiService/Address/AddressRepo.cs~",
     "Matrimony/MatrimonyApiService/Commons/Validations/EnumTypeValidation.cs",
     "Matrimony/MatrimonyApiService/Commons/Validations/AgeValidationAttribute.cs",
@@ -159,7 +160,6 @@
     "Matrimony/MatrimonyApiService/Profile/ProfileRepo.cs",
     "Matrimony/MatrimonyApiService/Preference/PreferenceRepo.cs",
     "Matrimony/MatrimonyApiService/Message/MessageRepo.cs",
-    "Matrimony/MatrimonyApiService/Membership/MembershipRepo.cs",
     "Architecture/BusinessLogic.md",
     "OpenFloorPlan.md",
     "Architecture/MatrimonyERD V2.png",

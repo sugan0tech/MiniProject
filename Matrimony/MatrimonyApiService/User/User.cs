@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.User;
 
+[Index(nameof(Email), Name = "Email_Ind")]
 public class User : BaseEntity
 {
     // [Key] public int UserId { get; set; }
@@ -27,4 +29,5 @@ public class User : BaseEntity
     public byte[]? HashKey { get; set; }
     public int LoginAttempts { get; set; }
     public IEnumerable<Message.Message>? Messages { get; set; }
+    public IEnumerable<ProfileView.ProfileView>? Views { get; set; }
 }

@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Entities;
 using MatrimonyApiService.Enums;
 using MatrimonyApiService.Validations;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Staff;
 
+[Index(nameof(Email), Name = "Email_Ind")]
 public class Staff : BaseEntity
 {
     // [Key] public int StaffId { get; set; }

@@ -95,6 +95,7 @@ public class Profile : BaseEntity
     [MaxLength(150)]
     public string? Bio { get; set; }
     public byte[]? ProfilePicture { get; set; }
+    // Todo habit enum
     public bool Habits { get; set; }
 
     [Required(ErrorMessage = "Gender is missing")]
