@@ -163,3 +163,33 @@ classDiagram
 
 ```
 
+
+
+# Learnings
+---
+### Accessor can be recursive :)
+```csharp
+public DateTime DateOfBirth  
+{  
+    get => DateOfBirth;  
+    set => {
+		DateOfBirth = value; // on recursive sets value to DateOfBirth
+	    Age = DateTime.Today.Year - value.Year;  
+	}
+}
+```
+### Required attribute instead of nullable
+```csharp
+[MaxLength(30)] public required string State { get; set; }
+							|
+							Ensures that object is not getting initialized without passing those properties
+```
+
+Ok then what about `Annotations.Required` and keyword `required`
+```cs
+[Required] // does it in runtime
+public required Entity entity; // does it in compile-time
+```
+using it both is a over kill:
+- `Annotations.Required` can be used for DTO's since it's constant input kinda data.
+- `required` can be used for internal must one like entity.

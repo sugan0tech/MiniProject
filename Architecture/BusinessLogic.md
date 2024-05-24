@@ -4,6 +4,7 @@
 ### Login
 - checks if user verified 
 - then logs in and returns token
+- Multiple failed login ( > 5 )  deactivates account
 ### Logout
 - Logs out & invalidates the existing token. (black listing)
 ### ResetPassword
