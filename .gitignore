@@ -399,3 +399,7 @@ FodyWeavers.xsd
 
 *.idea/
 global.json
+
+.obsidian/themes
+.obsidian/appearance.json
+.obsidian/workspace.json
