@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Entities;
 using MatrimonyApiService.Enums;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Membership;
 
 public class Membership: BaseEntity
 {
@@ -17,7 +18,7 @@ public class Membership: BaseEntity
     }
 
     [ForeignKey("ProfileId")] public int ProfileId { get; set; }
-    public Profile? Profile { get; set; }
+    public Profile.Profile? Profile { get; set; }
 
     [MaxLength(100)] public required string Description { get; set; }
     public DateTime EndsAt { get; set; }

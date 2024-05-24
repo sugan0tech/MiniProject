@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Entities;
 using MatrimonyApiService.Enums;
 using MatrimonyApiService.Validations;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Preference;
 
 public class Preference : BaseEntity
 {
@@ -59,7 +60,7 @@ public class Preference : BaseEntity
     public int MaxAge { get; set; }
 
     [ForeignKey("PreferenceForProfileId")] public int? PreferenceForId { get; set; }
-    public Profile? PreferenceFor { get; set; }
+    public Profile.Profile? PreferenceFor { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }

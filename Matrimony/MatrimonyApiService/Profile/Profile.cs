@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Entities;
 using MatrimonyApiService.Enums;
 using MatrimonyApiService.Validations;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Profile;
 
 public class Profile : BaseEntity
 {
@@ -112,13 +113,13 @@ public class Profile : BaseEntity
     public int Height { get; set; }
 
     [ForeignKey("MembershipId")] public int MembershipId { get; set; }
-    public required Membership Membership { get; set; }
+    public required Membership.Membership Membership { get; set; }
 
     [ForeignKey("ManagedById")] public int ManagedById { get; set; }
-    public User? ManagedBy { get; set; }
+    public User.User? ManagedBy { get; set; }
 
     [ForeignKey("PrimaryId")] public int UserId { get; set; }
-    public User? User { get; set; }
+    public User.User? User { get; set; }
 
     [Required(ErrorMessage = "No mapping found for ManagedByRelation")]
     [EnumTypeValidation(typeof(Relation))]
@@ -132,11 +133,11 @@ public class Profile : BaseEntity
         set => ManagedByRelation = value.ToString();
     }
 
-    public IEnumerable<ProfileView>? ProfileViews { get; set; }
-    public IEnumerable<Match>? Matches { get; set; }
+    public IEnumerable<ProfileView.ProfileView>? ProfileViews { get; set; }
+    public IEnumerable<Match.Match>? Matches { get; set; }
 
     [ForeignKey("PreferenceId")] public int PreferenceId { get; set; }
-    public Preference? Preference { get; set; }
+    public Preference.Preference? Preference { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }

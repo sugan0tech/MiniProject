@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Entities;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Address;
 
 public class Address : BaseEntity
 {

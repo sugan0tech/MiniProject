@@ -193,3 +193,12 @@ public required Entity entity; // does it in compile-time
 using it both is a over kill:
 - `Annotations.Required` can be used for DTO's since it's constant input kinda data.
 - `required` can be used for internal must one like entity.
+
+
+### Layer by Feature 
+[ref](https://www.jimmybogard.com/vertical-slice-architecture/)
+- removes the complexity look why developing
+
+### TPC (Table Per Concrete Type)
+[ref](https://www.scholarhat.com/tutorial/entityframework/understanding-inheritance-in-entity-**framework)
+- Here I have used TPC inheritance for the entities, which reduces lot of boiler plate from the repos

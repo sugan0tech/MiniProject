@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MatrimonyApiService.Entities;
 using MatrimonyApiService.Enums;
 using MatrimonyApiService.Validations;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Staff;
 
 public class Staff : BaseEntity
 {
@@ -20,7 +21,7 @@ public class Staff : BaseEntity
     public required string PhoneNumber { get; set; }
 
     [ForeignKey("AddressId")] public int AddressId;
-    public Address? Address;
+    public Address.Address? Address;
 
     public bool IsVerified { get; set; }
     public byte[]? Password { get; set; }
