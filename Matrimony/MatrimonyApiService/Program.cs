@@ -47,6 +47,11 @@ public class Program
 
         #endregion
 
+        #region Logger
+
+        builder.Services.AddLogging(l => l.AddLog4Net());
+
+        #endregion
         #region Services
 
         builder.Services.AddScoped<IAddressService, AddressService>();
