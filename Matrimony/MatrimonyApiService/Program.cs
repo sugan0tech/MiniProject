@@ -52,6 +52,8 @@ public class Program
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
         builder.Services.AddScoped<IPreferenceService, PreferenceService>();
+        builder.Services.AddScoped<IMembershipService, MembershipService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
 
         #endregion
 
