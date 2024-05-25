@@ -10,7 +10,7 @@ public class Preference : BaseEntity
 {
     // [Key] public int PreferenceId { get; set; }
 
-    [MaxLength(15)]
+    [MaxLength(25)]
     [EnumTypeValidation(typeof(MotherTongue))]
     public required string MotherTongue { get; set; }
 
@@ -21,7 +21,7 @@ public class Preference : BaseEntity
         set => MotherTongue = value.ToString();
     }
 
-    [MaxLength(15)]
+    [MaxLength(25)]
     [EnumTypeValidation(typeof(Religion))]
     public required string Religion { get; set; }
 
@@ -32,7 +32,7 @@ public class Preference : BaseEntity
         set => Religion = value.ToString();
     }
 
-    [MaxLength(10)]
+    [MaxLength(25)]
     [EnumTypeValidation(typeof(Education))]
     public required string Education { get; set; }
 
@@ -40,10 +40,10 @@ public class Preference : BaseEntity
     public Education EducationEnum
     {
         get => Enum.Parse<Education>(Education);
-        set => Religion = value.ToString();
+        set => Education = value.ToString();
     }
 
-    [MaxLength(15)]
+    [MaxLength(25)]
     [EnumTypeValidation(typeof(Occupation))]
     public required string Occupation { get; set; }
 

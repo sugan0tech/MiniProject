@@ -114,7 +114,7 @@ public class Profile : BaseEntity
     public int Height { get; set; }
 
     [ForeignKey("MembershipId")] public int MembershipId { get; set; }
-    public required Membership.Membership Membership { get; set; }
+    public Membership.Membership? Membership { get; set; }
 
     [ForeignKey("ManagedById")] public int ManagedById { get; set; }
     public User.User? ManagedBy { get; set; }

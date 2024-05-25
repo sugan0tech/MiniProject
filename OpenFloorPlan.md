@@ -243,14 +243,10 @@ modelBuilder.Entity<Match.Match>()
     .WithMany(profile => profile.ReceivedMatches)  
     .OnDelete(DeleteBehavior.NoAction);
 
-modelBuilder.Entity<Profile.Profile>()  
-    .HasMany<Match.Match>(profile => profile.SentMatches)  
-    .WithOne(match => match.SentProfile)  
-    .HasForeignKey(match => match.SentProfileId)  
-    .OnDelete(DeleteBehavior.Cascade);  
-modelBuilder.Entity<Profile.Profile>()  
-    .HasMany<Match.Match>(profile => profile.ReceivedMatches)  
-    .WithOne(match => match.ReceivedProfile)  
-    .HasForeignKey(match => match.ReceivedProfileId)  
-    .OnDelete(DeleteBehavior.Cascade);
+
 ```
+
+## New changes in NUnit 4
+[ref](https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html):w
+
+- All the legacy assertion will be under `ClassicAssert lib`
