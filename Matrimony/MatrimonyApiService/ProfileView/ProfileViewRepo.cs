@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.ProfileView;
 
-public class ProfileViewRepo(MatrimonyContext context): BaseRepo<ProfileView>(context);
+public class ProfileViewRepo(MatrimonyContext context) : BaseRepo<ProfileView>(context);

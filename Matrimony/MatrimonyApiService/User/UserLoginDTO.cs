@@ -10,6 +10,5 @@ public record UserLoginDto
     [MaxLength(256)]
     public string Email { get; init; }
 
-    [Required]
-    public string Password { get; init; }
+    [Required] public string Password { get; init; }
 }

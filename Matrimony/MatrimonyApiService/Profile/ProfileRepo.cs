@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.Profile;
 
-public class ProfileRepo(MatrimonyContext context): BaseRepo<Profile>(context);
+public class ProfileRepo(MatrimonyContext context) : BaseRepo<Profile>(context);

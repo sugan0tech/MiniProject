@@ -1,5 +1,4 @@
 ﻿using MatrimonyApiService.Entities;
-using MatrimonyApiService.Repos;
 using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Commons;

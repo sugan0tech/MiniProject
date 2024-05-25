@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.Message;
 
-public class MessageRepo(MatrimonyContext context): BaseRepo<Message>(context);
+public class MessageRepo(MatrimonyContext context) : BaseRepo<Message>(context);

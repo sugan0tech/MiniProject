@@ -88,9 +88,10 @@ public class Profile : BaseEntity
         set => Ethnicity = value.ToString();
     }
 
-    [MaxLength(150)]
-    public string? Bio { get; set; }
+    [MaxLength(150)] public string? Bio { get; set; }
+
     public byte[]? ProfilePicture { get; set; }
+
     // Todo habit enum
     public bool Habits { get; set; }
 
@@ -139,7 +140,7 @@ public class Profile : BaseEntity
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }
-    
+
     private int CalculateAge()
     {
         int age = DateTime.Today.Year - DateOfBirth.Year;

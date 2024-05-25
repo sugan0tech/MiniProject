@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.Match;
 
-public class MatchRepo(MatrimonyContext context): BaseRepo<Match>(context);
+public class MatchRepo(MatrimonyContext context) : BaseRepo<Match>(context);

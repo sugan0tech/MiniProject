@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.Preference;
 
-public class PreferenceRepo(MatrimonyContext context): BaseRepo<Preference>(context);
+public class PreferenceRepo(MatrimonyContext context) : BaseRepo<Preference>(context);

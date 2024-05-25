@@ -2,4 +2,4 @@
 
 namespace MatrimonyApiService.Staff;
 
-public class StaffRepo(MatrimonyContext context): BaseRepo<Staff>(context);
+public class StaffRepo(MatrimonyContext context) : BaseRepo<Staff>(context);

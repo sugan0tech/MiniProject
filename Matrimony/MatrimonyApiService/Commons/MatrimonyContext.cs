@@ -60,6 +60,7 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
             .OnDelete(DeleteBehavior.NoAction);
 
         #endregion
+
         #region Membership
 
         modelBuilder.Entity<Profile.Profile>()

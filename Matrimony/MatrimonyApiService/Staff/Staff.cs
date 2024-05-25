@@ -29,7 +29,9 @@ public class Staff : BaseEntity
     public byte[]? Password { get; set; }
     public byte[]? HashKey { get; set; }
 
-    [EnumTypeValidation(typeof(Role))][MaxLength(25)] public required string Role { get; set; }
+    [EnumTypeValidation(typeof(Role))]
+    [MaxLength(25)]
+    public required string Role { get; set; }
 
     [NotMapped]
     public Role RoleEnum

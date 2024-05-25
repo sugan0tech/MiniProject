@@ -5,7 +5,7 @@ using MatrimonyApiService.Enums;
 
 namespace MatrimonyApiService.Membership;
 
-public class Membership: BaseEntity
+public class Membership : BaseEntity
 {
     // [Key] public int MembershipId { get; set; }
     [MaxLength(20)] public required string Type { get; set; }
