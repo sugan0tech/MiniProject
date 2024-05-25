@@ -46,6 +46,20 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #region Profile
 
+        #region User
+
+        modelBuilder.Entity<Profile.Profile>()
+            .HasOne<User.User>(profile => profile.ManagedBy)
+            .WithMany()
+            .HasForeignKey(profile => profile.ManagedById)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Profile.Profile>()
+            .HasOne<User.User>(profile => profile.User)
+            .WithOne()
+            .HasForeignKey<Profile.Profile>(profile => profile.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        #endregion
         #region Membership
 
         modelBuilder.Entity<Profile.Profile>()
@@ -75,9 +89,14 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
         #region Match
 
         modelBuilder.Entity<Profile.Profile>()
-            .HasMany<Match.Match>(profile => profile.Matches)
-            .WithOne(match => match.ProfileOne)
-            .HasForeignKey(match => match.ProfileOneId)
+            .HasMany<Match.Match>(profile => profile.SentMatches)
+            .WithOne(match => match.SentProfile)
+            .HasForeignKey(match => match.SentProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Profile.Profile>()
+            .HasMany<Match.Match>(profile => profile.ReceivedMatches)
+            .WithOne(match => match.ReceivedProfile)
+            .HasForeignKey(match => match.ReceivedProfileId)
             .OnDelete(DeleteBehavior.Cascade);
 
         #endregion
@@ -138,7 +157,14 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #region Match
 
-        modelBuilder.Entity<Match.Match>();
+        modelBuilder.Entity<Match.Match>()
+            .HasOne<Profile.Profile>(match => match.SentProfile)
+            .WithMany(profile => profile.SentMatches)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Match.Match>()
+            .HasOne<Profile.Profile>(match => match.ReceivedProfile)
+            .WithMany(profile => profile.ReceivedMatches)
+            .OnDelete(DeleteBehavior.NoAction);
 
         #endregion
 

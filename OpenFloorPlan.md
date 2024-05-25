@@ -165,7 +165,7 @@ classDiagram
 
 
 
-# Learnings
+# Developer Notes
 ---
 ### Accessor can be recursive :)
 ```csharp
@@ -202,3 +202,55 @@ using it both is a over kill:
 ### TPC (Table Per Concrete Type)
 [ref](https://www.scholarhat.com/tutorial/entityframework/understanding-inheritance-in-entity-**framework)
 - Here I have used TPC inheritance for the entities, which reduces lot of boiler plate from the repos
+
+## Handling two one to one relations
+```csharp
+modelBuilder.Entity<Profile.Profile>()  
+    .HasMany<Match.Match>(profile => profile.Matches)  
+    .WithOne(match => match.ProfileOne)  
+    .HasForeignKey(match => match.ProfileOneId)  
+    .OnDelete(DeleteBehavior.NoAction);  
+modelBuilder.Entity<Profile.Profile>()  
+    .HasMany<Match.Match>(profile => profile.Matches)  
+    .WithOne(match => match.ProfileTwo)  
+    .HasForeignKey(match => match.ProfileTwoId)  
+    .OnDelete(DeleteBehavior.NoAction);
+
+modelBuilder.Entity<Match.Match>()  
+    .HasOne<Profile.Profile>(match => match.ProfileOne)  
+    .WithMany()  
+    .OnDelete(DeleteBehavior.Cascade);  
+modelBuilder.Entity<Match.Match>()  
+    .HasOne<Profile.Profile>(match => match.ProfileTwo)  
+    .WithMany()  
+    .OnDelete(DeleteBehavior.Cascade);
+```
+with this tried to establish one to one between profile matches, but under profile it's just a single ennumerable collection
+- got this a error while adding migration
+```powershell
+Unable to create a 'DbContext' of type ''. The exception 'Cannot create a relationship between 'Profile.Matches' and 'Match.ProfileTwo' because a relationship already exists between 'Profile.Matches' and 'Match.ProfileOne'. Navigations can only participate in a single relationship. If you want to override an existing relationship call 'Ignore' on the navigation 'Match.ProfileTwo' first in 'OnModelCreating'.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728
+```
+
+Solution:
+- For Ef to handle this kind of multiple one to many relations, just have them in separate ICollections
+```csharp
+modelBuilder.Entity<Match.Match>()  
+    .HasOne<Profile.Profile>(match => match.SentProfile)  
+    .WithMany(profile => profile.SentMatches)  
+    .OnDelete(DeleteBehavior.NoAction);  
+modelBuilder.Entity<Match.Match>()  
+    .HasOne<Profile.Profile>(match => match.ReceivedProfile)  
+    .WithMany(profile => profile.ReceivedMatches)  
+    .OnDelete(DeleteBehavior.NoAction);
+
+modelBuilder.Entity<Profile.Profile>()  
+    .HasMany<Match.Match>(profile => profile.SentMatches)  
+    .WithOne(match => match.SentProfile)  
+    .HasForeignKey(match => match.SentProfileId)  
+    .OnDelete(DeleteBehavior.Cascade);  
+modelBuilder.Entity<Profile.Profile>()  
+    .HasMany<Match.Match>(profile => profile.ReceivedMatches)  
+    .WithOne(match => match.ReceivedProfile)  
+    .HasForeignKey(match => match.ReceivedProfileId)  
+    .OnDelete(DeleteBehavior.Cascade);
+```
