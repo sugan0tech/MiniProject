@@ -7,117 +7,75 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MatrimonyTest.Profile;
 
-    [TestFixture]
-    public class ProfileRepoTests
+[TestFixture]
+public class ProfileRepoTests
+{
+    private DbContextOptions<MatrimonyContext> _dbContextOptions;
+    private MatrimonyContext _context;
+    private ProfileRepo _profileRepo;
+
+    [SetUp]
+    public void Setup()
     {
-        private DbContextOptions<MatrimonyContext> _dbContextOptions;
-        private MatrimonyContext _context;
-        private ProfileRepo _profileRepo;
+        _dbContextOptions = new DbContextOptionsBuilder<MatrimonyContext>()
+            .UseInMemoryDatabase(databaseName: "MatrimonyTestDb")
+            .Options;
 
-        [SetUp]
-        public void Setup()
-        {
-            _dbContextOptions = new DbContextOptionsBuilder<MatrimonyContext>()
-                .UseInMemoryDatabase(databaseName: "MatrimonyTestDb")
-                .Options;
+        _context = new MatrimonyContext(_dbContextOptions);
+        _profileRepo = new ProfileRepo(_context);
+    }
 
-            _context = new MatrimonyContext(_dbContextOptions);
-            _profileRepo = new ProfileRepo(_context);
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _context.Database.EnsureDeleted();
-            _context.Dispose();
-        }
-
-        [Test]
-        public async Task GetById_ShouldReturnEntity_WhenEntityExists()
-        {
+    [Test]
+    public async Task GetById_ShouldReturnEntity_WhenEntityExists()
+    {
         // Arrange
         var profile = new MatrimonyApiService.Profile.Profile
         {
-                DateOfBirth = new DateTime(1990, 1, 1),
-                Education = Education.NoEducation.ToString(),
-                Occupation = "Engineer",
-                MaritalStatus = MaritalStatus.Single.ToString(),
-                MotherTongue = "English",
-                Religion = "Christian",
-                Ethnicity = "Asian",
-                Gender = "Male",
-                ManagedByRelation = "Self",
-                MembershipId = 1,
-                UserId = 1
-            };
-            await _context.Profiles.AddAsync(profile);
-            await _context.SaveChangesAsync();
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = Education.NoEducation.ToString(),
+            Occupation = "Engineer",
+            MaritalStatus = MaritalStatus.Single.ToString(),
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = "Male",
+            ManagedByRelation = "Self",
+            MembershipId = 1,
+            UserId = 1
+        };
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
 
-            // Act
-            var result = await _profileRepo.GetById(profile.Id);
+        // Act
+        var result = await _profileRepo.GetById(profile.Id);
 
-            // Assert
-            ClassicAssert.NotNull(result);
-            ClassicAssert.AreEqual(Education.NoEducation, result.Education);
-            ClassicAssert.AreEqual("Engineer", result.Occupation);
-        }
+        // Assert
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(Education.NoEducation, result.Education);
+        ClassicAssert.AreEqual("Engineer", result.Occupation);
+    }
 
-        [Test]
-        public void GetById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
-        {
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.GetById(99));
-            ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
-        }
+    [Test]
+    public void GetById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
+    {
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.GetById(99));
+        ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
+    }
 
-        [Test]
-        public async Task GetAll_ShouldReturnAllEntities()
-        {
-            // Arrange
-            await _context.Profiles.AddRangeAsync(
-                new MatrimonyApiService.Profile.Profile
-                {
-                    DateOfBirth = new DateTime(1990, 1, 1),
-                    Education = "Graduate",
-                    Occupation = "Engineer",
-                    MaritalStatus = "Single",
-                    MotherTongue = "English",
-                    Religion = "Christian",
-                    Ethnicity = "Asian",
-                    Gender = "Male",
-                    ManagedByRelation = "Self",
-                    MembershipId = 1,
-                    UserId = 1
-                },
-                new MatrimonyApiService.Profile.Profile
-                {
-                    DateOfBirth = new DateTime(1985, 5, 5),
-                    Education = "PostGraduate",
-                    Occupation = "Doctor",
-                    MaritalStatus = "Divorced",
-                    MotherTongue = "Hindi",
-                    Religion = "Hindu",
-                    Ethnicity = "Asian",
-                    Gender = "Female",
-                    ManagedByRelation = "Parent",
-                    MembershipId = 2,
-                    UserId = 2
-                }
-            );
-            await _context.SaveChangesAsync();
-
-            // Act
-            var result = await _profileRepo.GetAll();
-
-            // Assert
-            ClassicAssert.AreEqual(2, result.Count);
-        }
-
-        [Test]
-        public async Task Add_ShouldAddEntity()
-        {
-            // Arrange
-            var profile = new MatrimonyApiService.Profile.Profile
+    [Test]
+    public async Task GetAll_ShouldReturnAllEntities()
+    {
+        // Arrange
+        await _context.Profiles.AddRangeAsync(
+            new MatrimonyApiService.Profile.Profile
             {
                 DateOfBirth = new DateTime(1990, 1, 1),
                 Education = "Graduate",
@@ -130,116 +88,158 @@ namespace MatrimonyTest.Profile;
                 ManagedByRelation = "Self",
                 MembershipId = 1,
                 UserId = 1
-            };
-
-            // Act
-            var result = await _profileRepo.Add(profile);
-
-            // Assert
-            ClassicAssert.IsNotNull(result);
-            ClassicAssert.AreEqual("Graduate", result.Education);
-            ClassicAssert.AreEqual(1, await _context.Profiles.CountAsync());
-        }
-
-        [Test]
-        public void Add_ShouldThrowArgumentNullException_WhenEntityIsNull()
-        {
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _profileRepo.Add(null));
-            ClassicAssert.AreEqual("Profile cannot be null. (Parameter 'entity')", ex.Message);
-        }
-
-        [Test]
-        public async Task Update_ShouldUpdateEntity()
-        {
-            // Arrange
-            var profile = new MatrimonyApiService.Profile.Profile
+            },
+            new MatrimonyApiService.Profile.Profile
             {
-                DateOfBirth = new DateTime(1990, 1, 1),
-                Education = "Graduate",
-                Occupation = "Engineer",
-                MaritalStatus = "Single",
-                MotherTongue = "English",
-                Religion = "Christian",
+                DateOfBirth = new DateTime(1985, 5, 5),
+                Education = "PostGraduate",
+                Occupation = "Doctor",
+                MaritalStatus = "Divorced",
+                MotherTongue = "Hindi",
+                Religion = "Hindu",
                 Ethnicity = "Asian",
-                Gender = "Male",
-                ManagedByRelation = "Self",
-                MembershipId = 1,
-                UserId = 1
-            };
-            await _context.Profiles.AddAsync(profile);
-            await _context.SaveChangesAsync();
+                Gender = "Female",
+                ManagedByRelation = "Parent",
+                MembershipId = 2,
+                UserId = 2
+            }
+        );
+        await _context.SaveChangesAsync();
 
-            profile.Education = "PostGraduate";
+        // Act
+        var result = await _profileRepo.GetAll();
 
-            // Act
-            var result = await _profileRepo.Update(profile);
+        // Assert
+        ClassicAssert.AreEqual(2, result.Count);
+    }
 
-            // Assert
-            ClassicAssert.IsNotNull(result);
-            ClassicAssert.AreEqual("PostGraduate", result.Education);
-        }
-
-        [Test]
-        public void Update_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
+    [Test]
+    public async Task Add_ShouldAddEntity()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
         {
-            // Arrange
-            var updateProfile = new MatrimonyApiService.Profile.Profile
-            {
-                Id = 99,
-                DateOfBirth = new DateTime(1990, 1, 1),
-                Education = "Graduate",
-                Occupation = "Engineer",
-                MaritalStatus = "Single",
-                MotherTongue = "English",
-                Religion = "Christian",
-                Ethnicity = "Asian",
-                Gender = "Male",
-                ManagedByRelation = "Self",
-                MembershipId = 1,
-                UserId = 1
-            };
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = "Male",
+            ManagedByRelation = "Self",
+            MembershipId = 1,
+            UserId = 1
+        };
 
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.Update(updateProfile));
-            ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
-        }
+        // Act
+        var result = await _profileRepo.Add(profile);
 
-        [Test]
-        public async Task DeleteById_ShouldDeleteEntity()
+        // Assert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual("Graduate", result.Education);
+        ClassicAssert.AreEqual(1, await _context.Profiles.CountAsync());
+    }
+
+    [Test]
+    public void Add_ShouldThrowArgumentNullException_WhenEntityIsNull()
+    {
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _profileRepo.Add(null));
+        ClassicAssert.AreEqual("Profile cannot be null. (Parameter 'entity')", ex.Message);
+    }
+
+    [Test]
+    public async Task Update_ShouldUpdateEntity()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
         {
-            // Arrange
-            var profile = new MatrimonyApiService.Profile.Profile
-            {
-                DateOfBirth = new DateTime(1990, 1, 1),
-                Education = "Graduate",
-                Occupation = "Engineer",
-                MaritalStatus = "Single",
-                MotherTongue = "English",
-                Religion = "Christian",
-                Ethnicity = "Asian",
-                Gender = "Male",
-                ManagedByRelation = "Self",
-                MembershipId = 1,
-                UserId = 1
-            };
-            await _context.Profiles.AddAsync(profile);
-            await _context.SaveChangesAsync();
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = "Male",
+            ManagedByRelation = "Self",
+            MembershipId = 1,
+            UserId = 1
+        };
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
 
-            // Act
-            await _profileRepo.DeleteById(profile.Id);
+        profile.Education = "PostGraduate";
 
-            // Assert
-            ClassicAssert.AreEqual(0, await _context.Profiles.CountAsync());
-        }
+        // Act
+        var result = await _profileRepo.Update(profile);
 
-        [Test]
-        public void DeleteById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
+        // Assert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual("PostGraduate", result.Education);
+    }
+
+    [Test]
+    public void Update_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
+    {
+        // Arrange
+        var updateProfile = new MatrimonyApiService.Profile.Profile
         {
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.DeleteById(99));
-            ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
-        }
+            Id = 99,
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = "Male",
+            ManagedByRelation = "Self",
+            MembershipId = 1,
+            UserId = 1
+        };
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.Update(updateProfile));
+        ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
+    }
+
+    [Test]
+    public async Task DeleteById_ShouldDeleteEntity()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = "Male",
+            ManagedByRelation = "Self",
+            MembershipId = 1,
+            UserId = 1
+        };
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
+
+        // Act
+        await _profileRepo.DeleteById(profile.Id);
+
+        // Assert
+        ClassicAssert.AreEqual(0, await _context.Profiles.CountAsync());
+    }
+
+    [Test]
+    public void DeleteById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
+    {
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileRepo.DeleteById(99));
+        ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
+    }
 
     [Test]
     public void Profile_ShouldFailValidation_WhenInvalidEducationIsProvided()
@@ -269,7 +269,8 @@ namespace MatrimonyTest.Profile;
         // Assert
         ClassicAssert.IsFalse(isValid);
         ClassicAssert.AreEqual(1, results.Count);
-        ClassicAssert.AreEqual("The field Education must be a string with a maximum length of 20.", results[0].ErrorMessage);
+        ClassicAssert.AreEqual("The field Education must be a string with a maximum length of 20.",
+            results[0].ErrorMessage);
     }
 
     [Test]

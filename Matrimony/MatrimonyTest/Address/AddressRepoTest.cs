@@ -34,7 +34,8 @@ public class AddressRepoTests
     public async Task GetById_ShouldReturnEntity_WhenEntityExists()
     {
         // Arrange
-        var address = new MatrimonyApiService.Address.Address { Id = 1, City = "City1", State = "State1", Country = "Country1" };
+        var address = new MatrimonyApiService.Address.Address
+            { Id = 1, City = "City1", State = "State1", Country = "Country1" };
         await _context.Addresses.AddAsync(address);
         await _context.SaveChangesAsync();
 
@@ -59,8 +60,10 @@ public class AddressRepoTests
     {
         // Arrange
         await _context.Addresses.AddRangeAsync(
-            new MatrimonyApiService.Address.Address { Id = 1, Street = "street1", City = "City1", State = "State1", Country = "Country1" },
-            new MatrimonyApiService.Address.Address { Id = 2, Street = "street2", City = "City2", State = "State2", Country = "Country2" }
+            new MatrimonyApiService.Address.Address
+                { Id = 1, Street = "street1", City = "City1", State = "State1", Country = "Country1" },
+            new MatrimonyApiService.Address.Address
+                { Id = 2, Street = "street2", City = "City2", State = "State2", Country = "Country2" }
         );
         await _context.SaveChangesAsync();
 
@@ -75,7 +78,8 @@ public class AddressRepoTests
     public async Task Add_ShouldAddEntity()
     {
         // Arrange
-        var address = new MatrimonyApiService.Address.Address { Id = 1, City = "City1", State = "State1", Country = "Country1" };
+        var address = new MatrimonyApiService.Address.Address
+            { Id = 1, City = "City1", State = "State1", Country = "Country1" };
 
         // Act
         var result = await _addressRepo.Add(address);
@@ -98,7 +102,8 @@ public class AddressRepoTests
     public async Task Update_ShouldUpdateEntity()
     {
         // Arrange
-        var address = new MatrimonyApiService.Address.Address { Id = 1, City = "City1", State = "State1", Country = "Country1" };
+        var address = new MatrimonyApiService.Address.Address
+            { Id = 1, City = "City1", State = "State1", Country = "Country1" };
         await _context.Addresses.AddAsync(address);
         await _context.SaveChangesAsync();
 
@@ -116,7 +121,8 @@ public class AddressRepoTests
     public void Update_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
     {
         // Arrange
-        var updateAddress = new MatrimonyApiService.Address.Address { Id = 99, City = "City99", State = "State99", Country = "Country99" };
+        var updateAddress = new MatrimonyApiService.Address.Address
+            { Id = 99, City = "City99", State = "State99", Country = "Country99" };
 
         // Act & Assert
         var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _addressRepo.Update(updateAddress));
@@ -127,7 +133,8 @@ public class AddressRepoTests
     public async Task DeleteById_ShouldDeleteEntity()
     {
         // Arrange
-        var address = new MatrimonyApiService.Address.Address { Id = 1, City = "City1", State = "State1", Country = "Country1" };
+        var address = new MatrimonyApiService.Address.Address
+            { Id = 1, City = "City1", State = "State1", Country = "Country1" };
         await _context.Addresses.AddAsync(address);
         await _context.SaveChangesAsync();
 
