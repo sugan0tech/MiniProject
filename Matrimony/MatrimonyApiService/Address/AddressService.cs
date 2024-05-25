@@ -38,16 +38,14 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
     {
         try
         {
-            var existingAddressEntity = await addressRepo.GetById(addressDto.AddressId);
-            if (existingAddressEntity == null)
-            {
-                throw new KeyNotFoundException($"Address with id {addressDto.AddressId} not found.");
-            }
-
             var updatedAddressEntity = mapper.Map<Address>(addressDto);
             updatedAddressEntity.Id = addressDto.AddressId; // Ensure the ID is set to the correct value
             var result = await addressRepo.Update(updatedAddressEntity);
             return mapper.Map<AddressDto>(result);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            throw new KeyNotFoundException(ex.Message);
         }
         catch (Exception ex)
         {
