@@ -1,8 +1,8 @@
-﻿using MatrimonyApiService.Commons;
-using MatrimonyApiService.Entities;
+﻿using MatrimonyApiService.Entities;
+using MatrimonyApiService.Repos;
 using Microsoft.EntityFrameworkCore;
 
-namespace MatrimonyApiService.Repos;
+namespace MatrimonyApiService.Commons;
 
 /// <summary>
 /// A base repository implementation for entities.

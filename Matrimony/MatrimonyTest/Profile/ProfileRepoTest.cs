@@ -40,16 +40,21 @@ public class ProfileRepoTests
         {
             DateOfBirth = new DateTime(1990, 1, 1),
             Education = Education.NoEducation.ToString(),
-            Occupation = "Engineer",
+            Occupation = Occupation.Engineer.ToString(),
             MaritalStatus = MaritalStatus.Single.ToString(),
-            MotherTongue = "English",
-            Religion = "Christian",
-            Ethnicity = "Asian",
-            Gender = "Male",
+            MotherTongue = MotherTongue.English.ToString(),
+            Religion = Religion.Christian.ToString(),
+            Ethnicity = Ethnicity.Indian.ToString(),
+            Gender = Gender.Male.ToString(),
             ManagedByRelation = "Self",
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habits = true,
+            UserId = 1,
+            PreferenceId = 2,
+            UpdatedAt = DateTime.Now
         };
+
         await _context.Profiles.AddAsync(profile);
         await _context.SaveChangesAsync();
 
@@ -59,7 +64,7 @@ public class ProfileRepoTests
         // Assert
         ClassicAssert.NotNull(result);
         ClassicAssert.AreEqual(Education.NoEducation, result.Education);
-        ClassicAssert.AreEqual("Engineer", result.Occupation);
+        ClassicAssert.AreEqual(Occupation.Engineer.ToString(), result.Occupation);
     }
 
     [Test]
@@ -269,7 +274,7 @@ public class ProfileRepoTests
         // Assert
         ClassicAssert.IsFalse(isValid);
         ClassicAssert.AreEqual(1, results.Count);
-        ClassicAssert.AreEqual("The field Education must be a string with a maximum length of 20.",
+        ClassicAssert.AreEqual("Failed to parse InvalidEducation as Education",
             results[0].ErrorMessage);
     }
 
@@ -280,7 +285,7 @@ public class ProfileRepoTests
         var profile = new MatrimonyApiService.Profile.Profile
         {
             DateOfBirth = new DateTime(1990, 1, 1),
-            Education = "Graduate",
+            Education = "NoEducation",
             Occupation = "Engineer",
             MaritalStatus = "Single",
             MotherTongue = "English",
@@ -311,7 +316,7 @@ public class ProfileRepoTests
         var profile = new MatrimonyApiService.Profile.Profile
         {
             DateOfBirth = new DateTime(1990, 1, 1),
-            Education = "Graduate",
+            Education = Education.NoEducation.ToString(),
             Occupation = "Engineer",
             MaritalStatus = "Single",
             MotherTongue = "English",
@@ -342,7 +347,7 @@ public class ProfileRepoTests
         var profile = new MatrimonyApiService.Profile.Profile
         {
             DateOfBirth = new DateTime(1990, 1, 1),
-            Education = "Graduate",
+            Education = Education.NoEducation.ToString(),
             Occupation = "Engineer",
             MaritalStatus = "InvalidStatus",
             MotherTongue = "English",

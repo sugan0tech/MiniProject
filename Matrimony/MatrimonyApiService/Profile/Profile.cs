@@ -10,17 +10,13 @@ public class Profile : BaseEntity
 {
     // public int ProfileId { get; set; }
 
-    public DateTime DateOfBirth
-    {
-        get => DateOfBirth;
-        set => Age = DateTime.Today.Year - value.Year;
-    }
+    public DateTime DateOfBirth { get; set; }
 
-    [AgeValidation(21)] public int Age { get; set; }
+    [AgeValidation(21)] public int Age => CalculateAge();
 
     [Required(ErrorMessage = "Education is missing")]
     [EnumTypeValidation(typeof(Education))]
-    [MaxLength(20)]
+    [MaxLength(25)]
     public required string Education { get; set; }
 
     [NotMapped]
@@ -143,4 +139,10 @@ public class Profile : BaseEntity
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }
+    
+    private int CalculateAge()
+    {
+        int age = DateTime.Today.Year - DateOfBirth.Year;
+        return age;
+    }
 }
