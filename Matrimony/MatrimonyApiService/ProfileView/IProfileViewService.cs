@@ -8,7 +8,7 @@ public interface IProfileViewService
     /// <summary>
     /// Adds a new view for a profile by a viewer asynchronously.
     /// </summary>
-    Task AddView(int profileId, int viewerId);
+    Task AddView(int viewerId, int profileId);
 
     /// <summary>
     /// Adds a new view asynchronously.

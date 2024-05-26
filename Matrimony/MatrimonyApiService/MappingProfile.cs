@@ -21,6 +21,7 @@ public class MappingProfile: AutoMapper.Profile
         CreateMap<Message.Message, MessageDto>();
         CreateMap<Preference.Preference, PreferenceDto>();
         CreateMap<Profile.Profile, ProfileDto>();
+        CreateMap<Profile.Profile, ProfilePreviewDto>();
         CreateMap<ProfileView.ProfileView, ProfileViewDto>();
         CreateMap<Staff.Staff, StaffPlainDto>();
         CreateMap<User.User, UserDto>();

@@ -10,6 +10,20 @@ public interface IMatchService
     Task<List<MatchDto>> GetAcceptedMatches(int profileId);
 
     /// <summary>
+    ///  Returns All the matches Requests.
+    /// </summary>
+    /// <param name="profileId"></param>
+    /// <returns> List of MatchDto's </returns>
+    Task<List<MatchDto>> GetMatchRequests(int profileId);
+    
+    /// <summary>
+    ///  Rejects requested match.
+    /// </summary>
+    /// <param name="matchId"></param>
+    /// <param name="profileId"></param>
+    Task Cancel(int matchId, int profileId);
+    
+    /// <summary>
     /// Get's match by Id to be  used in other services
     /// </summary>
     /// <param name="id">Match Id</param>

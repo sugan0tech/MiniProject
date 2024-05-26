@@ -10,7 +10,7 @@ public class ProfileViewService(IBaseRepo<ProfileView> profileViewRepo, IMapper 
 {
 
     /// <inheritdoc/>
-    public async Task AddView(int profileId, int viewerId)
+    public async Task AddView(int viewerId, int profileId)
     {
         try
         {
