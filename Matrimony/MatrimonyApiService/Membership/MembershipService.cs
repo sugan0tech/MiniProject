@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 
 namespace MatrimonyApiService.Membership;
 
@@ -93,7 +94,11 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
         try
         {
             var membership = await repo.GetById(membershipId);
-            membership.IsTrail = false;
+            if (membership.EndsAt < DateTime.Now)
+            {
+                membership.TypeEnum = MemberShip.FreeUser;
+                membership.IsTrail = false;
+            }
             await repo.Update(membership);
         }
         catch (Exception ex)

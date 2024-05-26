@@ -23,4 +23,5 @@ public class Membership : BaseEntity
     [MaxLength(100)] public required string Description { get; set; }
     public DateTime EndsAt { get; set; }
     public bool IsTrail { get; set; }
+    public bool IsTrailEnded { get; set; }
 }
