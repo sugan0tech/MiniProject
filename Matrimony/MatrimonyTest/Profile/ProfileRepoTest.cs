@@ -132,6 +132,7 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "Male",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1
@@ -200,6 +201,7 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "Male",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1
@@ -260,6 +262,7 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "Male",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1
@@ -292,6 +295,7 @@ public class ProfileRepoTests
             Religion = "InvalidReligion",
             Ethnicity = "Asian",
             Gender = "Male",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1
@@ -323,6 +327,7 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "InvalidGender",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1
@@ -354,6 +359,7 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "Male",
+            Habit = "None",
             ManagedByRelation = "Self",
             MembershipId = 1,
             UserId = 1

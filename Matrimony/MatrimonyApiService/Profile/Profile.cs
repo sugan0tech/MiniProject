@@ -92,8 +92,16 @@ public class Profile : BaseEntity
 
     public byte[]? ProfilePicture { get; set; }
 
-    // Todo habit enum
-    public bool Habits { get; set; }
+    [MaxLength(50)]
+    [EnumTypeValidation(typeof(Habit))]
+    public required string Habit { get; set; }
+    
+    [NotMapped]
+    public Habit HabitEnum
+    {
+        get => Enum.Parse<Habit>(Habit);
+        set => Habit = value.ToString();
+    }
 
     [Required(ErrorMessage = "Gender is missing")]
     [EnumTypeValidation(typeof(Gender))]
