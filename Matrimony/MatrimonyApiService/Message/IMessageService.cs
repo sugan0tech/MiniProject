@@ -51,5 +51,5 @@ public interface IMessageService
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<List<MessageDto>> ReceivedMessages(int userId);
+    Task<List<MessageDto>> GetReceivedMessages(int userId);
 }

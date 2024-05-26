@@ -6,7 +6,7 @@ namespace MatrimonyApiService.Message;
 /// <summary>
 /// Implementation of the IMessageService interface.
 /// </summary>
-public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageService
+public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Message> logger) : IMessageService
 {
     /// <inheritdoc/>
     public async Task<MessageDto> AddMessage(MessageDto messageDto)
@@ -19,6 +19,7 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageS
         }
         catch (Exception ex)
         {
+            logger.LogError("On AddMessage " + ex.Message);
             throw new Exception("Error adding message.", ex);
         }
     }
@@ -31,9 +32,10 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageS
             var message = await repo.GetById(id);
             return mapper.Map<MessageDto>(message);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error retrieving message with id {id}.", ex);
+            logger.LogError("On GetMessageById " + ex.Message);
+            throw ;
         }
     }
 
@@ -42,20 +44,15 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageS
     {
         try
         {
-            var existingMessage = await repo.GetById(messageDto.MessageId);
-            if (existingMessage == null)
-            {
-                throw new KeyNotFoundException($"Message with id {messageDto.MessageId} not found.");
-            }
-
             var updatedMessage = mapper.Map<Message>(messageDto);
             updatedMessage.Id = messageDto.MessageId;
             var result = await repo.Update(updatedMessage);
             return mapper.Map<MessageDto>(result);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error updating message with id {messageDto.MessageId}.", ex);
+            logger.LogError("On UpdateMessage " + ex.Message);
+            throw ;
         }
     }
 
@@ -67,33 +64,33 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageS
             var deletedMessage = await repo.DeleteById(id);
             return mapper.Map<MessageDto>(deletedMessage);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error deleting message with id {id}.", ex);
+            logger.LogError("On DeleteMessageById " + ex.Message);
+            throw;
         }
     }
 
     /// <inheritdoc/>
     public async Task<List<MessageDto>> GetAllMessages()
     {
-        try
-        {
-            var messages = await repo.GetAll();
-            return mapper.Map<List<MessageDto>>(messages);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error retrieving all messages.", ex);
-        }
+        var messages = await repo.GetAll();
+        return mapper.Map<List<MessageDto>>(messages);
     }
 
-    public Task<List<MessageDto>> GetSentMessages(int userId)
+    /// <inheritdoc/>
+    public async Task<List<MessageDto>> GetSentMessages(int userId)
     {
-        throw new NotImplementedException();
+        var messages = await repo.GetAll();
+        return messages.FindAll(message => message.SenderId.Equals(userId))
+            .ConvertAll(input => mapper.Map<MessageDto>(input)).ToList();
     }
 
-    public Task<List<MessageDto>> ReceivedMessages(int userId)
+    /// <inheritdoc/>
+    public async Task<List<MessageDto>> GetReceivedMessages(int userId)
     {
-        throw new NotImplementedException();
+        var messages = await repo.GetAll();
+        return messages.FindAll(message => message.ReceiverId.Equals(userId))
+            .ConvertAll(input => mapper.Map<MessageDto>(input)).ToList();
     }
 }
