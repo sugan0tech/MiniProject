@@ -6,7 +6,7 @@ namespace MatrimonyApiService.Message;
 /// <summary>
 /// Implementation of the IMessageService interface.
 /// </summary>
-public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Message> logger) : IMessageService
+public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<MessageService> logger) : IMessageService
 {
     /// <inheritdoc/>
     public async Task<MessageDto> AddMessage(MessageDto messageDto)
@@ -83,7 +83,7 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Mes
     {
         var messages = await repo.GetAll();
         return messages.FindAll(message => message.SenderId.Equals(userId))
-            .ConvertAll(input => mapper.Map<MessageDto>(input)).ToList();
+            .ConvertAll(mapper.Map<MessageDto>).ToList();
     }
 
     /// <inheritdoc/>

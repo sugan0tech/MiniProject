@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Exceptions;
 
 namespace MatrimonyApiService.Membership;
 
-public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogger<Membership> logger)
+public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogger<MembershipService> logger)
     : IMembershipService
 {
     /// <inheritdoc/>
@@ -13,14 +14,17 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogg
         try
         {
             var memberships = await repo.GetAll();
+            if (memberships == null)
+                throw new KeyNotFoundException("No Memberships Found");
             var membership = memberships.Find(m => m.ProfileId == personId);
             if (membership == null)
                 throw new KeyNotFoundException($"Membership for person with id {personId} not found.");
             return mapper.Map<MembershipDto>(membership);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error retrieving membership for person with id {personId}.", ex);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 
@@ -32,9 +36,10 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogg
             var deletedMembership = await repo.DeleteById(membershipId);
             return mapper.Map<MembershipDto>(deletedMembership);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error deleting membership with id {membershipId}.", ex);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 
@@ -43,14 +48,16 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogg
     {
         try
         {
+            await GetByPersonId(dto.ProfileId);
+        }
+        catch (KeyNotFoundException)
+        {
             var membership = mapper.Map<Membership>(dto);
             var addedMembership = await repo.Add(membership);
             return mapper.Map<MembershipDto>(addedMembership);
         }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error adding membership.", ex);
-        }
+
+        throw new AlreadyExistingEntityException($"Membership with profile {dto.ProfileId} already exists");
     }
 
     /// <inheritdoc/>
@@ -69,9 +76,10 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogg
             var result = await repo.Update(updatedMembership);
             return mapper.Map<MembershipDto>(result);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error updating membership with id {dto.MembershipId}.", ex);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 

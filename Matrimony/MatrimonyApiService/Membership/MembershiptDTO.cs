@@ -16,4 +16,5 @@ public record MembershipDto
 
     public DateTime EndsAt { get; init; }
     public bool IsTrail { get; init; }
+    public bool IsTrailEnded { get; init; }
 }

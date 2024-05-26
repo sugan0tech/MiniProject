@@ -47,11 +47,6 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
         {
             throw new KeyNotFoundException(ex.Message);
         }
-        catch (Exception ex)
-        {
-            // Log the exception
-            throw new Exception($"Error updating address with id {addressDto.AddressId}.", ex);
-        }
     }
 
     /// <inheritdoc/>
@@ -62,10 +57,10 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
             var deletedAddressEntity = await addressRepo.DeleteById(id);
             return mapper.Map<AddressDto>(deletedAddressEntity);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
             // Log the exception
-            throw new Exception($"Error deleting address with id {id}.", ex);
+            throw;
         }
     }
 }
