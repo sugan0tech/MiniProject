@@ -31,13 +31,6 @@ public interface IMembershipService
     Task<MembershipDto> Update(MembershipDto dto);
 
     /// <summary>
-    ///  Validates if the given membershipId is valid till now.
-    /// </summary>
-    /// <param name="membershipId"></param>
-    /// <returns></returns>
-    Task<bool> IsExpired(int membershipId);
-
-    /// <summary>
     ///  validates given membershipId if it's expired.
     /// </summary>
     /// <param name="dto"></param>

@@ -4,7 +4,8 @@ using MatrimonyApiService.Commons.Enums;
 
 namespace MatrimonyApiService.Membership;
 
-public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMembershipService
+public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogger<Membership> logger)
+    : IMembershipService
 {
     /// <inheritdoc/>
     public async Task<MembershipDto> GetByPersonId(int personId)
@@ -75,20 +76,6 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
     }
 
     /// <inheritdoc/>
-    public async Task<bool> IsExpired(int membershipId)
-    {
-        try
-        {
-            var membership = await repo.GetById(membershipId);
-            return membership.EndsAt < DateTime.Now;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error checking if membership with id {membershipId} is expired.", ex);
-        }
-    }
-
-    /// <inheritdoc/>
     public async Task Validate(int membershipId)
     {
         try
@@ -96,47 +83,35 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
             var membership = await repo.GetById(membershipId);
             if (membership.EndsAt < DateTime.Now)
             {
+                if (membership.IsTrail)
+                    membership.IsTrailEnded = true;
+
                 membership.TypeEnum = MemberShip.FreeUser;
-                membership.IsTrail = false;
+                logger.LogInformation($"Membership Ended => Profile: {membership.ProfileId}");
             }
+
             await repo.Update(membership);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error flushing membership with id {membershipId}.", ex);
+            logger.LogError(ex.Message);
+            throw;
         }
     }
 
     /// <inheritdoc/>
     public async Task Validate(MembershipDto dto)
     {
-        try
-        {
-            var membership = mapper.Map<Membership>(dto);
-            membership.IsTrail = false;
-            await repo.Update(membership);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error flushing membership with id {dto.MembershipId}.", ex);
-        }
+        await Validate(dto.MembershipId);
     }
 
     /// <inheritdoc/>
     public async Task ValidateAll()
     {
-        try
+        var memberships = await repo.GetAll();
+        foreach (var membership in memberships)
         {
-            var memberships = await repo.GetAll();
-            foreach (var membership in memberships)
-            {
-                membership.IsTrail = false;
-                await repo.Update(membership);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error flushing all memberships.", ex);
+            await Validate(membership.Id);
         }
     }
 }
