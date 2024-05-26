@@ -14,14 +14,14 @@
 ---
 ## Membership
 
-| Basic Member $5             | Premium Member $15                    |      |
-| --------------------------- | ------------------------------------- | ---- |
-| - 15 matches per month <br> | - Unlimited matches per month<br>     | <br> |
-| - No private chats          | - Upto 25 private chats<br>           |      |
-| - Up to 5 views Per month   | - Unlimited lookup on profile viewers |      |
+| Basic Member $5             | Premium Member $15                    | Free Member $0           |
+| --------------------------- | ------------------------------------- | ------------------------ |
+| - 15 matches per month <br> | - Unlimited matches per month<br>     | - 5 matches permonth<br> |
+| - No private chats          | - Upto 25 private chats<br>           | - No private chat        |
+| - Up to 5 views Per month   | - Unlimited lookup on profile viewers | - No profile views       |
 > Any Member ship will be automatically canceled on the due date, and temporary access will be restricted. Might be using ==CRON job== and ==flusher== on app startup.
 ### Free Trail
-> For basic user they can enjoy a 7 day free trail with the insights of Premium Member ship features ( chats and unlimited viewers view )
+> For user they can enjoy a 7 day free trail with the insights of Premium Member ship features ( chats and unlimited viewers view )
 
 ### Membership validation
 - Will be using middleware for membership validation for required apis. [ref](https://medium.com/@shubhadeepchat/net-core-middleware-explained-8c21bf646700)
