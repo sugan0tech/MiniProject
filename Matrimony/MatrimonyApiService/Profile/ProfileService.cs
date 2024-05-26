@@ -44,6 +44,19 @@ public class ProfileService(
     public async Task<ProfileDto> AddProfile(ProfileDto dto)
     {
         var profile = mapper.Map<Profile>(dto);
+        var preference = new PreferenceDto
+        {
+            MotherTongue = profile.MotherTongue,
+            Religion = profile.Religion,
+            Education = profile.Education,
+            Occupation = profile.Occupation,
+            MinHeight = profile.Height - 1,
+            MaxHeight = profile.Height + 1,
+            MinAge = profile.Age - 5,
+            MaxAge = profile.Age + 5
+        };
+        preference = await preferenceService.Add(preference);
+        profile.PreferenceId = preference.PreferenceId;
         return mapper.Map<ProfileDto>(await repo.Add(profile));
     }
 
@@ -90,8 +103,8 @@ public class ProfileService(
                 (preference.Religion == "ALL" || p.Religion == preference.Religion) &&
                 (preference.Education == "ALL" || p.Education == preference.Education) &&
                 (preference.Occupation == "ALL" || p.Occupation == preference.Occupation) &&
-                (p.Height >= preference.MinHeight && p.Height <= preference.MaxHeight) &&
-                (p.Age >= preference.MinAge && p.Age <= preference.MaxAge)
+                p.Height >= preference.MinHeight && p.Height <= preference.MaxHeight &&
+                p.Age >= preference.MinAge && p.Age <= preference.MaxAge
             ).ToList();
 
             var matchedProfileDtos = matchedProfiles.Select(p => mapper.Map<ProfilePreviewDto>(p)).ToList();

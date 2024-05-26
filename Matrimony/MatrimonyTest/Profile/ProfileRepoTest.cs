@@ -18,11 +18,49 @@ public class ProfileRepoTests
     public void Setup()
     {
         _dbContextOptions = new DbContextOptionsBuilder<MatrimonyContext>()
-            .UseInMemoryDatabase(databaseName: "MatrimonyTestDb")
+            .UseInMemoryDatabase("MatrimonyTestDb")
             .Options;
 
         _context = new MatrimonyContext(_dbContextOptions);
         _profileRepo = new ProfileRepo(_context);
+
+        // PreSeeds
+        var user = new MatrimonyApiService.User.User
+        {
+            Email = "user@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
+        };
+        _context.Users.AddAsync(user);
+        _context.SaveChangesAsync();
+        var preference = new MatrimonyApiService.Preference.Preference
+        {
+            MotherTongue = MotherTongue.English.ToString(),
+            MotherTongueEnum = MotherTongue.English,
+            Religion = Religion.Christian.ToString(),
+            ReligionEnum = Religion.Christian,
+            Education = Education.NoEducation.ToString(),
+            EducationEnum = Education.NoEducation,
+            Occupation = Occupation.Engineer.ToString(),
+            MinHeight = 160,
+            MaxHeight = 180,
+            MinAge = 25,
+            MaxAge = 35,
+            PreferenceForId = 1
+        };
+        _context.Preferences.AddAsync(preference);
+        _context.SaveChangesAsync();
+        var membership = new MatrimonyApiService.Membership.Membership
+        {
+            Type = MemberShip.PremiumUser.ToString(), TypeEnum = MemberShip.PremiumUser, ProfileId = 1,
+            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
+        };
+        _context.Memberships.AddAsync(membership);
+        _context.SaveChangesAsync();
     }
 
     [TearDown]
@@ -32,40 +70,42 @@ public class ProfileRepoTests
         _context.Dispose();
     }
 
-    // [Test]
-    // public async Task GetById_ShouldReturnEntity_WhenEntityExists()
-    // {
-    //     // Arrange
-    //     var profile = new MatrimonyApiService.Profile.Profile
-    //     {
-    //         DateOfBirth = new DateTime(1990, 1, 1),
-    //         Education = Education.NoEducation.ToString(),
-    //         Occupation = Occupation.Engineer.ToString(),
-    //         MaritalStatus = MaritalStatus.Single.ToString(),
-    //         MotherTongue = MotherTongue.English.ToString(),
-    //         Religion = Religion.Christian.ToString(),
-    //         Ethnicity = Ethnicity.Indian.ToString(),
-    //         Gender = Gender.Male.ToString(),
-    //         ManagedByRelation = "Self",
-    //         MembershipId = 1,
-    //         AnnualIncome = 100,
-    //         Habits = true,
-    //         UserId = 1,
-    //         PreferenceId = 2,
-    //         UpdatedAt = DateTime.Now
-    //     };
-    //
-    //     await _context.Profiles.AddAsync(profile);
-    //     await _context.SaveChangesAsync();
-    //
-    //     // Act
-    //     var result = await _profileRepo.GetById(profile.Id);
-    //
-    //     // Assert
-    //     ClassicAssert.NotNull(result);
-    //     ClassicAssert.AreEqual(Education.NoEducation, result.Education);
-    //     ClassicAssert.AreEqual(Occupation.Engineer.ToString(), result.Occupation);
-    // }
+    [Test]
+    public async Task GetById_ShouldReturnEntity_WhenEntityExists()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = Education.NoEducation.ToString(),
+            Occupation = Occupation.Engineer.ToString(),
+            MaritalStatus = MaritalStatus.Single.ToString(),
+            MotherTongue = MotherTongue.English.ToString(),
+            Religion = Religion.Christian.ToString(),
+            Ethnicity = Ethnicity.Indian.ToString(),
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
+            MembershipId = 1,
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
+        };
+
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _profileRepo.GetById(profile.Id);
+
+        // Assert
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(Education.NoEducation, result.EducationEnum);
+        ClassicAssert.AreEqual(Occupation.Engineer, result.OccupationEnum);
+    }
 
     [Test]
     public void GetById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
@@ -75,48 +115,96 @@ public class ProfileRepoTests
         ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
     }
 
-    // [Test]
-    // public async Task GetAll_ShouldReturnAllEntities()
-    // {
-    //     // Arrange
-    //     await _context.Profiles.AddRangeAsync(
-    //         new MatrimonyApiService.Profile.Profile
-    //         {
-    //             DateOfBirth = new DateTime(1990, 1, 1),
-    //             Education = "Graduate",
-    //             Occupation = "Engineer",
-    //             MaritalStatus = "Single",
-    //             MotherTongue = "English",
-    //             Religion = "Christian",
-    //             Ethnicity = "Asian",
-    //             Gender = "Male",
-    //             ManagedByRelation = "Self",
-    //             MembershipId = 1,
-    //             UserId = 1
-    //         },
-    //         new MatrimonyApiService.Profile.Profile
-    //         {
-    //             DateOfBirth = new DateTime(1985, 5, 5),
-    //             Education = "PostGraduate",
-    //             Occupation = "Doctor",
-    //             MaritalStatus = "Divorced",
-    //             MotherTongue = "Hindi",
-    //             Religion = "Hindu",
-    //             Ethnicity = "Asian",
-    //             Gender = "Female",
-    //             ManagedByRelation = "Parent",
-    //             MembershipId = 2,
-    //             UserId = 2
-    //         }
-    //     );
-    //     await _context.SaveChangesAsync();
-    //
-    //     // Act
-    //     var result = await _profileRepo.GetAll();
-    //
-    //     // Assert
-    //     ClassicAssert.AreEqual(2, result.Count);
-    // }
+    [Test]
+    public async Task GetAll_ShouldReturnAllEntities()
+    {
+        // Arrange
+        var user2 = new MatrimonyApiService.User.User
+        {
+            Email = "user@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
+        };
+        await _context.Users.AddAsync(user2);
+        await _context.SaveChangesAsync();
+        var preference2 = new MatrimonyApiService.Preference.Preference
+        {
+            MotherTongue = MotherTongue.English.ToString(),
+            MotherTongueEnum = MotherTongue.English,
+            Religion = Religion.Christian.ToString(),
+            ReligionEnum = Religion.Christian,
+            Education = Education.NoEducation.ToString(),
+            EducationEnum = Education.NoEducation,
+            Occupation = Occupation.Engineer.ToString(),
+            MinHeight = 160,
+            MaxHeight = 180,
+            MinAge = 25,
+            MaxAge = 35,
+            PreferenceForId = 2
+        };
+        await _context.Preferences.AddAsync(preference2);
+        await _context.SaveChangesAsync();
+        var membership2 = new MatrimonyApiService.Membership.Membership
+        {
+            Type = MemberShip.PremiumUser.ToString(), TypeEnum = MemberShip.PremiumUser, ProfileId = 2,
+            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
+        };
+        await _context.Memberships.AddAsync(membership2);
+        await _context.SaveChangesAsync();
+        await _context.Profiles.AddRangeAsync(
+            new MatrimonyApiService.Profile.Profile
+            {
+                DateOfBirth = new DateTime(1990, 1, 1),
+                Education = "Graduate",
+                Occupation = "Engineer",
+                MaritalStatus = "Single",
+                MotherTongue = "English",
+                Religion = "Christian",
+                Ethnicity = "Asian",
+                Gender = Gender.Male.ToString(),
+                ManagedByRelation = Relation.Self.ToString(),
+                MembershipId = 1,
+                AnnualIncome = 100,
+                Habit = "None",
+                UserId = 1,
+                PreferenceId = 1,
+                ManagedById = 1,
+                Height = 1,
+                Weight = 2
+            },
+            new MatrimonyApiService.Profile.Profile
+            {
+                DateOfBirth = new DateTime(1985, 5, 5),
+                Education = "PostGraduate",
+                Occupation = "Doctor",
+                MaritalStatus = "Divorced",
+                MotherTongue = "Hindi",
+                Religion = "Hindu",
+                Ethnicity = "Asian",
+                Gender = Gender.Male.ToString(),
+                ManagedByRelation = Relation.Self.ToString(),
+                MembershipId = 2,
+                AnnualIncome = 100,
+                Habit = "None",
+                UserId = 2,
+                PreferenceId = 2,
+                ManagedById = 2,
+                Height = 1,
+                Weight = 2
+            }
+        );
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _profileRepo.GetAll();
+
+        // Assert
+        ClassicAssert.AreEqual(2, result.Count);
+    }
 
     [Test]
     public async Task Add_ShouldAddEntity()
@@ -131,11 +219,16 @@ public class ProfileRepoTests
             MotherTongue = "English",
             Religion = "Christian",
             Ethnicity = "Asian",
-            Gender = "Male",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         // Act
@@ -155,36 +248,42 @@ public class ProfileRepoTests
         ClassicAssert.AreEqual("Profile cannot be null. (Parameter 'entity')", ex.Message);
     }
 
-    // [Test]
-    // public async Task Update_ShouldUpdateEntity()
-    // {
-    //     // Arrange
-    //     var profile = new MatrimonyApiService.Profile.Profile
-    //     {
-    //         DateOfBirth = new DateTime(1990, 1, 1),
-    //         Education = "Graduate",
-    //         Occupation = "Engineer",
-    //         MaritalStatus = "Single",
-    //         MotherTongue = "English",
-    //         Religion = "Christian",
-    //         Ethnicity = "Asian",
-    //         Gender = "Male",
-    //         ManagedByRelation = "Self",
-    //         MembershipId = 1,
-    //         UserId = 1
-    //     };
-    //     await _context.Profiles.AddAsync(profile);
-    //     await _context.SaveChangesAsync();
-    //
-    //     profile.Education = "PostGraduate";
-    //
-    //     // Act
-    //     var result = await _profileRepo.Update(profile);
-    //
-    //     // Assert
-    //     ClassicAssert.IsNotNull(result);
-    //     ClassicAssert.AreEqual("PostGraduate", result.Education);
-    // }
+    [Test]
+    public async Task Update_ShouldUpdateEntity()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
+            MembershipId = 1,
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
+        };
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
+
+        profile.Education = "PostGraduate";
+
+        // Act
+        var result = await _profileRepo.Update(profile);
+
+        // Assert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual("PostGraduate", result.Education);
+    }
 
     [Test]
     public void Update_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
@@ -200,11 +299,16 @@ public class ProfileRepoTests
             MotherTongue = "English",
             Religion = "Christian",
             Ethnicity = "Asian",
-            Gender = "Male",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         // Act & Assert
@@ -212,33 +316,39 @@ public class ProfileRepoTests
         ClassicAssert.AreEqual("Profile with key 99 not found!!!", ex.Message);
     }
 
-    // [Test]
-    // public async Task DeleteById_ShouldDeleteEntity()
-    // {
-    //     // Arrange
-    //     var profile = new MatrimonyApiService.Profile.Profile
-    //     {
-    //         DateOfBirth = new DateTime(1990, 1, 1),
-    //         Education = "Graduate",
-    //         Occupation = "Engineer",
-    //         MaritalStatus = "Single",
-    //         MotherTongue = "English",
-    //         Religion = "Christian",
-    //         Ethnicity = "Asian",
-    //         Gender = "Male",
-    //         ManagedByRelation = "Self",
-    //         MembershipId = 1,
-    //         UserId = 1
-    //     };
-    //     await _context.Profiles.AddAsync(profile);
-    //     await _context.SaveChangesAsync();
-    //
-    //     // Act
-    //     await _profileRepo.DeleteById(profile.Id);
-    //
-    //     // Assert
-    //     ClassicAssert.AreEqual(0, await _context.Profiles.CountAsync());
-    // }
+    [Test]
+    public async Task DeleteById_ShouldDeleteEntity()
+    {
+        // Arrange
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Education = "Graduate",
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Asian",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
+            MembershipId = 1,
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
+        };
+        await _context.Profiles.AddAsync(profile);
+        await _context.SaveChangesAsync();
+
+        // Act
+        await _profileRepo.DeleteById(profile.Id);
+
+        // Assert
+        ClassicAssert.AreEqual(0, await _context.Profiles.CountAsync());
+    }
 
     [Test]
     public void DeleteById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
@@ -261,11 +371,16 @@ public class ProfileRepoTests
             MotherTongue = "English",
             Religion = "Christian",
             Ethnicity = "Asian",
-            Gender = "Male",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         var context = new ValidationContext(profile, null, null);
@@ -294,11 +409,16 @@ public class ProfileRepoTests
             MotherTongue = "English",
             Religion = "InvalidReligion",
             Ethnicity = "Asian",
-            Gender = "Male",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         var context = new ValidationContext(profile, null, null);
@@ -327,10 +447,15 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "InvalidGender",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         var context = new ValidationContext(profile, null, null);
@@ -359,10 +484,15 @@ public class ProfileRepoTests
             Religion = "Christian",
             Ethnicity = "Asian",
             Gender = "Male",
-            Habit = "None",
-            ManagedByRelation = "Self",
+            ManagedByRelation = Relation.Self.ToString(),
             MembershipId = 1,
-            UserId = 1
+            AnnualIncome = 100,
+            Habit = "None",
+            UserId = 1,
+            PreferenceId = 1,
+            ManagedById = 1,
+            Height = 1,
+            Weight = 2
         };
 
         var context = new ValidationContext(profile, null, null);
