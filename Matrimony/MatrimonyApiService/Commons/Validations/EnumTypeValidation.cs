@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MatrimonyApiService.Validations;
+namespace MatrimonyApiService.Commons.Validations;
 
 public class EnumTypeValidation(Type enumType) : ValidationAttribute
 {

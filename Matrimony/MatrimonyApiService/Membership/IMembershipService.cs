@@ -38,23 +38,23 @@ public interface IMembershipService
     Task<bool> IsExpired(int membershipId);
 
     /// <summary>
-    ///  Flushes given membershipId if it's expired.
+    ///  validates given membershipId if it's expired.
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task Flush(int membershiptId);
+    Task Validate(int membershiptId);
 
     /// <summary>
-    ///  Flushes given membershipDto if it's expired.
+    ///  validates given membershipDto if it's expired.
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task Flush(MembershipDto dto);
+    Task Validate(MembershipDto dto);
 
     /// <summary>
-    ///  Flushes all membershipt
+    ///  Validates all the memberships
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task Flush();
+    Task ValidateAll();
 }

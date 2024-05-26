@@ -1,9 +1,10 @@
-﻿using MatrimonyApiService.Match;
+﻿using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Validations;
+using MatrimonyApiService.Match;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.User;
-using MatrimonyApiService.Validations;
 
 namespace MatrimonyApiService.Profile;
 
@@ -13,31 +14,31 @@ public record ProfileDto
     public DateTime DateOfBirth { get; init; }
     public int Age { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.Education))]
+    [EnumTypeValidation(typeof(Education))]
     public string Education { get; init; }
 
     public int AnnualIncome { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.Occupation))]
+    [EnumTypeValidation(typeof(Occupation))]
     public string Occupation { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.MaritalStatus))]
+    [EnumTypeValidation(typeof(MaritalStatus))]
     public string MaritalStatus { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.MotherTongue))]
+    [EnumTypeValidation(typeof(MotherTongue))]
     public string MotherTongue { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.Religion))]
+    [EnumTypeValidation(typeof(Religion))]
     public string Religion { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.Ethnicity))]
+    [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
 
     public string? Bio { get; init; }
     public byte[]? ProfilePicture { get; init; }
     public bool Habits { get; init; }
 
-    [EnumTypeValidation(typeof(Enums.Gender))]
+    [EnumTypeValidation(typeof(Gender))]
     public string Gender { get; init; }
 
     public int Weight { get; init; }

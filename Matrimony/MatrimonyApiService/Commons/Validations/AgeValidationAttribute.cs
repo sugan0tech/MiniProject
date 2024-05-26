@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MatrimonyApiService.Validations;
+namespace MatrimonyApiService.Commons.Validations;
 
 public class AgeValidationAttribute(int minAge) : ValidationAttribute
 {

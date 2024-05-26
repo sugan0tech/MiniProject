@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MatrimonyApiService.Entities;
-using MatrimonyApiService.Enums;
-using MatrimonyApiService.Validations;
+using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Validations;
 
 namespace MatrimonyApiService.Profile;
 

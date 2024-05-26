@@ -1,6 +1,6 @@
 ﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
-using MatrimonyApiService.Enums;
+using MatrimonyApiService.Commons.Enums;
 
 namespace MatrimonyApiService.Staff;
 

@@ -1,9 +1,9 @@
 ﻿using MatrimonyApiService.Commons;
-using MatrimonyApiService.Enums;
 using MatrimonyApiService.Preference;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
 using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons.Enums;
 
 namespace MatrimonyTest.Preference;
 

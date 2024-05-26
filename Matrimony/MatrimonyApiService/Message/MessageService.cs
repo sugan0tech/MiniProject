@@ -86,4 +86,14 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper) : IMessageS
             throw new Exception("Error retrieving all messages.", ex);
         }
     }
+
+    public Task<List<MessageDto>> GetSentMessages(int userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<MessageDto>> ReceivedMessages(int userId)
+    {
+        throw new NotImplementedException();
+    }
 }

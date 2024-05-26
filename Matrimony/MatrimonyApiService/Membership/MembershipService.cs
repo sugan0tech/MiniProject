@@ -88,7 +88,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
     }
 
     /// <inheritdoc/>
-    public async Task Flush(int membershipId)
+    public async Task Validate(int membershipId)
     {
         try
         {
@@ -103,7 +103,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
     }
 
     /// <inheritdoc/>
-    public async Task Flush(MembershipDto dto)
+    public async Task Validate(MembershipDto dto)
     {
         try
         {
@@ -118,7 +118,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper) : IMe
     }
 
     /// <inheritdoc/>
-    public async Task Flush()
+    public async Task ValidateAll()
     {
         try
         {

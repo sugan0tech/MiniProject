@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MatrimonyApiService.Entities;
-using MatrimonyApiService.Enums;
+using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 
 namespace MatrimonyApiService.Membership;
 

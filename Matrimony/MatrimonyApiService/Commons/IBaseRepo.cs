@@ -1,6 +1,4 @@
-﻿using MatrimonyApiService.Entities;
-
-namespace MatrimonyApiService.Commons;
+﻿namespace MatrimonyApiService.Commons;
 
 public interface IBaseRepo<T> where T : BaseEntity
 {

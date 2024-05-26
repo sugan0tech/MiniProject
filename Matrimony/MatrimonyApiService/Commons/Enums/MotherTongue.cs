@@ -1,4 +1,4 @@
-﻿namespace MatrimonyApiService.Enums;
+﻿namespace MatrimonyApiService.Commons.Enums;
 
 public enum MotherTongue
 {

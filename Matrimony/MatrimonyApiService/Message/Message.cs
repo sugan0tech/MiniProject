@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using MatrimonyApiService.Entities;
+using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.Message;
 

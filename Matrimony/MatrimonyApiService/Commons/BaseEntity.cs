@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MatrimonyApiService.Entities;
+namespace MatrimonyApiService.Commons;
 
 public class BaseEntity
 {

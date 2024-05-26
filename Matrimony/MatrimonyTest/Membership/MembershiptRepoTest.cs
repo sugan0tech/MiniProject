@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using NUnit.Framework.Legacy;
-using MatrimonyApiService.Enums;
 
 namespace MatrimonyTest.Membership;
 
