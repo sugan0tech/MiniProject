@@ -191,8 +191,8 @@ Ok then what about `Annotations.Required` and keyword `required`
 public required Entity entity; // does it in compile-time
 ```
 using it both is a over kill:
-- `Annotations.Required` can be used for DTO's since it's constant input kinda data.
-- `required` can be used for internal must one like entity.
+- `Annotations.Required` can be used for Entity since it  can be translated to sql constraints
+- `required` can be used for internal must one like DTO, also we can have `init` for setter.
 
 
 ### Layer by Feature 

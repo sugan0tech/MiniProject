@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.Text;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.User;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
@@ -40,7 +41,9 @@ public class UserRepoTests
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            IsVerified = true
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
         };
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
@@ -73,7 +76,9 @@ public class UserRepoTests
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
-                IsVerified = true
+                IsVerified = true,
+                Password = "password"u8.ToArray(),
+                HashKey = "key"u8.ToArray()
             },
             new MatrimonyApiService.User.User
             {
@@ -81,7 +86,9 @@ public class UserRepoTests
                 FirstName = "Jane",
                 LastName = "Doe",
                 PhoneNumber = "9876543210",
-                IsVerified = true
+                IsVerified = true,
+                Password = "password"u8.ToArray(),
+                HashKey = "key"u8.ToArray()
             }
         );
         await _context.SaveChangesAsync();
@@ -103,7 +110,9 @@ public class UserRepoTests
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            IsVerified = true
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
         };
 
         // Act

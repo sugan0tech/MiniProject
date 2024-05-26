@@ -1,4 +1,5 @@
 using MatrimonyApiService.Address;
+using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Match;
 using MatrimonyApiService.Membership;
@@ -9,6 +10,7 @@ using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace MatrimonyApiService;
 
@@ -56,9 +58,14 @@ public class Program
 
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
+        builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<IPreferenceService, PreferenceService>();
         builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IMatchService, MatchService>();
 
         #endregion
 

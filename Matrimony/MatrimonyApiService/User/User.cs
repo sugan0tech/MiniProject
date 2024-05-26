@@ -23,8 +23,8 @@ public class User : BaseEntity
     [ForeignKey("AddressId")] public int AddressId;
     public Address.Address? Address;
     public bool IsVerified { get; set; }
-    public byte[]? Password { get; set; }
-    public byte[]? HashKey { get; set; }
+    public required byte[] Password { get; set; }
+    public required byte[] HashKey { get; set; }
     public int LoginAttempts { get; set; }
     public IEnumerable<Message.Message>? MessagesSent { get; set; }
     public IEnumerable<Message.Message>? MessagesReceived { get; set; }
