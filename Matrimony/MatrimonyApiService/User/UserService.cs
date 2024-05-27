@@ -3,7 +3,6 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
-using MatrimonyApiService.Message;
 using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
 

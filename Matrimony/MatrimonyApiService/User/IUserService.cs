@@ -1,5 +1,4 @@
-﻿using MatrimonyApiService.Message;
-using MatrimonyApiService.Profile;
+﻿using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.User;
 
