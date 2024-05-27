@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Validations;
 using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.User;
@@ -26,6 +28,9 @@ public class User : BaseEntity
     public required byte[] Password { get; set; }
     public required byte[] HashKey { get; set; }
     public int LoginAttempts { get; set; }
+
+    [AllowedValues(["User", "Admin"], ErrorMessage = "Invalid Role")] [EnumTypeValidation(typeof(Role))]
+    public string Role = Commons.Enums.Role.User.ToString();
     public IEnumerable<Message.Message>? MessagesSent { get; set; }
     public IEnumerable<Message.Message>? MessagesReceived { get; set; }
     public IEnumerable<ProfileView.ProfileView>? Views { get; set; }

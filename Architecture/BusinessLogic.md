@@ -56,3 +56,7 @@
 ## Staff
 - Internal Admins & Support Team.
 - Complete Internal Access for support and bug fix.
+---
+# Todo 
+ - [ ] Admin stuffs
+ - [ ] Profile reporting

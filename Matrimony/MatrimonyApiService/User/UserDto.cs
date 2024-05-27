@@ -11,4 +11,5 @@ public record UserDto
     public int AddressId { get; init; }
     public bool IsVerified { get; init; }
     public int LoginAttempts { get; init; }
+    public string Role { get; init; }
 }

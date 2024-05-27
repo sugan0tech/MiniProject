@@ -23,7 +23,8 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new (ClaimTypes.Name, user.Id.ToString()),
-            new (ClaimTypes.Email, user.Email)
+            new (ClaimTypes.Email, user.Email),
+            new (ClaimTypes.Role, user.Role)
         };
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
         var myToken = new JwtSecurityToken(null, null, claims, expires: DateTime.Now.AddDays(2),
@@ -49,7 +50,8 @@ public class TokenService : ITokenService
         var payload = new PayloadDto
         (
             int.Parse(enumerable.First(x => x.Type == ClaimTypes.Name).Value),
-            enumerable.First(x => x.Type == ClaimTypes.Email).Value
+            enumerable.First(x => x.Type == ClaimTypes.Email).Value,
+            enumerable.First(x => x.Type == ClaimTypes.Role).Value
         );
 
         return payload;
