@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,19 +11,11 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddMessage(MessageDto messageDto)
     {
-        try
-        {
-            var addedMessage = await messageService.AddMessage(messageDto);
-            return Ok(addedMessage);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
-        }
+        var addedMessage = await messageService.AddMessage(messageDto);
+        return Ok(addedMessage);
     }
 
     [HttpGet("{id}")]
@@ -44,7 +37,8 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
 
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateMessage(MessageDto messageDto)
     {
         try
@@ -56,11 +50,6 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
     }
 
@@ -78,11 +67,6 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
     }
 

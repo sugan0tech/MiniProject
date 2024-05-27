@@ -1,10 +1,10 @@
 ﻿namespace MatrimonyApiService.Commons;
 
-public interface IBaseService<T>
+public interface IBaseService<T, DTO>
 {
-    public Task<T> Add(T ietem);
-    public Task<T> DeleteById(int id);
-    public Task<T> Update(T entity);
-    public Task<T> GetById(int id);
-    public Task<List<T>> GetAll();
+    public Task<DTO> Add(DTO item);
+    public Task<DTO> DeleteById(int id);
+    public Task<DTO> Update(DTO entity);
+    public Task<DTO> GetById(int id);
+    public Task<List<DTO>> GetAll();
 }

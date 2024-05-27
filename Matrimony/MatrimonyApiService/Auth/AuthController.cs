@@ -14,7 +14,7 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
     [ProducesResponseType(typeof(AuthReturnDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthReturnDto>> Login([FromBody] LoginDTO loginDto)
     {
         try
@@ -23,10 +23,6 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
             logger.LogInformation(loginDto.Email);
             logger.LogCritical(loginDto.Email);
             return Ok(loginReturnDto);
-        }
-        catch (ValidationException e)
-        {
-            return BadRequest(new ErrorModel(400, e.Message));
         }
         catch (UserNotVerifiedException e)
         {

@@ -22,9 +22,9 @@ public class AuthService(
                 throw new UserNotVerifiedException($"User {user.Email} not verified");
             }
 
-            HMACSHA512 hMACSHA = new HMACSHA512(user.HashKey);
+            var hMACSHA = new HMACSHA512(user.HashKey);
             var hash = hMACSHA.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-            bool isPasswordSame = ComparePassword(hash, user.Password);
+            var isPasswordSame = ComparePassword(hash, user.Password);
             if (isPasswordSame)
             {
                 logger.LogInformation($"Successfully logged as Id :{user.Id}");
@@ -40,18 +40,14 @@ public class AuthService(
         }
     }
 
-    private bool ComparePassword(byte[] encrypterPass, byte[] password)
+    private bool ComparePassword(byte[] encryptedPassword, byte[] password)
     {
-        if (encrypterPass.Length != password.Length)
+        if (encryptedPassword.Length != password.Length)
             return false;
-        
-        for (int i = 0; i < encrypterPass.Length; i++)
-        {
-            if (encrypterPass[i] != password[i])
-            {
+
+        for (var i = 0; i < encryptedPassword.Length; i++)
+            if (encryptedPassword[i] != password[i])
                 return false;
-            }
-        }
 
         return true;
     }
@@ -86,8 +82,6 @@ public class AuthService(
 
     public async Task<AuthReturnDto> ResetPassword(ResetPasswordDto resetPasswordDto)
     {
-        // Find the user based on the provided email
-
         try
         {
             var user = await userService.GetByEmail(resetPasswordDto.Email);

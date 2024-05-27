@@ -5,6 +5,7 @@ using MatrimonyApiService.Message;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
+using MatrimonyApiService.Report;
 using MatrimonyApiService.User;
 
 namespace MatrimonyApiService;
@@ -33,6 +34,7 @@ public class MappingProfile: AutoMapper.Profile
         CreateMap<User.User, UserDto>()
             .ForMember(dto => dto.UserId, act => act.MapFrom(src => src.Id));
         CreateMap<User.User, RegisterDTO>();
+        CreateMap<Report.Report, ReportDto>();
     }
     
 }

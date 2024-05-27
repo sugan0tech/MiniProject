@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +7,12 @@ namespace MatrimonyApiService.ProfileView;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger): ControllerBase
+public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger)
+    : ControllerBase
 {
-
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddView(int viewerId, int profileId)
     {
         try
@@ -19,28 +20,20 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
             await profileViewService.AddView(viewerId, profileId);
             return Ok();
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+            return BadRequest(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddView(ProfileViewDto profileViewDto)
     {
-        try
-        {
-            await profileViewService.AddView(profileViewDto);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
-        }
+        await profileViewService.AddView(profileViewDto);
+        return Ok();
     }
 
     [HttpGet("{viewId}")]
@@ -105,11 +98,6 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
             return Ok();
         }
         catch (InvalidDateTimeException ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
-        }
-        catch (Exception ex)
         {
             logger.LogError(ex.Message);
             return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));

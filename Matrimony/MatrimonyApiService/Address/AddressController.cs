@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using MatrimonyApiService.Commons;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ public class AddressController(IAddressService addressService, ILogger<AddressCo
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(AddressDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAddressById(int id)
     {
         try
@@ -29,7 +31,6 @@ public class AddressController(IAddressService addressService, ILogger<AddressCo
 
     [HttpGet]
     [ProducesResponseType(typeof(List<AddressDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllAddresses()
     {
         var addresses = await addressService.GetAllAddresses();
@@ -38,23 +39,27 @@ public class AddressController(IAddressService addressService, ILogger<AddressCo
 
     [HttpPost]
     [ProducesResponseType(typeof(AddressDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddAddress([FromBody] AddressDto addressDto)
     {
-        if (addressDto == null) return BadRequest("Address data is null.");
-
-        var createdAddress = await addressService.AddAddress(addressDto);
-        return StatusCode(201 ,createdAddress);
+        try
+        {
+            var createdAddress = await addressService.AddAddress(addressDto);
+            return StatusCode(201, createdAddress);
+        }
+        catch (ArgumentNullException e)
+        {
+            logger.LogError(e.Message);
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
     }
 
     [HttpPut]
     [ProducesResponseType(typeof(AddressDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateAddress([FromBody] AddressDto addressDto)
     {
-        if (addressDto == null) return BadRequest("Address data is null.");
-
         try
         {
             var updatedAddress = await addressService.UpdateAddress(addressDto);

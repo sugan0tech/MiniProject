@@ -1,13 +1,13 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Match;
 
-// TODO In detail validations
 [ApiController]
 [Route("api/[controller]")]
-public class MatchController(IMatchService matchService, ILogger<MatchController> logger): ControllerBase
+public class MatchController(IMatchService matchService, ILogger<MatchController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,6 +61,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(MatchDto dto)
     {
         var match = await matchService.Add(dto);
@@ -69,18 +70,37 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
 
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(MatchDto dto)
     {
-        var match = await matchService.Update(dto);
-        return Ok(match);
+        try
+        {
+            var match = await matchService.Update(dto);
+            return Ok(match);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            return NotFound(new ErrorModel(404, e.Message));
+        }
     }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteById(int id)
     {
-        var match = await matchService.DeleteById(id);
-        return Ok(match);
+        try
+        {
+            var match = await matchService.DeleteById(id);
+            return Ok(match);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            return NotFound(new ErrorModel(404, e.Message));
+        }
     }
 
     [HttpGet]

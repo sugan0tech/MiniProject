@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Preference;
@@ -15,19 +16,11 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     /// <returns>Added preference</returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(PreferenceDto preferenceDto)
     {
-        try
-        {
-            var addedPreference = await preferenceService.Add(preferenceDto);
-            return Ok(addedPreference);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
-        }
+        var addedPreference = await preferenceService.Add(preferenceDto);
+        return Ok(addedPreference);
     }
 
     /// <summary>
@@ -59,7 +52,8 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     /// <returns>Updated preference</returns>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(PreferenceDto preferenceDto)
     {
         try
@@ -71,11 +65,6 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
     }
 }

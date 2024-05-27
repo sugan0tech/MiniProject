@@ -33,9 +33,9 @@ public class ReportController(IBaseService<Report> reportService, ILogger<Report
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add(Report report)
+    public async Task<IActionResult> Add(ReportDto report)
     {
         try
         {
@@ -52,7 +52,7 @@ public class ReportController(IBaseService<Report> reportService, ILogger<Report
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(Report report)
+    public async Task<IActionResult> Update(ReportDto report)
     {
         try
         {

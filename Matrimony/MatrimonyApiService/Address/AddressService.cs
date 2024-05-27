@@ -3,13 +3,22 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.Address;
 
-public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IAddressService
+public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILogger<AddressService> logger) : IAddressService
 {
     /// <inheritdoc/>
     public async Task<AddressDto> GetAddressById(int id)
     {
-        var addressEntity = await addressRepo.GetById(id);
-        return mapper.Map<AddressDto>(addressEntity);
+        try
+        {
+            var addressEntity = await addressRepo.GetById(id);
+            return mapper.Map<AddressDto>(addressEntity);
+
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -38,6 +47,8 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
     {
         try
         {
+            if (addressDto == null)
+                throw new ArgumentNullException(nameof(addressDto));
             var updatedAddressEntity = mapper.Map<Address>(addressDto);
             updatedAddressEntity.Id = addressDto.AddressId; // Ensure the ID is set to the correct value
             var result = await addressRepo.Update(updatedAddressEntity);
@@ -45,7 +56,8 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
         }
         catch(KeyNotFoundException ex)
         {
-            throw new KeyNotFoundException(ex.Message);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 
@@ -59,7 +71,7 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper) : IA
         }
         catch (KeyNotFoundException ex)
         {
-            // Log the exception
+            logger.LogError(ex.Message);
             throw;
         }
     }

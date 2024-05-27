@@ -33,7 +33,7 @@ public class MatchService(IBaseRepo<Match> repo, IMapper mapper, ILogger<MatchSe
             await repo.Update(match);
             return;
         }
-        
+
         logger.LogError($"The match {matchId} is not meant for {profileId}");
         throw new InvalidMatchForProfile($"The match {matchId} is not meant for {profileId}");
     }
@@ -64,15 +64,31 @@ public class MatchService(IBaseRepo<Match> repo, IMapper mapper, ILogger<MatchSe
     /// <inheritdoc/>
     public async Task<MatchDto> Update(MatchDto dto)
     {
-        var entity = mapper.Map<Match>(dto);
-        var updatedEntity = await repo.Update(entity);
-        return mapper.Map<MatchDto>(updatedEntity);
+        try
+        {
+            var entity = mapper.Map<Match>(dto);
+            var updatedEntity = await repo.Update(entity);
+            return mapper.Map<MatchDto>(updatedEntity);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
     public async Task<MatchDto> DeleteById(int id)
     {
-        return mapper.Map<MatchDto>(await repo.DeleteById(id));
+        try
+        {
+            return mapper.Map<MatchDto>(await repo.DeleteById(id));
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 
     /// <inheritdoc/>

@@ -22,7 +22,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+            return NotFound(new ErrorModel(404, ex.Message));
         }
     }
 
@@ -39,7 +39,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+            return NotFound(new ErrorModel(404, ex.Message));
         }
     }
 
@@ -73,7 +73,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
         catch (AlreadyExistingEntityException ex)
         {
             logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+            return BadRequest(new ErrorModel(40, ex.Message));
         }
     }
 

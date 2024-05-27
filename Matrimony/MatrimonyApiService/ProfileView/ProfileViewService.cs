@@ -65,23 +65,15 @@ public class ProfileViewService(
     /// <inheritdoc/>
     public async Task DeleteOldViews(DateTime before)
     {
-        try
+        if (DateTime.Now < before)
         {
-            if (DateTime.Now < before)
-            {
-                logger.LogError($"{before} is in near feature, Cleanup dates should be atleast a day older");
-                throw new InvalidDateTimeException(
-                    $"{before} is in near feature, Cleanup dates should be atleast a day older");
-            }
+            logger.LogError($"{before} is in near feature, Cleanup dates should be atleast a day older");
+            throw new InvalidDateTimeException(
+                $"{before} is in near feature, Cleanup dates should be atleast a day older");
+        }
 
-            var views = await profileViewRepo.GetAll();
-            var viewsToDelete = views.Where(view => view.ViewedAt.CompareTo(before) < 0).ToList();
-            foreach (var viewToDelete in viewsToDelete) await profileViewRepo.DeleteById(viewToDelete.Id);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            logger.LogError("Error Deleting old views" + ex.Message);
-            throw;
-        }
+        var views = await profileViewRepo.GetAll();
+        var viewsToDelete = views.Where(view => view.ViewedAt.CompareTo(before) < 0).ToList();
+        foreach (var viewToDelete in viewsToDelete) await profileViewRepo.DeleteById(viewToDelete.Id);
     }
 }

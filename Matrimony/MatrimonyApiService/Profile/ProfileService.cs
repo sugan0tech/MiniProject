@@ -109,6 +109,7 @@ public class ProfileService(
         }
     }
 
+    // TODO to be migrated to match service
     /// <intheritdoc/>
     public async Task<List<ProfilePreviewDto>> GetMatches(int profileId)
     {
@@ -150,6 +151,7 @@ public class ProfileService(
         return profiles.ConvertAll(profile => mapper.Map<ProfileDto>(profile)).ToList();
     }
 
+    // Todo be migrated to profile view service
     /// <intheritdoc/>
     public async Task<List<ProfileViewDto>> GetViews(int profileId)
     {

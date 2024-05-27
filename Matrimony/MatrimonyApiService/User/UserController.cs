@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.ComponentModel.DataAnnotations;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Profile;
 using Microsoft.AspNetCore.Mvc;
@@ -48,29 +49,19 @@ public class UserController(IUserService userService, ILogger<UserController> lo
 
     [HttpPost]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] User user)
     {
-        if (user == null)
-        {
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, "User data is null."));
-        }
-
         var createdUser = await userService.Add(user);
         return StatusCode(StatusCodes.Status201Created, createdUser);
     }
 
     [HttpPut]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update([FromBody] User user)
     {
-        if (user == null)
-        {
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, "User data is null."));
-        }
-
         try
         {
             var updatedUser = await userService.Update(user);

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Address;
+using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
 
@@ -10,6 +12,7 @@ public class AddressServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.Address.Address>> _mockRepo;
     private Mock<IMapper> _mockMapper;
+    private Mock<ILogger<AddressService>> _loggerMock;
     private AddressService _addressService;
 
     [SetUp]
@@ -17,7 +20,8 @@ public class AddressServiceTests
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.Address.Address>>();
         _mockMapper = new Mock<IMapper>();
-        _addressService = new AddressService(_mockRepo.Object, _mockMapper.Object);
+        _loggerMock = new Mock<ILogger<AddressService>>();
+        _addressService = new AddressService(_mockRepo.Object, _mockMapper.Object, _loggerMock.Object);
     }
 
     [Test]
