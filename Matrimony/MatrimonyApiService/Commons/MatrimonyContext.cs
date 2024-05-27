@@ -13,6 +13,7 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
     public DbSet<Address.Address> Addresses { get; set; }
     public DbSet<Match.Match> Matches { get; set; }
     public DbSet<Membership.Membership> Memberships { get; set; }
+    public DbSet<Report.Report> Reports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -114,6 +115,12 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
             .AutoInclude();
 
         #endregion
+
+        #endregion
+
+        #region Report
+
+        modelBuilder.Entity<Report.Report>();
 
         #endregion
 

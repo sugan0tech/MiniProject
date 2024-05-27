@@ -7,6 +7,7 @@ using MatrimonyApiService.Message;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
+using MatrimonyApiService.Report;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,7 @@ public class Program
         builder.Services.AddScoped<IBaseRepo<Match.Match>, MatchRepo>();
         builder.Services.AddScoped<IBaseRepo<Message.Message>, MessageRepo>();
         builder.Services.AddScoped<IBaseRepo<Membership.Membership>, MembershipRepo>();
+        builder.Services.AddScoped<IBaseRepo<Report.Report>, ReportRepo>();
 
         #endregion
 
@@ -66,6 +68,7 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchService, MatchService>();
+        builder.Services.AddScoped<IBaseService<Report.Report>, ReportService>();
 
         #endregion
 
