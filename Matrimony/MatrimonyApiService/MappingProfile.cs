@@ -32,6 +32,7 @@ public class MappingProfile: AutoMapper.Profile
         // CreateMap<Staff.Staff, StaffPlainDto>();
         CreateMap<User.User, UserDto>()
             .ForMember(dto => dto.UserId, act => act.MapFrom(src => src.Id));
+        CreateMap<User.User, RegisterDTO>();
     }
     
 }

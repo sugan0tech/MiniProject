@@ -29,8 +29,9 @@ public class User : BaseEntity
     public required byte[] HashKey { get; set; }
     public int LoginAttempts { get; set; }
 
-    [AllowedValues(["User", "Admin"], ErrorMessage = "Invalid Role")] [EnumTypeValidation(typeof(Role))]
-    public string Role = Commons.Enums.Role.User.ToString();
+    [Required] [EnumTypeValidation(typeof(Role))] [AllowedValues(["User", "Admin"], ErrorMessage = "Invalid Role")]
+    public string Role { get; set; } = Commons.Enums.Role.User.ToString();
+
     public IEnumerable<Message.Message>? MessagesSent { get; set; }
     public IEnumerable<Message.Message>? MessagesReceived { get; set; }
     public IEnumerable<ProfileView.ProfileView>? Views { get; set; }
