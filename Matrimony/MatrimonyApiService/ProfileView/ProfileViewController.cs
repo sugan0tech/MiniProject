@@ -1,0 +1,118 @@
+﻿using MatrimonyApiService.Commons;
+using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MatrimonyApiService.ProfileView;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger): ControllerBase
+{
+
+    [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddView(int viewerId, int profileId)
+    {
+        try
+        {
+            await profileViewService.AddView(viewerId, profileId);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddView(ProfileViewDto profileViewDto)
+    {
+        try
+        {
+            await profileViewService.AddView(profileViewDto);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+    }
+
+    [HttpGet("{viewId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetViewById(int viewId)
+    {
+        try
+        {
+            var view = await profileViewService.GetViewById(viewId);
+            return Ok(view);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+    }
+
+    [HttpGet("profile/{profileId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetViewsByProfileId(int profileId)
+    {
+        try
+        {
+            var views = await profileViewService.GetViewsByProfileId(profileId);
+            return Ok(views);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+    }
+
+    [HttpDelete("{viewId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteViewById(int viewId)
+    {
+        try
+        {
+            await profileViewService.DeleteViewById(viewId);
+            return Ok();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+    }
+
+    [HttpDelete("before/{date}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteOldViews(DateTime date)
+    {
+        try
+        {
+            await profileViewService.DeleteOldViews(date);
+            return Ok();
+        }
+        catch (InvalidDateTimeException ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+    }
+}
