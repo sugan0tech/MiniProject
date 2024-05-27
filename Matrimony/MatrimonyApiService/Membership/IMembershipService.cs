@@ -3,11 +3,18 @@
 public interface IMembershipService
 {
     /// <summary>
-    ///  Get Membership for a person
+    ///  Get Membership for a profile
     /// </summary>
-    /// <param name="personId"></param>
+    /// <param name="profileId"></param>
     /// <returns></returns>
-    Task<MembershipDto> GetByPersonId(int personId);
+    Task<MembershipDto> GetByProfileId(int profileId);
+    
+    /// <summary>
+    ///  Get Membership for a user's profile
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<MembershipDto> GetByUserId(int userId);
 
     /// <summary>
     /// Deletes Members ship by Id. mostly if user / profile deleted.

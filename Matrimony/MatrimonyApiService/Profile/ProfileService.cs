@@ -1,12 +1,17 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics;
+using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Preference;
+using MatrimonyApiService.ProfileView;
 
 namespace MatrimonyApiService.Profile;
 
 public class ProfileService(
     IBaseRepo<Profile> repo,
     IPreferenceService preferenceService,
+    IProfileViewService profileViewService,
     IMapper mapper,
     ILogger<ProfileService> logger) : IProfileService
 {
@@ -23,6 +28,21 @@ public class ProfileService(
             logger.LogError(e.Message);
             throw;
         }
+    }
+
+    /// <intheritdoc/>
+    public async Task<ProfileDto> GetProfileByUserId(int userId)
+    {
+        var profiles = await repo.GetAll();
+        var fetchedProfile = profiles.Find(profile => profile.UserId.Equals(userId));
+        return mapper.Map<ProfileDto>(fetchedProfile);
+    }
+
+    public async Task<List<ProfilePreviewDto>> GetProfilePreviewForManager(int managerId)
+    {
+        var profiles = await repo.GetAll();
+        return profiles.FindAll(profiles => profiles.ManagedById.Equals(managerId))
+            .ConvertAll(profile => mapper.Map<ProfilePreviewDto>(profile)).ToList();
     }
 
     /// <intheritdoc/>
@@ -119,6 +139,35 @@ public class ProfileService(
         catch (Exception e)
         {
             logger.LogError(e, "An error occurred while getting matches.");
+            throw;
+        }
+    }
+
+    /// <intheritdoc/>
+    public async Task<List<ProfileViewDto>> GetViews(int profileId)
+    {
+        try
+        {
+            var profile = await repo.GetById(profileId);
+            var membership = profile.Membership;
+            var views = await profileViewService.GetViewsByProfileId(profileId);
+            if (membership == null || membership.Type.Equals(MemberShip.FreeUser.ToString()))
+                throw new NonPremiumUserException("Atleast you have to be a basic user to access this feature");
+            if (membership.Type.Equals(MemberShip.BasicUser.ToString()))
+            {
+                var filteredViews = views
+                    .Where(view => view.ViewedProfileAt == profileId && view.ViewedAt > DateTime.Now.AddMonths(-1))
+                    .OrderBy(view => view.ViewedAt)
+                    .Take(5)
+                    .ToList();
+                return filteredViews;
+            }
+
+            return views;
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError($"Profile with {profileId} not found");
             throw;
         }
     }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -10,6 +12,7 @@ namespace MatrimonyTest.Message;
 public class MessageServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.Message.Message>> _mockRepo;
+    private Mock<IMembershipService> _mockMembershipService;
     private Mock<IMapper> _mockMapper;
     private Mock<ILogger<MessageService>> _mockLogger;
     private MessageService _messageService;
@@ -19,8 +22,10 @@ public class MessageServiceTests
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.Message.Message>>();
         _mockMapper = new Mock<IMapper>();
+        _mockMembershipService = new Mock<IMembershipService>();
         _mockLogger = new Mock<ILogger<MessageService>>();
-        _messageService = new MessageService(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+        _messageService = new MessageService(_mockRepo.Object, _mockMembershipService.Object, _mockMapper.Object,
+            _mockLogger.Object);
     }
 
     [Test]
@@ -204,6 +209,9 @@ public class MessageServiceTests
         };
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(messages);
+        var membershipDto = new MembershipDto
+            { MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" };
+        _mockMembershipService.Setup(service => service.GetByUserId(1)).ReturnsAsync(membershipDto);
         // _mockMapper.Setup(mapper => mapper.Map<List<MessageDto>>(It.IsAny<List<MatrimonyApiService.Message.Message>>()))
         //     .Returns(messageDtos);
         _mockMapper.Setup(mapper => mapper.Map<MessageDto>(It.IsAny<MatrimonyApiService.Message.Message>()))

@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 using NUnit.Framework.Legacy;
+using MembershipService = MatrimonyApiService.Membership.MembershipService;
 
 namespace MatrimonyTest.Membership;
 
@@ -13,6 +15,7 @@ namespace MatrimonyTest.Membership;
 public class MembershipServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.Membership.Membership>> _mockRepo;
+    private Mock<IProfileService> _mockProflieService;
     private Mock<IMapper> _mockMapper;
     private Mock<ILogger<MembershipService>> _mockLogger;
     private MembershipService _membershipService;
@@ -21,9 +24,11 @@ public class MembershipServiceTests
     public void Setup()
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.Membership.Membership>>();
+        _mockProflieService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILogger<MembershipService>>();
-        _membershipService = new MembershipService(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+        _membershipService =
+            new MembershipService(_mockRepo.Object, _mockProflieService.Object, _mockMapper.Object, _mockLogger.Object);
     }
 
     [Test]
@@ -41,7 +46,7 @@ public class MembershipServiceTests
         _mockMapper.Setup(mapper => mapper.Map<MembershipDto>(membership)).Returns(membershipDto);
 
         // Act
-        var result = await _membershipService.GetByPersonId(personId);
+        var result = await _membershipService.GetByProfileId(personId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(membershipDto, result);
@@ -55,7 +60,7 @@ public class MembershipServiceTests
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(new List<MatrimonyApiService.Membership.Membership>());
 
         // Act & ClassicAssert
-        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByPersonId(personId));
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByProfileId(personId));
     }
 
     [Test]
@@ -83,10 +88,12 @@ public class MembershipServiceTests
     {
         // Arrange
         var membershipId = 1;
-        _mockRepo.Setup(repo => repo.DeleteById(membershipId)).Throws(new KeyNotFoundException("Error deleting membership"));
+        _mockRepo.Setup(repo => repo.DeleteById(membershipId))
+            .Throws(new KeyNotFoundException("Error deleting membership"));
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.DeleteById(membershipId));
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            await _membershipService.DeleteById(membershipId));
         ClassicAssert.AreEqual("Error deleting membership", ex.Message);
     }
 
@@ -110,14 +117,14 @@ public class MembershipServiceTests
         // ClassicAssert
         ClassicAssert.AreEqual(membershipDto, result);
     }
-    
+
     [Test]
     public void Add_ThrowsException_ReturnsException()
     {
         // Arrange
         var membershipDto = new MembershipDto
             { MembershipId = 1, ProfileId = 1, Type = "Premium", Description = "Test Description" };
-        
+
         var membershipOne =
             new MatrimonyApiService.Membership.Membership
             {
@@ -136,7 +143,8 @@ public class MembershipServiceTests
             .Throws(new Exception("Error adding membership"));
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<AlreadyExistingEntityException>(async () => await _membershipService.Add(membershipDto));
+        var ex = Assert.ThrowsAsync<AlreadyExistingEntityException>(async () =>
+            await _membershipService.Add(membershipDto));
         ClassicAssert.AreEqual($"Membership with profile 1 already exists", ex.Message);
     }
 
@@ -221,9 +229,12 @@ public class MembershipServiceTests
         // Arrange
         var membershipId = 1;
         var membership = new MatrimonyApiService.Membership.Membership
-            { Id = membershipId, EndsAt = DateTime.Now.AddDays(-1), Type = "Premium", ProfileId = 1, IsTrail = true};
+            { Id = membershipId, EndsAt = DateTime.Now.AddDays(-1), Type = "Premium", ProfileId = 1, IsTrail = true };
         var membershipdto = new MembershipDto
-            { MembershipId = membershipId, EndsAt = DateTime.Now.AddDays(-1), Type = "Premium", ProfileId = 1, IsTrail = true};
+        {
+            MembershipId = membershipId, EndsAt = DateTime.Now.AddDays(-1), Type = "Premium", ProfileId = 1,
+            IsTrail = true
+        };
 
         _mockRepo.Setup(repo => repo.GetById(membershipId)).ReturnsAsync(membership);
         _mockRepo.Setup(repo => repo.Update(It.IsAny<MatrimonyApiService.Membership.Membership>()))

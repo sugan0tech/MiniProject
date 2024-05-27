@@ -41,6 +41,13 @@ public class ProfileViewService(
         }
     }
 
+    public async Task<List<ProfileViewDto>> GetViewsByProfileId(int profileId)
+    {
+        var views = await profileViewRepo.GetAll();
+        return views.FindAll(view => view.ViewedProfileAt.Equals(profileId))
+            .ConvertAll(view => mapper.Map<ProfileViewDto>(view)).ToList();
+    }
+
     /// <inheritdoc/>
     public async Task DeleteViewById(int viewId)
     {

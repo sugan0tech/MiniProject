@@ -2,29 +2,44 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.Membership;
 
-public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogger<MembershipService> logger)
+public class MembershipService(IBaseRepo<Membership> repo, IProfileService profileService, IMapper mapper, ILogger<MembershipService> logger)
     : IMembershipService
 {
     /// <inheritdoc/>
-    public async Task<MembershipDto> GetByPersonId(int personId)
+    public async Task<MembershipDto> GetByProfileId(int profileId)
     {
         try
         {
             var memberships = await repo.GetAll();
             if (memberships == null)
                 throw new KeyNotFoundException("No Memberships Found");
-            var membership = memberships.Find(m => m.ProfileId == personId);
+            var membership = memberships.Find(m => m.ProfileId == profileId);
             if (membership == null)
-                throw new KeyNotFoundException($"Membership for person with id {personId} not found.");
+                throw new KeyNotFoundException($"Membership for person with id {profileId} not found.");
             return mapper.Map<MembershipDto>(membership);
         }
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
             throw ;
+        }
+    }
+
+    public async Task<MembershipDto> GetByUserId(int userId)
+    {
+        try
+        {
+            var profile = await profileService.GetProfileByUserId(userId);
+            return await GetByProfileId(profile.ProfileId);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
         }
     }
 
@@ -48,7 +63,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IMapper mapper, ILogg
     {
         try
         {
-            await GetByPersonId(dto.ProfileId);
+            await GetByProfileId(dto.ProfileId);
         }
         catch (KeyNotFoundException)
         {

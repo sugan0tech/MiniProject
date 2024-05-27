@@ -1,4 +1,6 @@
-﻿namespace MatrimonyApiService.Profile;
+﻿using MatrimonyApiService.ProfileView;
+
+namespace MatrimonyApiService.Profile;
 
 public interface IProfileService
 {
@@ -8,6 +10,20 @@ public interface IProfileService
     /// <param name="id"></param>
     /// <returns></returns>
     Task<ProfileDto> GetProfileById(int id);
+    
+    /// <summary>
+    /// Gets profile by given id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<ProfileDto> GetProfileByUserId(int userId);
+    
+    /// <summary>
+    /// Get's profiles for a given manager.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<List<ProfilePreviewDto>> GetProfilePreviewForManager(int id);
     
     /// <summary>
     /// Gets profile Preview by given id
@@ -54,5 +70,12 @@ public interface IProfileService
     /// <param name="profileId"></param>
     /// <returns></returns>
     Task<List<ProfilePreviewDto>> GetMatches(int profileId);
+    
+    /// <summary>
+    ///  Get Matches for the profile, with preference
+    /// </summary>
+    /// <param name="profileId"></param>
+    /// <returns></returns>
+    Task<List<ProfileViewDto>> GetViews(int profileId);
     
 }

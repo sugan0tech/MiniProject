@@ -14,12 +14,12 @@
 ---
 ## Membership
 
-| Basic Member $5                      | Premium Member $15                    | Free Member $0                      |
-| ------------------------------------ | ------------------------------------- | ----------------------------------- |
-| - 15 matches per month <br>          | - Unlimited matches per month<br>     | - 5 matches permonth<br>            |
-| - No private chats                   | - Upto 25 private chats<br>           | - No private chat                   |
-| - Up to 5 views Per month<br>        | - Unlimited lookup on profile viewers | - No profile views                  |
-| - Unlimited detailed profile Lookups | - Unlimited detailed profile Lookups  | - Only profile Preview is available |
+| Basic Member $5               | Premium Member $15                    | Free Member $0                      |
+| ----------------------------- | ------------------------------------- | ----------------------------------- |
+| - 15 matches per month <br>   | - Unlimited matches per month<br>     | - 5 matches permonth<br>            |
+| - No private chats            | - Upto 25 private chats<br>           | - No private chat                   |
+| - Up to 5 views Per month<br> | - Unlimited lookup on profile viewers | - No profile views                  |
+| - 50 detailed profile Lookups | - Unlimited detailed profile Lookups  | - Only profile Preview is available |
 > Any Member ship will be automatically canceled on the due date, and temporary access will be restricted. Might be using ==CRON job== and ==flusher== on app startup.
 ### Free Trail
 > For user they can enjoy a 7 day free trail with the insights of Premium Member ship features ( chats and unlimited viewers view )

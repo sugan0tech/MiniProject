@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -152,6 +154,51 @@ public class ProfileViewServiceTests
         // Act & ClassicAssert
         var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.GetViewById(viewId));
         ClassicAssert.AreEqual("Error getting profile view with id 1.", ex.Message);
+    }
+    
+    [Test]
+    public async Task GetViewsByProfileId_ValidProfileId_ReturnsProfileViews()
+    {
+        // Arrange
+        var profileId = 1;
+        var views = new List<MatrimonyApiService.ProfileView.ProfileView>
+        {
+            new(){ Id = 1, ViewerId = 1, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-10) },
+            new(){ Id = 2, ViewerId = 2, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-20) },
+            new(){ Id = 3, ViewerId = 3, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) }
+        };
+
+        var viewDtos = views.ConvertAll(view => new ProfileViewDto
+        {
+            ProfileViewId = view.Id,
+            ViewerId = view.ViewerId,
+            ViewedProfileAt = view.ViewedProfileAt,
+            ViewedAt = view.ViewedAt
+        });
+
+        _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(views);
+        _mockMapper.Setup(mapper => mapper.Map<ProfileViewDto>(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
+            .Returns((MatrimonyApiService.ProfileView.ProfileView src) => new ProfileViewDto
+            {
+                ProfileViewId = src.Id,
+                ViewerId = src.ViewerId,
+                ViewedProfileAt = src.ViewedProfileAt,
+                ViewedAt = src.ViewedAt
+            });
+
+        // Act
+        var result = await _profileViewService.GetViewsByProfileId(profileId);
+
+        // Assert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(views.Count, result.Count);
+        for (int i = 0; i < views.Count; i++)
+        {
+            ClassicAssert.AreEqual(viewDtos[i].ProfileViewId, result[i].ProfileViewId);
+            ClassicAssert.AreEqual(viewDtos[i].ViewerId, result[i].ViewerId);
+            ClassicAssert.AreEqual(viewDtos[i].ViewedProfileAt, result[i].ViewedProfileAt);
+            ClassicAssert.AreEqual(viewDtos[i].ViewedAt, result[i].ViewedAt);
+        }
     }
 
     [Test]

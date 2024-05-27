@@ -1,12 +1,19 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Membership;
 
 namespace MatrimonyApiService.Message;
 
 /// <summary>
 /// Implementation of the IMessageService interface.
 /// </summary>
-public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<MessageService> logger) : IMessageService
+public class MessageService(
+    IBaseRepo<Message> repo,
+    IMembershipService membershipService,
+    IMapper mapper,
+    ILogger<MessageService> logger) : IMessageService
 {
     /// <inheritdoc/>
     public async Task<MessageDto> AddMessage(MessageDto messageDto)
@@ -35,7 +42,7 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Mes
         catch (KeyNotFoundException ex)
         {
             logger.LogError("On GetMessageById " + ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -52,7 +59,7 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Mes
         catch (KeyNotFoundException ex)
         {
             logger.LogError("On UpdateMessage " + ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -81,16 +88,45 @@ public class MessageService(IBaseRepo<Message> repo, IMapper mapper, ILogger<Mes
     /// <inheritdoc/>
     public async Task<List<MessageDto>> GetSentMessages(int userId)
     {
-        var messages = await repo.GetAll();
-        return messages.FindAll(message => message.SenderId.Equals(userId))
-            .ConvertAll(mapper.Map<MessageDto>).ToList();
+        try
+        {
+            var membershp = await membershipService.GetByUserId(userId);
+            if (membershp.Type.Equals(MemberShip.PremiumUser.ToString()))
+            {
+                var messages = await repo.GetAll();
+                return messages.FindAll(message => message.SenderId.Equals(userId))
+                    .ConvertAll(mapper.Map<MessageDto>).ToList();
+            }
+
+            throw new NonPremiumUserException("You should be a Premium user for accessing chats");
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
+    /// <exception cref="NonPremiumUserException"></exception>
     public async Task<List<MessageDto>> GetReceivedMessages(int userId)
     {
-        var messages = await repo.GetAll();
-        return messages.FindAll(message => message.ReceiverId.Equals(userId))
-            .ConvertAll(input => mapper.Map<MessageDto>(input)).ToList();
+        try
+        {
+            var membershp = await membershipService.GetByUserId(userId);
+            if (membershp.Type.Equals(MemberShip.PremiumUser.ToString()))
+            {
+                var messages = await repo.GetAll();
+                return messages.FindAll(message => message.ReceiverId.Equals(userId))
+                    .ConvertAll(input => mapper.Map<MessageDto>(input)).ToList();
+            }
+
+            throw new NonPremiumUserException("You should be a Premium user for accessing chats");
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 }
