@@ -3,22 +3,14 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.Preference;
 
-public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper mapper): IPreferenceService
+public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper mapper, ILogger<PreferenceService> logger) : IPreferenceService
 {
-
     /// <inheritdoc/>
     public async Task<PreferenceDto> Add(PreferenceDto preferenceDto)
     {
-        try
-        {
-            var preferenceEntity = mapper.Map<Preference>(preferenceDto);
-            var addedPreferenceEntity = await preferenceRepo.Add(preferenceEntity);
-            return mapper.Map<PreferenceDto>(addedPreferenceEntity);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error adding preference.", ex);
-        }
+        var preferenceEntity = mapper.Map<Preference>(preferenceDto);
+        var addedPreferenceEntity = await preferenceRepo.Add(preferenceEntity);
+        return mapper.Map<PreferenceDto>(addedPreferenceEntity);
     }
 
     /// <inheritdoc/>
@@ -29,9 +21,10 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
             var preferenceEntity = await preferenceRepo.GetById(id);
             return mapper.Map<PreferenceDto>(preferenceEntity);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error getting preference with id {id}.", ex);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 
@@ -44,9 +37,10 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
             var updatedPreferenceEntity = await preferenceRepo.Update(preferenceEntity);
             return mapper.Map<PreferenceDto>(updatedPreferenceEntity);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception("Error updating preference.", ex);
+            logger.LogError(ex.Message);
+            throw ;
         }
     }
 }

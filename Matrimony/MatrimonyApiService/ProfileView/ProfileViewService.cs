@@ -1,40 +1,29 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Exceptions;
 
 namespace MatrimonyApiService.ProfileView;
 
 using System;
 using System.Threading.Tasks;
 
-public class ProfileViewService(IBaseRepo<ProfileView> profileViewRepo, IMapper mapper) : IProfileViewService
+public class ProfileViewService(
+    IBaseRepo<ProfileView> profileViewRepo,
+    IMapper mapper,
+    ILogger<ProfileViewService> logger) : IProfileViewService
 {
-
     /// <inheritdoc/>
     public async Task AddView(int viewerId, int profileId)
     {
-        try
-        {
-            var profileView = new ProfileView { ViewedProfileAt = profileId, ViewerId = viewerId, ViewedAt = DateTime.Now};
-            await profileViewRepo.Add(profileView);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error adding profile view.", ex);
-        }
+        var profileView = new ProfileView { ViewedProfileAt = profileId, ViewerId = viewerId, ViewedAt = DateTime.Now };
+        await profileViewRepo.Add(profileView);
     }
 
     /// <inheritdoc/>
     public async Task AddView(ProfileViewDto profileViewDto)
     {
-        try
-        {
-            var profileView = mapper.Map<ProfileView>(profileViewDto);
-            await profileViewRepo.Add(profileView);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error adding profile view.", ex);
-        }
+        var profileView = mapper.Map<ProfileView>(profileViewDto);
+        await profileViewRepo.Add(profileView);
     }
 
     /// <inheritdoc/>
@@ -45,9 +34,10 @@ public class ProfileViewService(IBaseRepo<ProfileView> profileViewRepo, IMapper 
             var profileViewEntity = await profileViewRepo.GetById(viewId);
             return mapper.Map<ProfileViewDto>(profileViewEntity);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error getting profile view with id {viewId}.", ex);
+            logger.LogError(ex.Message);
+            throw;
         }
     }
 
@@ -58,9 +48,10 @@ public class ProfileViewService(IBaseRepo<ProfileView> profileViewRepo, IMapper 
         {
             await profileViewRepo.DeleteById(viewId);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception($"Error deleting profile view with id {viewId}.", ex);
+            logger.LogError(ex.Message);
+            throw;
         }
     }
 
@@ -69,16 +60,21 @@ public class ProfileViewService(IBaseRepo<ProfileView> profileViewRepo, IMapper 
     {
         try
         {
+            if (DateTime.Now < before)
+            {
+                logger.LogError($"{before} is in near feature, Cleanup dates should be atleast a day older");
+                throw new InvalidDateTimeException(
+                    $"{before} is in near feature, Cleanup dates should be atleast a day older");
+            }
+
             var views = await profileViewRepo.GetAll();
             var viewsToDelete = views.Where(view => view.ViewedAt.CompareTo(before) < 0).ToList();
-            foreach (var viewToDelete in viewsToDelete)
-            {
-                await profileViewRepo.DeleteById(viewToDelete.Id);
-            }
+            foreach (var viewToDelete in viewsToDelete) await profileViewRepo.DeleteById(viewToDelete.Id);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            throw new Exception("Error deleting old profile views.", ex);
+            logger.LogError("Error Deleting old views" + ex.Message);
+            throw;
         }
     }
 }
