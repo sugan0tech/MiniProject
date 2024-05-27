@@ -43,6 +43,9 @@ public class AuthService(
 
     private bool ComparePassword(byte[] encrypterPass, byte[] password)
     {
+        if (encrypterPass.Length != password.Length)
+            return false;
+        
         for (int i = 0; i < encrypterPass.Length; i++)
         {
             if (encrypterPass[i] != password[i])
@@ -79,7 +82,7 @@ public class AuthService(
             Console.WriteLine(e);
         }
 
-        throw new AuthenticationException("Not able to register at this moment");
+        throw new Exceptions.AuthenticationException("Not able to register at this moment");
     }
 
     public async Task<UserAuthReturnDto> ResetPassword(ResetPasswordDto resetPasswordDto)
@@ -107,7 +110,7 @@ public class AuthService(
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Failed to reset password");
+            throw new Exceptions.AuthenticationException("Failed to reset password");
         }
     }
 }
