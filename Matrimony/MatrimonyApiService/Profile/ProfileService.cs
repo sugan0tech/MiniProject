@@ -145,6 +145,13 @@ public class ProfileService(
     }
 
     /// <intheritdoc/>
+    public async Task<List<ProfileDto>> GetAll()
+    {
+        var profiles = await repo.GetAll();
+        return profiles.ConvertAll(profile => mapper.Map<ProfileDto>(profile)).ToList();
+    }
+
+    /// <intheritdoc/>
     public async Task<List<ProfileViewDto>> GetViews(int profileId)
     {
         try

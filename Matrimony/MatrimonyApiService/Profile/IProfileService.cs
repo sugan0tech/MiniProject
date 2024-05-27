@@ -78,4 +78,10 @@ public interface IProfileService
     /// <returns></returns>
     Task<List<ProfileViewDto>> GetViews(int profileId);
     
+    /// <summary>
+    /// Tobe used by admins only
+    /// </summary>
+    /// <returns></returns>
+    Task<List<ProfileDto>> GetAll();
+    
 }

@@ -52,9 +52,10 @@ public class UserService(
     }
 
     /// <intheritdoc/>
-    public Task<List<User>> GetAll()
+    public async Task<List<UserDto>> GetAll()
     {
-        return repo.GetAll();
+        var users = await repo.GetAll();
+        return users.ConvertAll(input => mapper.Map<UserDto>(input)).ToList();
     }
 
     /// <intheritdoc/>
@@ -87,5 +88,18 @@ public class UserService(
 
         if (user == null) throw new UserNotFoundException(email);
         return user;
+    }
+
+    public async Task<UserDto> DeleteById(int id)
+    {
+        try
+        {
+            return mapper.Map<UserDto>(await repo.DeleteById(id));
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
     }
 }

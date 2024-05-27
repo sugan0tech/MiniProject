@@ -50,4 +50,11 @@ public interface IMatchService
     /// <param name="id"></param>
     /// <returns></returns>
     Task<MatchDto> DeleteById(int id);
+
+    /// <summary>
+    ///  Get's all the matces
+    ///  To be only used by admins
+    /// </summary>
+    /// <returns></returns>
+    Task<List<MatchDto>> GetAll();
 }

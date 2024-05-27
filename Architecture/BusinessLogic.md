@@ -60,3 +60,9 @@
 # Todo 
  - [ ] Admin stuffs
  - [ ] Profile reporting
+
+----
+# Admin Actions
+1. Delete Profiles, Users
+2. Fetches all profiles, matches and users
+3. Can update membership of user

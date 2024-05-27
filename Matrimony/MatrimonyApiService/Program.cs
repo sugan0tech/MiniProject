@@ -1,6 +1,8 @@
+using System.Text;
 using MatrimonyApiService.Address;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Match;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
@@ -10,8 +12,10 @@ using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace MatrimonyApiService;
 
@@ -26,7 +30,38 @@ public class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddLogging(l => l.AddLog4Net());
+        builder.Services.AddSwaggerGen(option =>
+        {
+            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description =
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+            });
+            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddLogging(l => l.AddLog4Net());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         #region Context
@@ -69,6 +104,28 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchService, MatchService>();
         builder.Services.AddScoped<IBaseService<Report.Report>, ReportService>();
+
+        #endregion
+
+        #region AuthConfig
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
+                };
+
+            });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminPolicy", policyBuilder =>  policyBuilder.RequireRole(Role.Admin.ToString()));
+            options.AddPolicy("UserPolicy", policyBuilder =>  policyBuilder.RequireRole(Role.User.ToString(), Role.Admin.ToString()));
+        });
 
         #endregion
 

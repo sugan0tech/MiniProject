@@ -74,4 +74,11 @@ public class MatchService(IBaseRepo<Match> repo, IMapper mapper, ILogger<MatchSe
     {
         return mapper.Map<MatchDto>(await repo.DeleteById(id));
     }
+
+    /// <inheritdoc/>
+    public async Task<List<MatchDto>> GetAll()
+    {
+        var matches = await repo.GetAll();
+        return matches.ConvertAll(input => mapper.Map<MatchDto>(input)).ToList();
+    }
 }

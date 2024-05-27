@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using AutoMapper;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using AuthenticationException = System.Security.Authentication.AuthenticationException;
