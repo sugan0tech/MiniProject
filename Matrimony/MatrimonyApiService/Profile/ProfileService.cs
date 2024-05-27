@@ -124,7 +124,8 @@ public class ProfileService(
                 (preference.Education == "ALL" || p.Education == preference.Education) &&
                 (preference.Occupation == "ALL" || p.Occupation == preference.Occupation) &&
                 p.Height >= preference.MinHeight && p.Height <= preference.MaxHeight &&
-                p.Age >= preference.MinAge && p.Age <= preference.MaxAge
+                p.Age >= preference.MinAge && p.Age <= preference.MaxAge &&
+                p.Id != profileId
             ).ToList();
 
             var matchedProfileDtos = matchedProfiles.Select(p => mapper.Map<ProfilePreviewDto>(p)).ToList();

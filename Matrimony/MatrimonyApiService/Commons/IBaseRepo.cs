@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Commons;
 
-public interface IBaseRepo<T> where T : BaseEntity
+public interface IBaseRepo<T>
 {
     public Task<T> Add(T ietem);
     public Task<T> DeleteById(int id);

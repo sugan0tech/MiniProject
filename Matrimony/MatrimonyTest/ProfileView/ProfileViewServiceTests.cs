@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
-using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
