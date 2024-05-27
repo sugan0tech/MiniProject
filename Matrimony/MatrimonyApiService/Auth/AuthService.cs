@@ -12,7 +12,7 @@ public class AuthService(
     ITokenService tokenService,
     ILogger<AuthService> logger) : IAuthService
 {
-    public async Task<UserAuthReturnDto> Login(UserLoginDto loginDto)
+    public async Task<AuthReturnDto> Login(LoginDTO loginDto)
     {
         try
         {
@@ -29,7 +29,7 @@ public class AuthService(
             if (isPasswordSame)
             {
                 logger.LogInformation($"Successfully logged as Id :{user.Id}");
-                return new UserAuthReturnDto { Token = tokenService.GenerateToken(user) };
+                return new AuthReturnDto { Token = tokenService.GenerateToken(user) };
             }
 
             throw new Exceptions.AuthenticationException("Invalid username or password");
@@ -57,7 +57,7 @@ public class AuthService(
         return true;
     }
 
-    public async Task<bool> Register(UserRegisterDto dto)
+    public async Task<bool> Register(RegisterDTO dto)
     {
         try
         {
@@ -85,7 +85,7 @@ public class AuthService(
         throw new Exceptions.AuthenticationException("Not able to register at this moment");
     }
 
-    public async Task<UserAuthReturnDto> ResetPassword(ResetPasswordDto resetPasswordDto)
+    public async Task<AuthReturnDto> ResetPassword(ResetPasswordDto resetPasswordDto)
     {
         // Find the user based on the provided email
 
@@ -100,7 +100,7 @@ public class AuthService(
                 throw new AuthenticationException("Invalid Password");
             user.Password = hasher.ComputeHash(Encoding.UTF8.GetBytes(resetPasswordDto.NewPassword));
             await userService.Update(user);
-            return new UserAuthReturnDto { Token = tokenService.GenerateToken(user) };
+            return new AuthReturnDto { Token = tokenService.GenerateToken(user) };
         }
         catch (UserNotFoundException e)
         {

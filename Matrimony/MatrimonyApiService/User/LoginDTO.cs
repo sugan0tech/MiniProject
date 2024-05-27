@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MatrimonyApiService.User;
 
-public record UserLoginDto
+public record LoginDTO
 {
     [Required]
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")]

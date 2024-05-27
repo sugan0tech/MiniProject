@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.User;
 
-public record UserAuthReturnDto
+public record AuthReturnDto
 {
     public string Token { get; init; }
 }

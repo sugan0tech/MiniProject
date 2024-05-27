@@ -27,7 +27,7 @@ public class AuthServiceTests
     [Test]
     public void Login_ValidUser_ReturnsUserAuthReturnDto()
     {
-        var loginDto = new UserLoginDto { Email = "test@test.com", Password = "password" };
+        var loginDto = new LoginDTO { Email = "test@test.com", Password = "password" };
         var user = new MatrimonyApiService.User.User
         {
             Id = 1,
@@ -51,13 +51,13 @@ public class AuthServiceTests
         var result = _authService.Login(loginDto);
 
         ClassicAssert.IsNotNull(result);
-        // ClassicAssert.IsInstanceOf<UserAuthReturnDto>(result);
+        // ClassicAssert.IsInstanceOf<AuthReturnDto>(result);
     }
 
     [Test]
     public void Login_UserNotVerified_ThrowsUserNotVerifiedException()
     {
-        var loginDto = new UserLoginDto { Email = "test@test.com", Password = "password" };
+        var loginDto = new LoginDTO { Email = "test@test.com", Password = "password" };
         var user = new MatrimonyApiService.User.User
         {
             Id = 1,
@@ -83,7 +83,7 @@ public class AuthServiceTests
     [Test]
     public void Login_InvalidPassword_ThrowsAuthenticationException()
     {
-        var loginDto = new UserLoginDto { Email = "test@test.com", Password = "wrongpassword" };
+        var loginDto = new LoginDTO { Email = "test@test.com", Password = "wrongpassword" };
         var user = new MatrimonyApiService.User.User
         {
             Id = 1,
@@ -109,7 +109,7 @@ public class AuthServiceTests
     // [Test]
     // public async Task Register_ValidUser_ReturnsTrue()
     // {
-    //     var registerDto = new UserRegisterDto
+    //     var registerDto = new RegisterDTO
     //     {
     //         Email = "test@test.com", Password = "password", FirstName = "Test", LastName = "User",
     //         PhoneNumber = "1234567890", AddressId = 1
@@ -124,7 +124,7 @@ public class AuthServiceTests
     [Test]
     public void Register_ThrowsException_ReturnsFalse()
     {
-        var registerDto = new UserRegisterDto
+        var registerDto = new RegisterDTO
         {
             Email = "test@test.com", Password = "password", FirstName = "Test", LastName = "User",
             PhoneNumber = "1234567890", AddressId = 1
@@ -155,7 +155,7 @@ public class AuthServiceTests
     //     var result = await _authService.ResetPassword(resetPasswordDto);
     //
     //     ClassicAssert.IsNotNull(result);
-    //     ClassicAssert.IsInstanceOf<UserAuthReturnDto>(result);
+    //     ClassicAssert.IsInstanceOf<AuthReturnDto>(result);
     // }
 
     [Test]
