@@ -1,4 +1,5 @@
 ﻿using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Staff;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
@@ -107,6 +108,7 @@ public class StaffRepoTests
             LastName = "Doe",
             PhoneNumber = "1234567890",
             Role = "Admin",
+            RoleEnum = Role.Admin,
             IsVerified = true
         };
 
@@ -116,6 +118,7 @@ public class StaffRepoTests
         // Assert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual("staff@example.com", result.Email);
+        ClassicAssert.AreEqual(Role.Admin, result.RoleEnum);
         ClassicAssert.AreEqual(1, await _context.Staffs.CountAsync());
     }
 

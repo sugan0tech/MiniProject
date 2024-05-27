@@ -26,8 +26,6 @@ public class Staff : BaseEntity
     public Address.Address? Address;
 
     public bool IsVerified { get; set; }
-    public byte[]? Password { get; set; }
-    public byte[]? HashKey { get; set; }
 
     [EnumTypeValidation(typeof(Role))]
     [MaxLength(25)]
