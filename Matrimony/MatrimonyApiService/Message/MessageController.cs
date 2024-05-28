@@ -48,24 +48,6 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
         }
     }
 
-    [HttpPut]
-    [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateMessage(MessageDto messageDto)
-    {
-        try
-        {
-            var updatedMessage = await messageService.UpdateMessage(messageDto);
-            return Ok(updatedMessage);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-    }
-
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

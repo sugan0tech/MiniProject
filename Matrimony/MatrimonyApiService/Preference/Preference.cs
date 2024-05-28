@@ -59,7 +59,7 @@ public class Preference : BaseEntity
     public int MinAge { get; set; }
     public int MaxAge { get; set; }
 
-    [ForeignKey("PreferenceForProfileId")] public int? PreferenceForId { get; set; }
+    [ForeignKey("PreferenceForProfileId")] public int PreferenceForId { get; set; }
     public Profile.Profile? PreferenceFor { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;

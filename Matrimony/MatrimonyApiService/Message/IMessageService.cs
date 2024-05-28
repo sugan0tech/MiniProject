@@ -40,14 +40,14 @@ public interface IMessageService
     Task<List<MessageDto>> GetAllMessages();
 
     /// <summary>
-    /// Get's all the sent messages for the user.
+    /// Gets all the send messages for the user.
     /// </summary>
-    /// <param name="userId"></param>
+    /// <param name="senderId"></param>
     /// <returns></returns>
-    Task<List<MessageDto>> GetSentMessages(int userId);
+    Task<List<MessageDto>> GetSentMessages(int senderId);
 
     /// <summary>
-    /// Get's all the received messages for the user
+    /// Gets all the received messages for the user
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>

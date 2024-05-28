@@ -18,6 +18,7 @@ public class MembershipService(
     {
         try
         {
+            await profileService.GetProfileById(profileId); // validation
             var memberships = await repo.GetAll();
             if (memberships == null)
                 throw new KeyNotFoundException("No Memberships Found");
@@ -33,6 +34,7 @@ public class MembershipService(
         }
     }
 
+    /// <inheritdoc/>
     public async Task<MembershipDto> GetByUserId(int userId)
     {
         try
@@ -85,7 +87,11 @@ public class MembershipService(
         try
         {
             var updatedMembership = mapper.Map<Membership>(dto);
-            updatedMembership.Id = dto.MembershipId; // Ensure the ID is set to the correct value
+            if (updatedMembership.IsTrail)
+                updatedMembership.EndsAt = DateTime.Today.AddDays(7);
+            else
+                updatedMembership.EndsAt = DateTime.Today.AddDays(30);
+            
             var result = await repo.Update(updatedMembership);
             return mapper.Map<MembershipDto>(result);
         }

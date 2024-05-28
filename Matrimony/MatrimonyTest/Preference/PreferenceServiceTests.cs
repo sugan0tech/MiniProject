@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Preference;
+using MatrimonyApiService.Profile;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -10,6 +11,7 @@ namespace MatrimonyTest.Preference;
 public class PreferenceServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.Preference.Preference>> _mockRepo;
+    private Mock<IProfileService> _mockProfileService;
     private Mock<IMapper> _mockMapper;
     private Mock<ILogger<PreferenceService>> _mockLogger;
     private PreferenceService _preferenceService;
@@ -18,9 +20,11 @@ public class PreferenceServiceTests
     public void Setup()
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.Preference.Preference>>();
+        _mockProfileService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILogger<PreferenceService>>();
-        _preferenceService = new PreferenceService(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+        _preferenceService = new PreferenceService(_mockRepo.Object, _mockProfileService.Object, _mockMapper.Object,
+            _mockLogger.Object);
     }
 
     [Test]

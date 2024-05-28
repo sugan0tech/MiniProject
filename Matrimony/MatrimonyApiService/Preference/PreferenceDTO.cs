@@ -14,7 +14,7 @@ public record PreferenceDto
     public int MaxHeight { get; init; }
     public int MinAge { get; init; }
     public int MaxAge { get; init; }
-    public int? PreferenceForId { get; init; }
+    public int PreferenceForId { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }
