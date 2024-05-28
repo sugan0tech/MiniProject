@@ -58,9 +58,12 @@
 - Complete Internal Access for support and bug fix.
 ---
 # Todo 
- - [ ] Admin stuffs
-	- [ ]  Api level exception layer
- - [ ] Profile reporting
+ - [x] Admin stuffs
+	- [x]  Api level exception layer
+ - [x] Profile reporting
+
+- Token level expiry - matches membership expiry
+ 
 
 ----
 # Admin Actions

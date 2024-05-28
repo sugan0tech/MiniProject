@@ -7,7 +7,7 @@ public interface IMatchRequestService
     /// </summary>
     /// <param name="profileId"></param>
     /// <returns> List of MatchRequestDTO's </returns>
-    Task<List<MatchRequestDto>> GetAcceptedMatches(int profileId);
+    Task<List<MatchRequestDto>> GetAcceptedMatcheRequests(int profileId);
 
     /// <summary>
     ///  Returns All the matches Requests.
@@ -17,32 +17,32 @@ public interface IMatchRequestService
     Task<List<MatchRequestDto>> GetMatchRequests(int profileId);
 
     /// <summary>
+    ///  Returns All the matches Requests.
+    /// </summary>
+    /// <param name="profileId"></param>
+    /// <returns> List of MatchRequestDTO's </returns>
+    Task<List<MatchRequestDto>> GetSentMatchRequests(int profileId);
+
+    /// <summary>
     ///  Rejects requested match.
     /// </summary>
     /// <param name="matchId"></param>
     /// <param name="profileId"></param>
-    Task Cancel(int matchId, int profileId);
+    Task Reject(int matchId, int profileId);
 
+    /// <summary>
+    ///  Approves requested match.
+    /// </summary>
+    /// <param name="matchId"></param>
+    /// <param name="profileId"></param>
+    Task Approve(int matchId, int profileId);
+    
     /// <summary>
     /// Get's match by Id to be  used in other services
     /// </summary>
     /// <param name="id">MatchRequest Id</param>
     /// <returns></returns>
     Task<MatchRequestDto> GetById(int id);
-
-    /// <summary>
-    /// Saves MatchRequest to store, to be used only among services.
-    /// </summary>
-    /// <param name="requestDto">MatchRequest requestDto to be stored</param>
-    /// <returns></returns>
-    Task<MatchRequestDto> Add(MatchRequestDto requestDto);
-
-    /// <summary>
-    ///  Updated MatchRequest, mostly to be used for updating status ( two way like ).
-    /// </summary>
-    /// <param name="requestDto">Update matchDto</param>
-    /// <returns>update requestDto</returns>
-    Task<MatchRequestDto> Update(MatchRequestDto requestDto);
 
     /// <summary>
     ///  Updated MatchRequest, mostly to be used for updating status ( two way like ).

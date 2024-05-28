@@ -103,7 +103,7 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
-        builder.Services.AddScoped<IMatchRequestService, MatchRequestRequestService>();
+        builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();
         builder.Services.AddScoped<IBaseService<Report.Report, ReportDto>, ReportService>();
 
         #endregion

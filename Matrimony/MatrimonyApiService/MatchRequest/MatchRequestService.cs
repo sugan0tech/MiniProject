@@ -5,15 +5,16 @@ using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.MatchRequest;
 
-public class MatchRequestRequestService(
+public class MatchRequestService(
     IBaseRepo<MatchRequest> repo,
     IProfileService profileService,
     IMapper mapper,
-    ILogger<MatchRequestRequestService> logger) : IMatchRequestService
+    ILogger<MatchRequestService> logger) : IMatchRequestService
 {
     /// <inheritdoc/>
-    public async Task<List<MatchRequestDto>> GetAcceptedMatches(int profileId)
+    public async Task<List<MatchRequestDto>> GetAcceptedMatcheRequests(int profileId)
     {
+        await profileService.GetProfileById(profileId); // validates profile
         var matches = await repo.GetAll();
         return matches.Where(match => match.SentProfileId.Equals(profileId) && match.ProfileTwoLike).ToList()
             .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
@@ -28,13 +29,37 @@ public class MatchRequestRequestService(
     }
 
     /// <inheritdoc/>
+    public async Task<List<MatchRequestDto>> GetSentMatchRequests(int profileId)
+    {
+        await profileService.GetProfileById(profileId);
+        var requests = await GetAll();
+        return requests.FindAll(dto => dto.SentProfileId.Equals(profileId));
+    }
+
+    /// <inheritdoc/>
     /// <exception cref="InvalidMatchForProfile">If the incoming matchId not for current profile</exception>
-    public async Task Cancel(int matchId, int profileId)
+    public async Task Reject(int matchId, int profileId)
     {
         var match = await repo.GetById(matchId);
         if (match.ReceivedProfileId.Equals(profileId))
         {
             match.ProfileTwoLike = false;
+            await repo.Update(match);
+            return;
+        }
+
+        logger.LogError($"The match {matchId} is not meant for {profileId}");
+        throw new InvalidMatchForProfile($"The match {matchId} is not meant for {profileId}");
+    }
+    
+    /// <inheritdoc/>
+    /// <exception cref="InvalidMatchForProfile">If the incoming matchId not for current profile</exception>
+    public async Task Approve(int matchId, int profileId)
+    {
+        var match = await repo.GetById(matchId);
+        if (match.ReceivedProfileId.Equals(profileId))
+        {
+            match.ProfileTwoLike = true;
             await repo.Update(match);
             return;
         }
@@ -54,30 +79,6 @@ public class MatchRequestRequestService(
         catch (KeyNotFoundException e)
         {
             Console.WriteLine(e.Message);
-            throw;
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task<MatchRequestDto> Add(MatchRequestDto requestDto)
-    {
-        var entity = mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(requestDto);
-        var savedEntity = await repo.Add(entity);
-        return mapper.Map<MatchRequestDto>(savedEntity);
-    }
-
-    /// <inheritdoc/>
-    public async Task<MatchRequestDto> Update(MatchRequestDto requestDto)
-    {
-        try
-        {
-            var entity = mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(requestDto);
-            var updatedEntity = await repo.Update(entity);
-            return mapper.Map<MatchRequestDto>(updatedEntity);
-        }
-        catch (KeyNotFoundException e)
-        {
-            logger.LogError(e.Message);
             throw;
         }
     }
@@ -105,7 +106,9 @@ public class MatchRequestRequestService(
             FoundAt = DateTime.Now
         };
 
-        return await Add(match);
+        var entity = mapper.Map<MatchRequest>(match);
+        var savedEntity = await repo.Add(entity);
+        return mapper.Map<MatchRequestDto>(savedEntity);
     }
 
     /// <inheritdoc/>

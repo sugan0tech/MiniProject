@@ -33,6 +33,7 @@ public class UserService(
     /// <intheritdoc/>
     public async Task<UserDto> Add(User user)
     {
+        user.IsVerified = false;
         var usr = await repo.Add(user);
         return mapper.Map<UserDto>(usr);
     }

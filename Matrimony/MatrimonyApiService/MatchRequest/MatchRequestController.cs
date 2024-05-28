@@ -8,7 +8,8 @@ namespace MatrimonyApiService.MatchRequest;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger) : ControllerBase
+public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger)
+    : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -31,26 +32,43 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAcceptedMatches(int profileId)
     {
-        var matches = await matchRequestService.GetAcceptedMatches(profileId);
+        var matches = await matchRequestService.GetAcceptedMatcheRequests(profileId);
         return Ok(matches);
     }
 
-    [HttpGet("requests/{profileId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpGet("/profile/{profileId}")]
+    [ProducesResponseType(typeof(List<MatchRequestDto>),StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMatchRequests(int profileId)
     {
         var matches = await matchRequestService.GetMatchRequests(profileId);
         return Ok(matches);
     }
 
-    [HttpDelete("{matchId}/{profileId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Cancel(int matchId, int profileId)
+    [HttpGet("sent/{profileId}")]
+    [ProducesResponseType(typeof(List<MatchRequestDto>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel),StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSentMatchRequests(int profileId)
     {
         try
         {
-            await matchRequestService.Cancel(matchId, profileId);
+        var matches = await matchRequestService.GetSentMatchRequests(profileId);
+        return Ok(matches);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            return NotFound(new ErrorModel(404, e.Message));
+        }
+    }
+
+    [HttpPost("reject/{matchId}/{profileId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Reject(int matchId, int profileId)
+    {
+        try
+        {
+            await matchRequestService.Reject(matchId, profileId);
             return Ok();
         }
         catch (InvalidMatchForProfile ex)
@@ -60,23 +78,20 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
         }
     }
 
-    [HttpPost]
+    [HttpPost("approve/{matchId}/{profileId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add(MatchRequestDto requestDto)
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Approve(int matchId, int profileId)
     {
         try
         {
-            var match = await matchRequestService.Add(requestDto);
-            return Ok(match);
+            await matchRequestService.Approve(matchId, profileId);
+            return Ok();
         }
-        catch (DbUpdateException e)
+        catch (InvalidMatchForProfile ex)
         {
-            var message = e.Message;
-            if (e.InnerException != null)
-                message = e.InnerException.Message;
-
-            return BadRequest(new ErrorModel(400, message));
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
     }
 
@@ -111,24 +126,6 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
         catch (MatchRequestToSelfException e)
         {
             return BadRequest(new ErrorModel(400, e.Message));
-        }
-    }
-    
-    [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(MatchRequestDto requestDto)
-    {
-        try
-        {
-            var match = await matchRequestService.Update(requestDto);
-            return Ok(match);
-        }
-        catch (KeyNotFoundException e)
-        {
-            logger.LogError(e.Message);
-            return NotFound(new ErrorModel(404, e.Message));
         }
     }
 

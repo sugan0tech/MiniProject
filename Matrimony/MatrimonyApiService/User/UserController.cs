@@ -45,7 +45,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     }
 
     [HttpGet("email/{email}")]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByEmail(string email)
     {
