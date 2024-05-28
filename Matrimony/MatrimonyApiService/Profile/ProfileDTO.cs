@@ -1,6 +1,6 @@
 ﻿using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.ProfileView;
@@ -47,8 +47,8 @@ public record ProfileDto
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }
     public IEnumerable<ProfileViewDto>? ProfileViews { get; init; }
-    public IEnumerable<MatchDto>? SentMatches { get; init; }
-    public IEnumerable<MatchDto>? ReceivedMatches { get; init; }
+    public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
+    public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
     public int PreferenceId { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }

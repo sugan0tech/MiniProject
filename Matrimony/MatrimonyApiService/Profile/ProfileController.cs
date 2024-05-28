@@ -1,5 +1,5 @@
 ﻿using MatrimonyApiService.Commons;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -130,7 +130,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet("{profileId}/matches")]
-    [ProducesResponseType(typeof(List<MatchDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMatches(int profileId)
     {

@@ -1,6 +1,6 @@
-﻿namespace MatrimonyApiService.Match;
+﻿namespace MatrimonyApiService.MatchRequest;
 
-public record MatchDto
+public record MatchRequestDto
 {
     public int MatchId { get; init; }
 

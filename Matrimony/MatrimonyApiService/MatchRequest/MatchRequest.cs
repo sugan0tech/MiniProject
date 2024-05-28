@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Commons;
 
-namespace MatrimonyApiService.Match;
+namespace MatrimonyApiService.MatchRequest;
 
-public class Match : BaseEntity
+public class MatchRequest : BaseEntity
 {
     // [Key] public int MatchId { get; set; }
     [ForeignKey("SentProfileId")] public int SentProfileId { get; set; }

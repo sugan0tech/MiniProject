@@ -1,27 +1,31 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
+using MatrimonyApiService.Profile;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
 
-namespace MatrimonyTest.Match;
+namespace MatrimonyTest.MatchRequest;
 
-public class MatchServiceTests
+public class MatchRequestRequestServiceTests
 {
-    private Mock<IBaseRepo<MatrimonyApiService.Match.Match>> _mockRepo;
+    private Mock<IBaseRepo<MatrimonyApiService.MatchRequest.MatchRequest>> _mockRepo;
+    private Mock<IProfileService> _mockProfileService;
     private Mock<IMapper> _mockMapper;
-    private Mock<ILogger<MatchService>> _mockLogger;
-    private MatchService _matchService;
+    private Mock<ILogger<MatchRequestRequestService>> _mockLogger;
+    private MatchRequestRequestService _matchRequestRequestService;
 
     [SetUp]
     public void Setup()
     {
-        _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.Match.Match>>();
+        _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.MatchRequest.MatchRequest>>();
+        _mockProfileService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILogger<MatchService>>();
-        _matchService = new MatchService(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+        _mockLogger = new Mock<ILogger<MatchRequestRequestService>>();
+        _matchRequestRequestService = new MatchRequestRequestService(_mockRepo.Object, _mockProfileService.Object,
+            _mockMapper.Object, _mockLogger.Object);
     }
 
     [Test]
@@ -29,24 +33,24 @@ public class MatchServiceTests
     {
         // Arrange
         var profileId = 1;
-        var matches = new List<MatrimonyApiService.Match.Match>
+        var matches = new List<MatrimonyApiService.MatchRequest.MatchRequest>
         {
             new() { Id = 1, SentProfileId = profileId, ProfileTwoLike = true },
             new() { Id = 2, SentProfileId = profileId, ProfileTwoLike = false },
             new() { Id = 3, SentProfileId = 2, ProfileTwoLike = true }
         };
-        var expectedMatches = new List<MatchDto>
+        var expectedMatches = new List<MatchRequestDto>
         {
             new() { MatchId = 1, SentProfileId = profileId, ProfileTwoLike = true }
         };
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(matches);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(It.IsAny<MatrimonyApiService.Match.Match>()))
-            .Returns((MatrimonyApiService.Match.Match source) => new MatchDto
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(It.IsAny<MatrimonyApiService.MatchRequest.MatchRequest>()))
+            .Returns((MatrimonyApiService.MatchRequest.MatchRequest source) => new MatchRequestDto
                 { MatchId = source.Id, SentProfileId = source.SentProfileId, ProfileTwoLike = source.ProfileTwoLike });
 
         // Act
-        var result = await _matchService.GetAcceptedMatches(profileId);
+        var result = await _matchRequestRequestService.GetAcceptedMatches(profileId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(1, result.Count);
@@ -60,25 +64,25 @@ public class MatchServiceTests
     {
         // Arrange
         var profileId = 1;
-        var matches = new List<MatrimonyApiService.Match.Match>
+        var matches = new List<MatrimonyApiService.MatchRequest.MatchRequest>
         {
             new() { Id = 1, ReceivedProfileId = profileId },
             new() { Id = 2, ReceivedProfileId = 2 },
             new() { Id = 3, ReceivedProfileId = profileId }
         };
-        var expectedMatches = new List<MatchDto>
+        var expectedMatches = new List<MatchRequestDto>
         {
             new() { MatchId = 1, ReceivedProfileId = profileId },
             new() { MatchId = 3, ReceivedProfileId = profileId }
         };
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(matches);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(It.IsAny<MatrimonyApiService.Match.Match>()))
-            .Returns((MatrimonyApiService.Match.Match source) => new MatchDto
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(It.IsAny<MatrimonyApiService.MatchRequest.MatchRequest>()))
+            .Returns((MatrimonyApiService.MatchRequest.MatchRequest source) => new MatchRequestDto
                 { MatchId = source.Id, ReceivedProfileId = source.ReceivedProfileId });
 
         // Act
-        var result = await _matchService.GetMatchRequests(profileId);
+        var result = await _matchRequestRequestService.GetMatchRequests(profileId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(2, result.Count);
@@ -94,18 +98,18 @@ public class MatchServiceTests
         // Arrange
         var matchId = 1;
         var profileId = 2;
-        var match = new MatrimonyApiService.Match.Match
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest
             { Id = matchId, ReceivedProfileId = profileId, ProfileTwoLike = true };
 
         _mockRepo.Setup(repo => repo.GetById(matchId)).ReturnsAsync(match);
 
         // Act
-        await _matchService.Cancel(matchId, profileId);
+        await _matchRequestRequestService.Cancel(matchId, profileId);
 
         // ClassicAssert
         _mockRepo.Verify(
             repo => repo.Update(
-                It.Is<MatrimonyApiService.Match.Match>(m => m.Id == matchId && m.ProfileTwoLike == false)), Times.Once);
+                It.Is<MatrimonyApiService.MatchRequest.MatchRequest>(m => m.Id == matchId && m.ProfileTwoLike == false)), Times.Once);
     }
 
     [Test]
@@ -114,12 +118,13 @@ public class MatchServiceTests
         // Arrange
         var matchId = 1;
         var profileId = 3;
-        var match = new MatrimonyApiService.Match.Match { Id = matchId, ReceivedProfileId = 2 };
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest { Id = matchId, ReceivedProfileId = 2 };
 
         _mockRepo.Setup(repo => repo.GetById(matchId)).ReturnsAsync(match);
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<InvalidMatchForProfile>(() => _matchService.Cancel(matchId, profileId));
+        var ex = Assert.ThrowsAsync<InvalidMatchForProfile>(
+            () => _matchRequestRequestService.Cancel(matchId, profileId));
         ClassicAssert.AreEqual($"The match {matchId} is not meant for {profileId}", ex.Message);
     }
 
@@ -128,14 +133,14 @@ public class MatchServiceTests
     {
         // Arrange
         var matchId = 1;
-        var match = new MatrimonyApiService.Match.Match { Id = matchId, SentProfileId = 1 };
-        var expectedMatchDto = new MatchDto { MatchId = matchId, SentProfileId = 1 };
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest { Id = matchId, SentProfileId = 1 };
+        var expectedMatchDto = new MatchRequestDto { MatchId = matchId, SentProfileId = 1 };
 
         _mockRepo.Setup(repo => repo.GetById(matchId)).ReturnsAsync(match);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(match)).Returns(expectedMatchDto);
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(match)).Returns(expectedMatchDto);
 
         // Act
-        var result = await _matchService.GetById(matchId);
+        var result = await _matchRequestRequestService.GetById(matchId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(expectedMatchDto, result);
@@ -150,22 +155,22 @@ public class MatchServiceTests
         _mockRepo.Setup(repo => repo.GetById(matchId)).Throws(new KeyNotFoundException());
 
         // Act & ClassicAssert
-        Assert.ThrowsAsync<KeyNotFoundException>(() => _matchService.GetById(matchId));
+        Assert.ThrowsAsync<KeyNotFoundException>(() => _matchRequestRequestService.GetById(matchId));
     }
 
     [Test]
     public async Task Add_ValidDto_ReturnsAddedMatchDto()
     {
         // Arrange
-        var matchDto = new MatchDto { MatchId = 1, SentProfileId = 1 };
-        var match = new MatrimonyApiService.Match.Match { Id = 1, SentProfileId = 1 };
+        var matchDto = new MatchRequestDto { MatchId = 1, SentProfileId = 1 };
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest { Id = 1, SentProfileId = 1 };
 
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Match.Match>(matchDto)).Returns(match);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(matchDto)).Returns(match);
         _mockRepo.Setup(repo => repo.Add(match)).ReturnsAsync(match);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(match)).Returns(matchDto);
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(match)).Returns(matchDto);
 
         // Act
-        var result = await _matchService.Add(matchDto);
+        var result = await _matchRequestRequestService.Add(matchDto);
 
         // ClassicAssert
         ClassicAssert.AreEqual(matchDto, result);
@@ -175,15 +180,15 @@ public class MatchServiceTests
     public async Task Update_ValidDto_ReturnsUpdatedMatchDto()
     {
         // Arrange
-        var matchDto = new MatchDto { MatchId = 1, SentProfileId = 1 };
-        var match = new MatrimonyApiService.Match.Match { Id = 1, SentProfileId = 1 };
+        var matchDto = new MatchRequestDto { MatchId = 1, SentProfileId = 1 };
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest { Id = 1, SentProfileId = 1 };
 
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Match.Match>(matchDto)).Returns(match);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(matchDto)).Returns(match);
         _mockRepo.Setup(repo => repo.Update(match)).ReturnsAsync(match);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(match)).Returns(matchDto);
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(match)).Returns(matchDto);
 
         // Act
-        var result = await _matchService.Update(matchDto);
+        var result = await _matchRequestRequestService.Update(matchDto);
 
         // ClassicAssert
         ClassicAssert.AreEqual(matchDto, result);
@@ -194,14 +199,14 @@ public class MatchServiceTests
     {
         // Arrange
         var matchId = 1;
-        var match = new MatrimonyApiService.Match.Match { Id = matchId, SentProfileId = 1 };
-        var expectedMatchDto = new MatchDto { MatchId = matchId, SentProfileId = 1 };
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest { Id = matchId, SentProfileId = 1 };
+        var expectedMatchDto = new MatchRequestDto { MatchId = matchId, SentProfileId = 1 };
 
         _mockRepo.Setup(repo => repo.DeleteById(matchId)).ReturnsAsync(match);
-        _mockMapper.Setup(mapper => mapper.Map<MatchDto>(match)).Returns(expectedMatchDto);
+        _mockMapper.Setup(mapper => mapper.Map<MatchRequestDto>(match)).Returns(expectedMatchDto);
 
         // Act
-        var result = await _matchService.DeleteById(matchId);
+        var result = await _matchRequestRequestService.DeleteById(matchId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(expectedMatchDto, result);

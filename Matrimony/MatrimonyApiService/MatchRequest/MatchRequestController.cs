@@ -4,11 +4,11 @@ using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MatrimonyApiService.Match;
+namespace MatrimonyApiService.MatchRequest;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MatchController(IMatchService matchService, ILogger<MatchController> logger) : ControllerBase
+public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -17,7 +17,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     {
         try
         {
-            var match = await matchService.GetById(id);
+            var match = await matchRequestService.GetById(id);
             return Ok(match);
         }
         catch (KeyNotFoundException ex)
@@ -31,7 +31,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAcceptedMatches(int profileId)
     {
-        var matches = await matchService.GetAcceptedMatches(profileId);
+        var matches = await matchRequestService.GetAcceptedMatches(profileId);
         return Ok(matches);
     }
 
@@ -39,7 +39,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMatchRequests(int profileId)
     {
-        var matches = await matchService.GetMatchRequests(profileId);
+        var matches = await matchRequestService.GetMatchRequests(profileId);
         return Ok(matches);
     }
 
@@ -50,7 +50,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     {
         try
         {
-            await matchService.Cancel(matchId, profileId);
+            await matchRequestService.Cancel(matchId, profileId);
             return Ok();
         }
         catch (InvalidMatchForProfile ex)
@@ -63,11 +63,11 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add(MatchDto dto)
+    public async Task<IActionResult> Add(MatchRequestDto requestDto)
     {
         try
         {
-            var match = await matchService.Add(dto);
+            var match = await matchRequestService.Add(requestDto);
             return Ok(match);
         }
         catch (DbUpdateException e)
@@ -89,7 +89,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     {
         try
         {
-            var match = await matchService.MatchRequestToProfile(senderId, targetId);
+            var match = await matchRequestService.MatchRequestToProfile(senderId, targetId);
             return Ok(match);
         }
         catch (DbUpdateException e)
@@ -118,11 +118,11 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(MatchDto dto)
+    public async Task<IActionResult> Update(MatchRequestDto requestDto)
     {
         try
         {
-            var match = await matchService.Update(dto);
+            var match = await matchRequestService.Update(requestDto);
             return Ok(match);
         }
         catch (KeyNotFoundException e)
@@ -139,7 +139,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     {
         try
         {
-            var match = await matchService.DeleteById(id);
+            var match = await matchRequestService.DeleteById(id);
             return Ok(match);
         }
         catch (KeyNotFoundException e)
@@ -153,7 +153,7 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        var matches = await matchService.GetAll();
+        var matches = await matchRequestService.GetAll();
         return Ok(matches);
     }
 }

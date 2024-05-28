@@ -54,7 +54,7 @@ namespace MatrimonyApiService.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("MatrimonyApiService.Match.Match", b =>
+            modelBuilder.Entity("MatrimonyApiService.MatchRequest.MatchRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -481,7 +481,7 @@ namespace MatrimonyApiService.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MatrimonyApiService.Match.Match", b =>
+            modelBuilder.Entity("MatrimonyApiService.MatchRequest.MatchRequest", b =>
                 {
                     b.HasOne("MatrimonyApiService.Profile.Profile", "ReceivedProfile")
                         .WithMany("ReceivedMatches")

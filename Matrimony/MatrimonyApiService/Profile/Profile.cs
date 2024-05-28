@@ -140,8 +140,8 @@ public class Profile : BaseEntity
     }
 
     public IEnumerable<ProfileView.ProfileView>? ProfileViews { get; set; }
-    public IEnumerable<Match.Match>? SentMatches { get; set; }
-    public IEnumerable<Match.Match>? ReceivedMatches { get; set; }
+    public IEnumerable<MatchRequest.MatchRequest>? SentMatches { get; set; }
+    public IEnumerable<MatchRequest.MatchRequest>? ReceivedMatches { get; set; }
 
     [ForeignKey("PreferenceId")] public int PreferenceId { get; set; }
     public Preference.Preference? Preference { get; set; }

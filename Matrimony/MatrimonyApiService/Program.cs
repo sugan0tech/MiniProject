@@ -3,7 +3,7 @@ using MatrimonyApiService.Address;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
 using MatrimonyApiService.Preference;
@@ -79,7 +79,7 @@ public class Program
         builder.Services.AddScoped<IBaseRepo<Staff.Staff>, StaffRepo>();
         builder.Services.AddScoped<IBaseRepo<ProfileView.ProfileView>, ProfileViewRepo>();
         builder.Services.AddScoped<IBaseRepo<Preference.Preference>, PreferenceRepo>();
-        builder.Services.AddScoped<IBaseRepo<Match.Match>, MatchRepo>();
+        builder.Services.AddScoped<IBaseRepo<MatchRequest.MatchRequest>, MatchRequestRepo>();
         builder.Services.AddScoped<IBaseRepo<Message.Message>, MessageRepo>();
         builder.Services.AddScoped<IBaseRepo<Membership.Membership>, MembershipRepo>();
         builder.Services.AddScoped<IBaseRepo<Report.Report>, ReportRepo>();
@@ -103,7 +103,7 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
-        builder.Services.AddScoped<IMatchService, MatchService>();
+        builder.Services.AddScoped<IMatchRequestService, MatchRequestRequestService>();
         builder.Services.AddScoped<IBaseService<Report.Report, ReportDto>, ReportService>();
 
         #endregion

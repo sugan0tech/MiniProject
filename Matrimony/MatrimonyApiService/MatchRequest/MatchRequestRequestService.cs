@@ -3,28 +3,28 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Profile;
 
-namespace MatrimonyApiService.Match;
+namespace MatrimonyApiService.MatchRequest;
 
-public class MatchService(
-    IBaseRepo<Match> repo,
+public class MatchRequestRequestService(
+    IBaseRepo<MatchRequest> repo,
     IProfileService profileService,
     IMapper mapper,
-    ILogger<MatchService> logger) : IMatchService
+    ILogger<MatchRequestRequestService> logger) : IMatchRequestService
 {
     /// <inheritdoc/>
-    public async Task<List<MatchDto>> GetAcceptedMatches(int profileId)
+    public async Task<List<MatchRequestDto>> GetAcceptedMatches(int profileId)
     {
         var matches = await repo.GetAll();
         return matches.Where(match => match.SentProfileId.Equals(profileId) && match.ProfileTwoLike).ToList()
-            .ConvertAll(input => mapper.Map<MatchDto>(input)).ToList();
+            .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
     }
 
     /// <inheritdoc/>
-    public async Task<List<MatchDto>> GetMatchRequests(int profileId)
+    public async Task<List<MatchRequestDto>> GetMatchRequests(int profileId)
     {
         var matches = await repo.GetAll();
         return matches.Where(match => match.ReceivedProfileId.Equals(profileId)).ToList()
-            .ConvertAll(input => mapper.Map<MatchDto>(input)).ToList();
+            .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
     }
 
     /// <inheritdoc/>
@@ -44,12 +44,12 @@ public class MatchService(
     }
 
     /// <inheritdoc/>
-    public async Task<MatchDto> GetById(int id)
+    public async Task<MatchRequestDto> GetById(int id)
     {
         try
         {
             var match = await repo.GetById(id);
-            return mapper.Map<MatchDto>(match);
+            return mapper.Map<MatchRequestDto>(match);
         }
         catch (KeyNotFoundException e)
         {
@@ -59,21 +59,21 @@ public class MatchService(
     }
 
     /// <inheritdoc/>
-    public async Task<MatchDto> Add(MatchDto dto)
+    public async Task<MatchRequestDto> Add(MatchRequestDto requestDto)
     {
-        var entity = mapper.Map<Match>(dto);
+        var entity = mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(requestDto);
         var savedEntity = await repo.Add(entity);
-        return mapper.Map<MatchDto>(savedEntity);
+        return mapper.Map<MatchRequestDto>(savedEntity);
     }
 
     /// <inheritdoc/>
-    public async Task<MatchDto> Update(MatchDto dto)
+    public async Task<MatchRequestDto> Update(MatchRequestDto requestDto)
     {
         try
         {
-            var entity = mapper.Map<Match>(dto);
+            var entity = mapper.Map<MatrimonyApiService.MatchRequest.MatchRequest>(requestDto);
             var updatedEntity = await repo.Update(entity);
-            return mapper.Map<MatchDto>(updatedEntity);
+            return mapper.Map<MatchRequestDto>(updatedEntity);
         }
         catch (KeyNotFoundException e)
         {
@@ -82,7 +82,7 @@ public class MatchService(
         }
     }
 
-    public async Task<MatchDto> MatchRequestToProfile(int senderId, int targetId)
+    public async Task<MatchRequestDto> MatchRequestToProfile(int senderId, int targetId)
     {
         if (senderId == targetId)
             throw new MatchRequestToSelfException($"{senderId} is trying to give self request");
@@ -98,7 +98,7 @@ public class MatchService(
                 throw new DuplicateRequestException($"You have already sent request for this Profile {targetId}");
         }
 
-        var match = new MatchDto
+        var match = new MatchRequestDto
         {
             SentProfileId = senderId,
             ReceivedProfileId = targetId,
@@ -109,11 +109,11 @@ public class MatchService(
     }
 
     /// <inheritdoc/>
-    public async Task<MatchDto> DeleteById(int id)
+    public async Task<MatchRequestDto> DeleteById(int id)
     {
         try
         {
-            return mapper.Map<MatchDto>(await repo.DeleteById(id));
+            return mapper.Map<MatchRequestDto>(await repo.DeleteById(id));
         }
         catch (KeyNotFoundException e)
         {
@@ -123,9 +123,9 @@ public class MatchService(
     }
 
     /// <inheritdoc/>
-    public async Task<List<MatchDto>> GetAll()
+    public async Task<List<MatchRequestDto>> GetAll()
     {
         var matches = await repo.GetAll();
-        return matches.ConvertAll(input => mapper.Map<MatchDto>(input)).ToList();
+        return matches.ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
     }
 }

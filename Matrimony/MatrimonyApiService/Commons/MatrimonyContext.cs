@@ -11,7 +11,7 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
     public DbSet<Preference.Preference> Preferences { get; set; }
     public DbSet<Staff.Staff> Staffs { get; set; }
     public DbSet<Address.Address> Addresses { get; set; }
-    public DbSet<Match.Match> Matches { get; set; }
+    public DbSet<MatchRequest.MatchRequest> Matches { get; set; }
     public DbSet<Membership.Membership> Memberships { get; set; }
     public DbSet<Report.Report> Reports { get; set; }
 
@@ -88,15 +88,15 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #endregion
 
-        #region Match
+        #region MatchRequest
 
         modelBuilder.Entity<Profile.Profile>()
-            .HasMany<Match.Match>(profile => profile.SentMatches)
+            .HasMany<MatchRequest.MatchRequest>(profile => profile.SentMatches)
             .WithOne(match => match.SentProfile)
             .HasForeignKey(match => match.SentProfileId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Profile.Profile>()
-            .HasMany<Match.Match>(profile => profile.ReceivedMatches)
+            .HasMany<MatchRequest.MatchRequest>(profile => profile.ReceivedMatches)
             .WithOne(match => match.ReceivedProfile)
             .HasForeignKey(match => match.ReceivedProfileId)
             .OnDelete(DeleteBehavior.Cascade);
@@ -163,13 +163,13 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 
         #endregion
 
-        #region Match
+        #region MatchRequest
 
-        modelBuilder.Entity<Match.Match>()
+        modelBuilder.Entity<MatchRequest.MatchRequest>()
             .HasOne<Profile.Profile>(match => match.SentProfile)
             .WithMany(profile => profile.SentMatches)
             .OnDelete(DeleteBehavior.NoAction);
-        modelBuilder.Entity<Match.Match>()
+        modelBuilder.Entity<MatchRequest.MatchRequest>()
             .HasOne<Profile.Profile>(match => match.ReceivedProfile)
             .WithMany(profile => profile.ReceivedMatches)
             .OnDelete(DeleteBehavior.NoAction);

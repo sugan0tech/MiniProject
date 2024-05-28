@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
+using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,6 +14,7 @@ namespace MatrimonyTest.ProfileView;
 public class ProfileViewServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.ProfileView.ProfileView>> _mockRepo;
+    private Mock<IProfileService> _mockProfileService;
     private Mock<IMapper> _mockMapper;
     private Mock<IMembershipService> _membershipServiceMock;
     private Mock<ILogger<ProfileViewService>> _mockLogger;
@@ -22,10 +24,12 @@ public class ProfileViewServiceTests
     public void Setup()
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.ProfileView.ProfileView>>();
+        _mockProfileService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
         _membershipServiceMock = new Mock<IMembershipService>();
         _mockLogger = new Mock<ILogger<ProfileViewService>>();
         _profileViewService = new ProfileViewService(_mockRepo.Object, _membershipServiceMock.Object,
+            _mockProfileService.Object,
             _mockMapper.Object, _mockLogger.Object);
     }
 
@@ -352,7 +356,7 @@ public class ProfileViewServiceTests
 
         var profileView = new MatrimonyApiService.ProfileView.ProfileView
             { Id = 1, ViewerId = 1, ViewedProfileAt = 2, ViewedAt = DateTime.Now.AddDays(-2) };
-        
+
         _mockRepo.Setup(r => r.GetById(profileId)).ReturnsAsync(profileView);
         _membershipServiceMock.Setup(p => p.GetByProfileId(profileId)).ReturnsAsync(membershipDto);
 
@@ -402,10 +406,10 @@ public class ProfileViewServiceTests
             Type = MemberShip.FreeUser.ToString(), ProfileId = 1,
             Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
         };
-        
+
         var profileView = new MatrimonyApiService.ProfileView.ProfileView
             { Id = 1, ViewerId = 1, ViewedProfileAt = 2, ViewedAt = DateTime.Now.AddDays(-2) };
-        
+
         var profileId = 1;
         _mockRepo.Setup(r => r.GetById(profileId)).ReturnsAsync(profileView);
 

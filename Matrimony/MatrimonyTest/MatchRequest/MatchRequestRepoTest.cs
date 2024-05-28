@@ -1,16 +1,16 @@
 ﻿using MatrimonyApiService.Commons;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework.Legacy;
 
-namespace MatrimonyTest.Match;
+namespace MatrimonyTest.MatchRequest;
 
 [TestFixture]
-public class MatchRepoTests
+public class MatchRequestRepoTests
 {
     private DbContextOptions<MatrimonyContext> _dbContextOptions;
     private MatrimonyContext _context;
-    private MatchRepo _matchRepo;
+    private MatchRequestRepo _matchRequestRepo;
 
     [SetUp]
     public void Setup()
@@ -20,7 +20,7 @@ public class MatchRepoTests
             .Options;
 
         _context = new MatrimonyContext(_dbContextOptions);
-        _matchRepo = new MatchRepo(_context);
+        _matchRequestRepo = new MatchRequestRepo(_context);
     }
 
     [TearDown]
@@ -34,7 +34,7 @@ public class MatchRepoTests
     public async Task GetById_ShouldReturnEntity_WhenEntityExists()
     {
         // Arrange
-        var match = new MatrimonyApiService.Match.Match
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest
         {
             SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false, Level = 3,
             FoundAt = DateTime.Now
@@ -43,7 +43,7 @@ public class MatchRepoTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _matchRepo.GetById(match.Id);
+        var result = await _matchRequestRepo.GetById(match.Id);
 
         // Assert
         ClassicAssert.NotNull(result);
@@ -55,8 +55,8 @@ public class MatchRepoTests
     public void GetById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
     {
         // Act & Assert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRepo.GetById(99));
-        ClassicAssert.AreEqual("Match with key 99 not found!!!", ex.Message);
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRequestRepo.GetById(99));
+        ClassicAssert.AreEqual("MatchRequest with key 99 not found!!!", ex.Message);
     }
 
     [Test]
@@ -64,12 +64,12 @@ public class MatchRepoTests
     {
         // Arrange
         await _context.Matches.AddRangeAsync(
-            new MatrimonyApiService.Match.Match
+            new MatrimonyApiService.MatchRequest.MatchRequest
             {
                 SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false, Level = 3,
                 FoundAt = DateTime.Now
             },
-            new MatrimonyApiService.Match.Match
+            new MatrimonyApiService.MatchRequest.MatchRequest
             {
                 SentProfileId = 3, ReceivedProfileId = 4, ProfileOneLike = false, ProfileTwoLike = true, Level = 4,
                 FoundAt = DateTime.Now
@@ -78,7 +78,7 @@ public class MatchRepoTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _matchRepo.GetAll();
+        var result = await _matchRequestRepo.GetAll();
 
         // Assert
         ClassicAssert.AreEqual(2, result.Count);
@@ -88,14 +88,14 @@ public class MatchRepoTests
     public async Task Add_ShouldAddEntity()
     {
         // Arrange
-        var match = new MatrimonyApiService.Match.Match
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest
         {
             SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false, Level = 3,
             FoundAt = DateTime.Now
         };
 
         // Act
-        var result = await _matchRepo.Add(match);
+        var result = await _matchRequestRepo.Add(match);
 
         // Assert
         ClassicAssert.IsNotNull(result);
@@ -107,15 +107,15 @@ public class MatchRepoTests
     public void Add_ShouldThrowArgumentNullException_WhenEntityIsNull()
     {
         // Act & Assert
-        var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _matchRepo.Add(null));
-        ClassicAssert.AreEqual("Match cannot be null. (Parameter 'entity')", ex.Message);
+        var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _matchRequestRepo.Add(null));
+        ClassicAssert.AreEqual("MatchRequest cannot be null. (Parameter 'entity')", ex.Message);
     }
 
     [Test]
     public async Task Update_ShouldUpdateEntity()
     {
         // Arrange
-        var match = new MatrimonyApiService.Match.Match
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest
         {
             SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false, Level = 3,
             FoundAt = DateTime.Now
@@ -126,7 +126,7 @@ public class MatchRepoTests
         match.ProfileTwoLike = true;
 
         // Act
-        var result = await _matchRepo.Update(match);
+        var result = await _matchRequestRepo.Update(match);
 
         // Assert
         ClassicAssert.IsNotNull(result);
@@ -137,22 +137,22 @@ public class MatchRepoTests
     public void Update_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
     {
         // Arrange
-        var updateMatch = new MatrimonyApiService.Match.Match
+        var updateMatch = new MatrimonyApiService.MatchRequest.MatchRequest
         {
             Id = 99, SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false,
             Level = 3, FoundAt = DateTime.Now
         };
 
         // Act & Assert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRepo.Update(updateMatch));
-        ClassicAssert.AreEqual("Match with key 99 not found!!!", ex.Message);
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRequestRepo.Update(updateMatch));
+        ClassicAssert.AreEqual("MatchRequest with key 99 not found!!!", ex.Message);
     }
 
     [Test]
     public async Task DeleteById_ShouldDeleteEntity()
     {
         // Arrange
-        var match = new MatrimonyApiService.Match.Match
+        var match = new MatrimonyApiService.MatchRequest.MatchRequest
         {
             SentProfileId = 1, ReceivedProfileId = 2, ProfileOneLike = true, ProfileTwoLike = false, Level = 3,
             FoundAt = DateTime.Now
@@ -161,7 +161,7 @@ public class MatchRepoTests
         await _context.SaveChangesAsync();
 
         // Act
-        await _matchRepo.DeleteById(match.Id);
+        await _matchRequestRepo.DeleteById(match.Id);
 
         // Assert
         ClassicAssert.AreEqual(0, await _context.Matches.CountAsync());
@@ -171,7 +171,7 @@ public class MatchRepoTests
     public void DeleteById_ShouldThrowKeyNotFoundException_WhenEntityDoesNotExist()
     {
         // Act & Assert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRepo.DeleteById(99));
-        ClassicAssert.AreEqual("Match with key 99 not found!!!", ex.Message);
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _matchRequestRepo.DeleteById(99));
+        ClassicAssert.AreEqual("MatchRequest with key 99 not found!!!", ex.Message);
     }
 }

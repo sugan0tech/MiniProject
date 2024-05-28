@@ -1,5 +1,5 @@
 ﻿using MatrimonyApiService.Address;
-using MatrimonyApiService.Match;
+using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
 using MatrimonyApiService.Preference;
@@ -20,10 +20,10 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<AddressDto, Address.Address>()
             .ForMember(dto => dto.Id, act => act.MapFrom(src => src.AddressId));
 
-        // Match mappings
-        CreateMap<Match.Match, MatchDto>()
+        // MatchRequest mappings
+        CreateMap<MatchRequest.MatchRequest, MatchRequestDto>()
             .ForMember(dto => dto.MatchId, act => act.MapFrom(src => src.Id));
-        CreateMap<MatchDto, Match.Match>()
+        CreateMap<MatchRequestDto, MatchRequest.MatchRequest>()
             .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.MatchId));
 
         // Membership mappings
