@@ -77,4 +77,21 @@ public class UserController(IUserService userService, ILogger<UserController> lo
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
+    
+    [HttpPost("validate/{userId}/{status}")]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteById(int userId, bool status)
+    {
+        try
+        {
+            var user = await userService.Validate(userId, status);
+            return Ok(user);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+    }
 }

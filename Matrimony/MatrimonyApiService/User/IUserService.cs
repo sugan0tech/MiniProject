@@ -38,4 +38,12 @@ public interface IUserService
     /// <param name="email"></param>
     /// <returns></returns>
     Task<User> GetByEmail(string email);
+
+    /// <summary>
+    ///  If called validates the given user;
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    Task<UserDto> Validate(int userId, bool status);
 }

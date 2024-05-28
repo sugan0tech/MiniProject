@@ -44,7 +44,7 @@ public class UserService(
         try
         {
             var usr = await repo.Update(user);
-            return mapper.Map<UserDto>(user);
+            return mapper.Map<UserDto>(usr);
         }
         catch (KeyNotFoundException e)
         {
@@ -63,6 +63,23 @@ public class UserService(
         return user;
     }
 
+    /// <intheritdoc/>
+    public async Task<UserDto> Validate(int userId, bool status)
+    {
+        try
+        {
+            var user = await repo.GetById(userId);
+            user.IsVerified = status;
+            return await Update(user);
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
+    }
+
+    /// <intheritdoc/>
     public async Task<UserDto> DeleteById(int id)
     {
         try
