@@ -1,47 +1,20 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
-using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
-using MatrimonyApiService.Membership;
-using MatrimonyApiService.Profile;
-using MatrimonyApiService.ProfileView;
 
 namespace MatrimonyApiService.User;
 
 public class UserService(
     IBaseRepo<User> repo,
-    IProfileService profileService,
-    IProfileViewService profileViewService,
-    IMembershipService membershipService,
     IMapper mapper,
     ILogger<UserService> logger) : IUserService
 {
-    /// <intheritdoc/>
-    public async Task<ProfileDto> ViewProfile(int userId, int profileId)
+    public async Task<UserDto> GetById(int userId)
     {
         try
         {
-            // just for validation;
             var user = await repo.GetById(userId);
-            var userProfile = await profileService.GetProfileByUserId(user.Id);
-            var membership = await membershipService.GetByProfileId(userProfile.ProfileId);
-            if (membership.Type.Equals(MemberShip.FreeUser.ToString()))
-            {
-                logger.LogWarning($"User has not permission to view Profile {user.Email}");
-                throw new NonPremiumUserException($"Current {user.FirstName} runs on free tier account");
-            }
-
-            if (membership.Type.Equals(MemberShip.BasicUser.ToString()))
-                if (user.Views != null && user.Views.Count() > 50)
-                {
-                    logger.LogWarning($"User view Profile {user.Email} Has reached to maximum");
-                    throw new ExhaustedMaximumProfileViewsException(
-                        "You cannot view more than 50 profile per month, Cosider upgrading to premium membership");
-                }
-
-            var profile = await profileService.GetProfileById(profileId);
-            await profileViewService.AddView(userId, profileId);
-            return profile;
+            return mapper.Map<UserDto>(user);
         }
         catch (KeyNotFoundException e)
         {

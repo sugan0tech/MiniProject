@@ -4,7 +4,7 @@ namespace MatrimonyApiService.User;
 
 public interface IUserService
 {
-    Task<ProfileDto> ViewProfile(int userId, int profileId);
+    Task<UserDto> GetById(int userId);
 
     /// <summary>
     /// To be used by Admins

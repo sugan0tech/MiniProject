@@ -5,6 +5,7 @@ using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
+using MatrimonyApiService.User;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -17,6 +18,7 @@ public class ProfileViewServiceTests
     private Mock<IProfileService> _mockProfileService;
     private Mock<IMapper> _mockMapper;
     private Mock<IMembershipService> _membershipServiceMock;
+    private Mock<IUserService> _mockUserService;
     private Mock<ILogger<ProfileViewService>> _mockLogger;
     private ProfileViewService _profileViewService;
 
@@ -26,9 +28,11 @@ public class ProfileViewServiceTests
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.ProfileView.ProfileView>>();
         _mockProfileService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
+        _mockUserService = new Mock<IUserService>();
         _membershipServiceMock = new Mock<IMembershipService>();
         _mockLogger = new Mock<ILogger<ProfileViewService>>();
         _profileViewService = new ProfileViewService(_mockRepo.Object, _membershipServiceMock.Object,
+            _mockUserService.Object,
             _mockProfileService.Object,
             _mockMapper.Object, _mockLogger.Object);
     }
