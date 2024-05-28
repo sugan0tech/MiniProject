@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.Match;
 
-public class MatchService(IBaseRepo<Match> repo, IMapper mapper, ILogger<MatchService> logger) : IMatchService
+public class MatchService(
+    IBaseRepo<Match> repo,
+    IProfileService profileService,
+    IMapper mapper,
+    ILogger<MatchService> logger) : IMatchService
 {
     /// <inheritdoc/>
     public async Task<List<MatchDto>> GetAcceptedMatches(int profileId)
@@ -75,6 +80,32 @@ public class MatchService(IBaseRepo<Match> repo, IMapper mapper, ILogger<MatchSe
             logger.LogError(e.Message);
             throw;
         }
+    }
+
+    public async Task<MatchDto> MatchRequestToProfile(int senderId, int targetId)
+    {
+        if (senderId == targetId)
+            throw new MatchRequestToSelfException($"{senderId} is trying to give self request");
+
+        // validations
+        await profileService.GetProfileById(senderId);
+        await profileService.GetProfileById(targetId);
+
+        var matches = await GetAll();
+        foreach (var matchDto in matches)
+        {
+            if (matchDto.SentProfileId == senderId && matchDto.ReceivedProfileId == targetId)
+                throw new DuplicateRequestException($"You have already sent request for this Profile {targetId}");
+        }
+
+        var match = new MatchDto
+        {
+            SentProfileId = senderId,
+            ReceivedProfileId = targetId,
+            FoundAt = DateTime.Now
+        };
+
+        return await Add(match);
     }
 
     /// <inheritdoc/>

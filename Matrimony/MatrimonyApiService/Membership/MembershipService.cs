@@ -108,6 +108,9 @@ public class MembershipService(
                     membership.IsTrailEnded = true;
 
                 membership.TypeEnum = MemberShip.FreeUser;
+                membership.RequestCount = 0;
+                membership.ViewsCount = 0;
+                membership.ViewersViewCount = 0;
                 logger.LogInformation($"Membership Ended => Profile: {membership.ProfileId}");
             }
 

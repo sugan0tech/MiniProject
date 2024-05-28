@@ -80,6 +80,40 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
         }
     }
 
+    [HttpPost("{senderId}/{targetId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> MatchRequestToProfile(int senderId, int targetId)
+    {
+        try
+        {
+            var match = await matchService.MatchRequestToProfile(senderId, targetId);
+            return Ok(match);
+        }
+        catch (DbUpdateException e)
+        {
+            var message = e.Message;
+            if (e.InnerException != null)
+                message = e.InnerException.Message;
+
+            return BadRequest(new ErrorModel(400, message));
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(new ErrorModel(404, e.Message));
+        }
+        catch (DuplicateRequestException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
+        catch (MatchRequestToSelfException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
+    }
+    
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

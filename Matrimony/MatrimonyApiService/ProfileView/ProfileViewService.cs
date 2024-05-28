@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
+using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.ProfileView;
 
@@ -12,14 +13,29 @@ using System.Threading.Tasks;
 public class ProfileViewService(
     IBaseRepo<ProfileView> profileViewRepo,
     IMembershipService membershipService,
+    IProfileService profileService,
     IMapper mapper,
     ILogger<ProfileViewService> logger) : IProfileViewService
 {
     /// <inheritdoc/>
     public async Task AddView(int viewerId, int profileId)
     {
+        await profileService.GetProfileById(profileId); // validate profile
+        var membership = await membershipService.GetByProfileId(profileId);
+        if (!membership.IsTrail)
+        {
+            if (membership.Type.Equals(MemberShip.FreeUser.ToString()))
+                throw new NonPremiumUserException(
+                    "You can't View a profile under free account\n consider upgrading your membership.");
+            if (membership.Type.Equals(MemberShip.BasicUser.ToString()) && membership.ViewsCount >= 50)
+                throw new ExhaustedMaximumProfileViewsException(
+                    "You have reached limit of viewing 50 profiles");
+        }
+
         var profileView = new ProfileView { ViewedProfileAt = profileId, ViewerId = viewerId, ViewedAt = DateTime.Now };
         await profileViewRepo.Add(profileView);
+        membership.ViewsCount++;
+        await membershipService.Update(membership);
     }
 
     /// <inheritdoc/>

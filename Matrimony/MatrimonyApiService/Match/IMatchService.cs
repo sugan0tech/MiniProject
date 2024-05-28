@@ -45,6 +45,13 @@ public interface IMatchService
     Task<MatchDto> Update(MatchDto dto);
 
     /// <summary>
+    ///  Updated Match, mostly to be used for updating status ( two way like ).
+    /// </summary>
+    /// <param name="dto">Update matchDto</param>
+    /// <returns>update dto</returns>
+    Task<MatchDto> MatchRequestToProfile(int senderId, int targetId);
+    
+    /// <summary>
     /// Deletes match by id, mostly of if one of the parties dislikes
     /// </summary>
     /// <param name="id"></param>
