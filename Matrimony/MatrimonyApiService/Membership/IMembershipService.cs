@@ -8,7 +8,7 @@ public interface IMembershipService
     /// <param name="profileId"></param>
     /// <returns></returns>
     Task<MembershipDto> GetByProfileId(int profileId);
-    
+
     /// <summary>
     ///  Get Membership for a user's profile
     /// </summary>

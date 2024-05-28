@@ -16,7 +16,7 @@ public class MessageRepoTest
     public void Setup()
     {
         _dbContextOptions = new DbContextOptionsBuilder<MatrimonyContext>()
-            .UseInMemoryDatabase(databaseName: "MatrimonyTestDb")
+            .UseInMemoryDatabase("MatrimonyTestDb")
             .Options;
 
         _context = new MatrimonyContext(_dbContextOptions);

@@ -116,7 +116,7 @@ public class UserServiceTests
     public async Task ViewProfile_BasicUserBelowViewLimit_ReturnsProfileDto()
     {
         // Arrange
-;
+        ;
 
         var userId = 1;
         var profileId = 2;
@@ -163,13 +163,14 @@ public class UserServiceTests
         var userId = 1;
         var profileId = 2;
         var views = new List<MatrimonyApiService.ProfileView.ProfileView>();
-        for (var i = 0; i < 51; i++) views.Add(new MatrimonyApiService.ProfileView.ProfileView
-        {
-            Id = i,
-            ViewerId = 1,
-            ViewedProfileAt = 1,
-            ViewedAt = DateTime.Now
-        });
+        for (var i = 0; i < 51; i++)
+            views.Add(new MatrimonyApiService.ProfileView.ProfileView
+            {
+                Id = i,
+                ViewerId = 1,
+                ViewedProfileAt = 1,
+                ViewedAt = DateTime.Now
+            });
         var user = new MatrimonyApiService.User.User
         {
             Id = userId,

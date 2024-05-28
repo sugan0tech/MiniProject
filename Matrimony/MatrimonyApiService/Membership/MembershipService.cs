@@ -6,7 +6,11 @@ using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.Membership;
 
-public class MembershipService(IBaseRepo<Membership> repo, IProfileService profileService, IMapper mapper, ILogger<MembershipService> logger)
+public class MembershipService(
+    IBaseRepo<Membership> repo,
+    IProfileService profileService,
+    IMapper mapper,
+    ILogger<MembershipService> logger)
     : IMembershipService
 {
     /// <inheritdoc/>
@@ -25,7 +29,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IProfileService profi
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -54,7 +58,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IProfileService profi
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -80,12 +84,6 @@ public class MembershipService(IBaseRepo<Membership> repo, IProfileService profi
     {
         try
         {
-            var existingMembership = await repo.GetById(dto.MembershipId);
-            if (existingMembership == null)
-            {
-                throw new KeyNotFoundException($"Membership with id {dto.MembershipId} not found.");
-            }
-
             var updatedMembership = mapper.Map<Membership>(dto);
             updatedMembership.Id = dto.MembershipId; // Ensure the ID is set to the correct value
             var result = await repo.Update(updatedMembership);
@@ -94,7 +92,7 @@ public class MembershipService(IBaseRepo<Membership> repo, IProfileService profi
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -132,9 +130,6 @@ public class MembershipService(IBaseRepo<Membership> repo, IProfileService profi
     public async Task ValidateAll()
     {
         var memberships = await repo.GetAll();
-        foreach (var membership in memberships)
-        {
-            await Validate(membership.Id);
-        }
+        foreach (var membership in memberships) await Validate(membership.Id);
     }
 }

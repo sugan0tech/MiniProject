@@ -30,8 +30,8 @@ public class ProfileServiceTests
         _loggerMock = new Mock<ILogger<ProfileService>>();
         _profileService = new ProfileService(_repoMock.Object, _preferenceServiceMock.Object,
             _profileViewServiceMock.Object, _mapperMock.Object, _loggerMock.Object);
-        
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -54,7 +54,7 @@ public class ProfileServiceTests
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-        MatrimonyApiService.User.User user = new MatrimonyApiService.User.User
+        var user = new MatrimonyApiService.User.User
         {
             Email = "user@example.com",
             FirstName = "John",
@@ -64,7 +64,7 @@ public class ProfileServiceTests
             Password = "password"u8.ToArray(),
             HashKey = "key"u8.ToArray()
         };
-        MatrimonyApiService.Membership.Membership membership = new MatrimonyApiService.Membership.Membership
+        var membership = new MatrimonyApiService.Membership.Membership
         {
             Type = MemberShip.PremiumUser.ToString(), TypeEnum = MemberShip.PremiumUser, ProfileId = 1,
             Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
@@ -74,7 +74,7 @@ public class ProfileServiceTests
     [Test]
     public async Task GetProfileById_ShouldReturnProfile_WhenProfileExists()
     {
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -97,7 +97,7 @@ public class ProfileServiceTests
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-        MatrimonyApiService.User.User user = new MatrimonyApiService.User.User
+        var user = new MatrimonyApiService.User.User
         {
             Email = "user@example.com",
             FirstName = "John",
@@ -107,7 +107,7 @@ public class ProfileServiceTests
             Password = "password"u8.ToArray(),
             HashKey = "key"u8.ToArray()
         };
-        MatrimonyApiService.Membership.Membership membership = new MatrimonyApiService.Membership.Membership
+        var membership = new MatrimonyApiService.Membership.Membership
         {
             Type = MemberShip.PremiumUser.ToString(), TypeEnum = MemberShip.PremiumUser, ProfileId = 1,
             Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
@@ -142,7 +142,7 @@ public class ProfileServiceTests
             UserId = 1, MotherTongue = "English", Religion = "Christianity", Education = "Bachelors",
             Occupation = "Engineer", Height = 170, Age = 30
         };
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -164,7 +164,8 @@ public class ProfileServiceTests
             RelationEnum = Relation.Friend,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
-        };        var preferenceDto = new PreferenceDto { PreferenceId = 1 };
+        };
+        var preferenceDto = new PreferenceDto { PreferenceId = 1 };
 
         _mapperMock.Setup(m => m.Map<MatrimonyApiService.Profile.Profile>(profileDto)).Returns(profile);
         _preferenceServiceMock.Setup(p => p.Add(It.IsAny<PreferenceDto>())).ReturnsAsync(preferenceDto);
@@ -182,7 +183,7 @@ public class ProfileServiceTests
     public async Task UpdateProfile_ShouldUpdateProfileSuccessfully()
     {
         var profileDto = new ProfileDto { ProfileId = 1, UserId = 1 };
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -219,7 +220,7 @@ public class ProfileServiceTests
     public void UpdateProfile_ShouldThrowKeyNotFoundException_WhenProfileDoesNotExist()
     {
         var profileDto = new ProfileDto { ProfileId = 1 };
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -255,7 +256,7 @@ public class ProfileServiceTests
     public async Task DeleteProfileById_ShouldDeleteProfileSuccessfully()
     {
         var profileId = 1;
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -301,7 +302,7 @@ public class ProfileServiceTests
     public async Task GetProfileByUserId_ShouldReturnProfile_WhenProfileExists()
     {
         var userId = 1;
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -323,7 +324,8 @@ public class ProfileServiceTests
             RelationEnum = Relation.Friend,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
-        };        var profileDto = new ProfileDto { UserId = userId };
+        };
+        var profileDto = new ProfileDto { UserId = userId };
 
         _repoMock.Setup(r => r.GetAll()).ReturnsAsync(new List<MatrimonyApiService.Profile.Profile> { profile });
         _mapperMock.Setup(m => m.Map<ProfileDto>(profile)).Returns(profileDto);
@@ -375,7 +377,7 @@ public class ProfileServiceTests
             UpdatedAt = DateTime.Now,
             PreferenceId = 1,
             Preference = preferenceObj
-        };        
+        };
         var profile2 = new MatrimonyApiService.Profile.Profile
         {
             Id = 2,
@@ -398,7 +400,7 @@ public class ProfileServiceTests
             RelationEnum = Relation.Friend,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
-        };        
+        };
         var preference = new PreferenceDto
         {
             MotherTongue = "English",
@@ -432,7 +434,7 @@ public class ProfileServiceTests
     [Test]
     public async Task GetViews_ShouldReturnProfileViews()
     {
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -455,7 +457,7 @@ public class ProfileServiceTests
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-        MatrimonyApiService.User.User user = new MatrimonyApiService.User.User
+        var user = new MatrimonyApiService.User.User
         {
             Email = "user@example.com",
             FirstName = "John",
@@ -465,14 +467,14 @@ public class ProfileServiceTests
             Password = "password"u8.ToArray(),
             HashKey = "key"u8.ToArray()
         };
-        MatrimonyApiService.Membership.Membership membership = new MatrimonyApiService.Membership.Membership
+        var membership = new MatrimonyApiService.Membership.Membership
         {
             Id = 1, Type = MemberShip.PremiumUser.ToString(), ProfileId = 1,
             Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
         };
         profile.Membership = membership;
         profile.MembershipId = 1;
- 
+
         var profileId = 1;
         var profileViews = new List<ProfileViewDto>
         {
@@ -492,7 +494,7 @@ public class ProfileServiceTests
     [Test]
     public void GetViews_ShouldThrowNonPremiumUserException_WhenMembershipIsFree()
     {
-        MatrimonyApiService.Profile.Profile profile = new MatrimonyApiService.Profile.Profile
+        var profile = new MatrimonyApiService.Profile.Profile
         {
             Id = 1,
             DateOfBirth = new DateTime(1990, 5, 15),
@@ -515,7 +517,7 @@ public class ProfileServiceTests
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-        MatrimonyApiService.User.User user = new MatrimonyApiService.User.User
+        var user = new MatrimonyApiService.User.User
         {
             Email = "user@example.com",
             FirstName = "John",
@@ -525,7 +527,7 @@ public class ProfileServiceTests
             Password = "password"u8.ToArray(),
             HashKey = "key"u8.ToArray()
         };
-        MatrimonyApiService.Membership.Membership membership = new MatrimonyApiService.Membership.Membership
+        var membership = new MatrimonyApiService.Membership.Membership
         {
             Type = MemberShip.FreeUser.ToString(), ProfileId = 1,
             Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false

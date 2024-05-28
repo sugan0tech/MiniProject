@@ -15,7 +15,7 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     /// <param name="preferenceDto">Preference data transfer object</param>
     /// <returns>Added preference</returns>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PreferenceDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(PreferenceDto preferenceDto)
     {
@@ -29,7 +29,7 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     /// <param name="id">Preference ID</param>
     /// <returns>Preference data transfer object</returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PreferenceDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
@@ -51,7 +51,7 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     /// <param name="preferenceDto">Preference data transfer object</param>
     /// <returns>Updated preference</returns>
     [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PreferenceDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(PreferenceDto preferenceDto)

@@ -17,7 +17,7 @@ public interface IUserService
     /// </summary>
     /// <returns></returns>
     Task<UserDto> DeleteById(int id);
-    
+
     /// <summary>
     ///  To create new user, to be used in Auth service
     /// </summary>

@@ -19,7 +19,7 @@ public interface IProfileViewService
     /// Retrieves a view by its unique identifier asynchronously.
     /// </summary>
     Task<ProfileViewDto> GetViewById(int viewId);
-    
+
     /// <summary>
     /// Retrives Profile View for given Profile
     /// </summary>

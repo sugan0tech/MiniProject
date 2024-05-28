@@ -5,10 +5,11 @@ namespace MatrimonyApiService.Report;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReportController(IBaseService<Report, ReportDto> reportService, ILogger<ReportController> logger) : ControllerBase
+public class ReportController(IBaseService<Report, ReportDto> reportService, ILogger<ReportController> logger)
+    : ControllerBase
 {
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(int id)
     {
@@ -25,7 +26,7 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ReportDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
         var reports = await reportService.GetAll();
@@ -49,25 +50,8 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
         }
     }
 
-    [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(ReportDto report)
-    {
-        try
-        {
-            var updatedReport = await reportService.Update(report);
-            return Ok(updatedReport);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-    }
-
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteById(int id)
     {

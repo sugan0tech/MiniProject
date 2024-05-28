@@ -8,7 +8,9 @@ public class Match : BaseEntity
 {
     // [Key] public int MatchId { get; set; }
     [ForeignKey("SentProfileId")] public int SentProfileId { get; set; }
+
     public Profile.Profile? SentProfile { get; set; }
+
     // Todo to proper naming and migration
     public bool ProfileOneLike { get; set; }
     [ForeignKey("ReceivedProfileId")] public int ReceivedProfileId { get; set; }

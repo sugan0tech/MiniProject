@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class UserNotVerifiedException: Exception
+public class UserNotVerifiedException : Exception
 {
     public UserNotVerifiedException()
     {

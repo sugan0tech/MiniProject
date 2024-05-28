@@ -6,9 +6,9 @@ namespace MatrimonyApiService.Membership;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger): ControllerBase
+public class MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger)
+    : ControllerBase
 {
-
     [HttpGet("profile/{profileId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -61,7 +61,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MembershipDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(MembershipDto dto)
     {
@@ -73,12 +73,12 @@ public class MembershipController(IMembershipService membershipService, ILogger<
         catch (AlreadyExistingEntityException ex)
         {
             logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(40, ex.Message));
+            return BadRequest(new ErrorModel(400, ex.Message));
         }
     }
 
     [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MembershipDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(MembershipDto dto)
     {

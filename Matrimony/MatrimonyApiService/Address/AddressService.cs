@@ -3,7 +3,8 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.Address;
 
-public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILogger<AddressService> logger) : IAddressService
+public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILogger<AddressService> logger)
+    : IAddressService
 {
     /// <inheritdoc/>
     public async Task<AddressDto> GetAddressById(int id)
@@ -12,7 +13,6 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILog
         {
             var addressEntity = await addressRepo.GetById(id);
             return mapper.Map<AddressDto>(addressEntity);
-
         }
         catch (KeyNotFoundException e)
         {
@@ -26,10 +26,7 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILog
     {
         var addressEntities = await addressRepo.GetAll();
         var addressDtos = new List<AddressDto>();
-        foreach (var addressEntity in addressEntities)
-        {
-            addressDtos.Add(mapper.Map<AddressDto>(addressEntity));
-        }
+        foreach (var addressEntity in addressEntities) addressDtos.Add(mapper.Map<AddressDto>(addressEntity));
 
         return addressDtos;
     }
@@ -47,17 +44,15 @@ public class AddressService(IBaseRepo<Address> addressRepo, IMapper mapper, ILog
     {
         try
         {
-            if (addressDto == null)
-                throw new ArgumentNullException(nameof(addressDto));
             var updatedAddressEntity = mapper.Map<Address>(addressDto);
             updatedAddressEntity.Id = addressDto.AddressId; // Ensure the ID is set to the correct value
             var result = await addressRepo.Update(updatedAddressEntity);
             return mapper.Map<AddressDto>(result);
         }
-        catch(KeyNotFoundException ex)
+        catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 

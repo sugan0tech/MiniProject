@@ -12,5 +12,4 @@ public record PayloadDto
     public int Id { get; }
     public string Email { get; }
     public string Role { get; set; }
-
 }

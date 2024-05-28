@@ -6,7 +6,7 @@ namespace MatrimonyApiService.Profile;
 public record ProfilePreviewDto
 {
     public int ProfileId { get; init; }
-    
+
     [EnumTypeValidation(typeof(Education))]
     public string Education { get; init; }
 
@@ -19,10 +19,10 @@ public record ProfilePreviewDto
     [EnumTypeValidation(typeof(MotherTongue))]
     public string MotherTongue { get; init; }
 
-    [EnumTypeValidation(typeof(Religion))]
-    public string Religion { get; init; }
+    [EnumTypeValidation(typeof(Religion))] public string Religion { get; init; }
 
     [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
+
     public byte[]? ProfilePicture { get; init; }
 }

@@ -58,11 +58,17 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
     /// <returns>The updated entity.</returns>
     public async Task<TBaseEntity> Update(TBaseEntity updateEntity)
     {
-        var entity = await GetById(updateEntity.Id);
-        context.Entry(entity).State = EntityState.Modified;
-        await context.SaveChangesAsync();
+        try
+        {
+            context.Update(updateEntity);
+            await context.SaveChangesAsync();
 
-        return entity;
+            return updateEntity;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new KeyNotFoundException($"Unable to Update entity with id {updateEntity.Id}");
+        }
     }
 
     /// <summary>

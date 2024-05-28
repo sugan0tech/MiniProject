@@ -36,9 +36,10 @@ public class ProfileViewServiceTests
             ViewedProfileAt = profileId,
             ViewedAt = DateTime.Now
         };
-        
 
-        _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>())).ReturnsAsync(profileView);
+
+        _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
+            .ReturnsAsync(profileView);
 
         // Act
         await _profileViewService.AddView(viewerId, profileId);
@@ -54,7 +55,8 @@ public class ProfileViewServiceTests
         var viewerId = 1;
         var profileId = 2;
 
-        _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>())).Throws(new Exception("Error adding profile view."));
+        _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
+            .Throws(new Exception("Error adding profile view."));
 
         // Act & ClassicAssert
         var ex = Assert.ThrowsAsync<Exception>(async () => await _profileViewService.AddView(viewerId, profileId));
@@ -80,7 +82,8 @@ public class ProfileViewServiceTests
             ViewedAt = DateTime.Now
         };
 
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.ProfileView.ProfileView>(profileViewDto)).Returns(profileView);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.ProfileView.ProfileView>(profileViewDto))
+            .Returns(profileView);
         _mockRepo.Setup(repo => repo.Add(profileView)).ReturnsAsync(profileView);
 
         // Act
@@ -143,7 +146,6 @@ public class ProfileViewServiceTests
     [Test]
     public void GetViewById_InvalidId_ThrowsException()
     {
-        
         // Arrange
         var viewId = 1;
         _mockRepo.Setup(repo => repo.GetById(viewId))
@@ -153,7 +155,7 @@ public class ProfileViewServiceTests
         var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.GetViewById(viewId));
         ClassicAssert.AreEqual("Error getting profile view with id 1.", ex.Message);
     }
-    
+
     [Test]
     public async Task GetViewsByProfileId_ValidProfileId_ReturnsProfileViews()
     {
@@ -161,9 +163,9 @@ public class ProfileViewServiceTests
         var profileId = 1;
         var views = new List<MatrimonyApiService.ProfileView.ProfileView>
         {
-            new(){ Id = 1, ViewerId = 1, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-10) },
-            new(){ Id = 2, ViewerId = 2, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-20) },
-            new(){ Id = 3, ViewerId = 3, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) }
+            new() { Id = 1, ViewerId = 1, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-10) },
+            new() { Id = 2, ViewerId = 2, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-20) },
+            new() { Id = 3, ViewerId = 3, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) }
         };
 
         var viewDtos = views.ConvertAll(view => new ProfileViewDto
@@ -190,7 +192,7 @@ public class ProfileViewServiceTests
         // Assert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(views.Count, result.Count);
-        for (int i = 0; i < views.Count; i++)
+        for (var i = 0; i < views.Count; i++)
         {
             ClassicAssert.AreEqual(viewDtos[i].ProfileViewId, result[i].ProfileViewId);
             ClassicAssert.AreEqual(viewDtos[i].ViewerId, result[i].ViewerId);
@@ -272,10 +274,11 @@ public class ProfileViewServiceTests
         _mockRepo.Setup(repo => repo.GetAll()).Throws(new KeyNotFoundException("Error deleting old profile views."));
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.DeleteOldViews(beforeDate));
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            await _profileViewService.DeleteOldViews(beforeDate));
         ClassicAssert.AreEqual("Error deleting old profile views.", ex.Message);
     }
-    
+
     [Test]
     public void DeleteOldViews_InvalidBeforeDate_ThrowsInvalidDateTimeException()
     {

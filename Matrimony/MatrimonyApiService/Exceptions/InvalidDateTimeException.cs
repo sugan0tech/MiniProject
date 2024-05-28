@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class InvalidDateTimeException: Exception
+public class InvalidDateTimeException : Exception
 {
     public InvalidDateTimeException()
     {

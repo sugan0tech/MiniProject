@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class AlreadyExistingEntityException: Exception
+public class AlreadyExistingEntityException : Exception
 {
     public AlreadyExistingEntityException()
     {

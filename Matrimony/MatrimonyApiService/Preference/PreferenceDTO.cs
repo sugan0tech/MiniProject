@@ -15,7 +15,6 @@ public record PreferenceDto
     public int MinAge { get; init; }
     public int MaxAge { get; init; }
     public int? PreferenceForId { get; init; }
-    public ProfileDto? PreferenceFor { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }

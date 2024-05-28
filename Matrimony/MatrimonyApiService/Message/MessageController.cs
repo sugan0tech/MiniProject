@@ -2,6 +2,7 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Message;
 
@@ -10,12 +11,24 @@ namespace MatrimonyApiService.Message;
 public class MessageController(IMessageService messageService, ILogger<MessageController> logger) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddMessage(MessageDto messageDto)
     {
-        var addedMessage = await messageService.AddMessage(messageDto);
-        return Ok(addedMessage);
+        try
+        {
+            var addedMessage = await messageService.AddMessage(messageDto);
+            return Ok(addedMessage);
+        }
+        catch (DbUpdateException e)
+        {
+            var message = e.Message;
+            if (e.InnerException != null)
+                message = e.InnerException.Message;
+
+            return BadRequest(new ErrorModel(400, message));
+        }
     }
 
     [HttpGet("{id}")]
@@ -36,7 +49,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     }
 
     [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateMessage(MessageDto messageDto)
@@ -54,7 +67,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteMessageById(int id)
     {
@@ -71,7 +84,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MessageDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllMessages()
     {
         var messages = await messageService.GetAllMessages();
@@ -79,7 +92,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     }
 
     [HttpGet("sent/{userId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MessageDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetSentMessages(int userId)
     {
@@ -102,7 +115,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     }
 
     [HttpGet("received/{userId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MessageDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetReceivedMessages(int userId)
     {

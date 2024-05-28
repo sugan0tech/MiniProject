@@ -22,9 +22,9 @@ public class TokenService : ITokenService
     {
         var claims = new List<Claim>
         {
-            new (ClaimTypes.Name, user.Id.ToString()),
-            new (ClaimTypes.Email, user.Email),
-            new (ClaimTypes.Role, user.Role)
+            new(ClaimTypes.Name, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role)
         };
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
         var myToken = new JwtSecurityToken(null, null, claims, expires: DateTime.Now.AddDays(2),
@@ -43,7 +43,7 @@ public class TokenService : ITokenService
             ValidateIssuer = false,
             ValidateAudience = false
         };
-        tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+        tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
         var jwtToken = (JwtSecurityToken)validatedToken;
         var claims = jwtToken.Claims;
         var enumerable = claims as Claim[] ?? claims.ToArray();

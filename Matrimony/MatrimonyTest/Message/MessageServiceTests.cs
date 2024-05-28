@@ -210,7 +210,9 @@ public class MessageServiceTests
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(messages);
         var membershipDto = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description"
+        };
         _mockMembershipService.Setup(service => service.GetByUserId(1)).ReturnsAsync(membershipDto);
         // _mockMapper.Setup(mapper => mapper.Map<List<MessageDto>>(It.IsAny<List<MatrimonyApiService.Message.Message>>()))
         //     .Returns(messageDtos);

@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Message;
 
@@ -18,17 +19,9 @@ public class MessageService(
     /// <inheritdoc/>
     public async Task<MessageDto> AddMessage(MessageDto messageDto)
     {
-        try
-        {
-            var message = mapper.Map<Message>(messageDto);
-            var addedMessage = await repo.Add(message);
-            return mapper.Map<MessageDto>(addedMessage);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("On AddMessage " + ex.Message);
-            throw new Exception("Error adding message.", ex);
-        }
+        var message = mapper.Map<Message>(messageDto);
+        var addedMessage = await repo.Add(message);
+        return mapper.Map<MessageDto>(addedMessage);
     }
 
     /// <inheritdoc/>

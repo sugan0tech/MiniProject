@@ -11,7 +11,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     : ControllerBase
 {
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddView(int viewerId, int profileId)
     {
@@ -23,7 +23,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
 
@@ -37,7 +37,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     }
 
     [HttpGet("{viewId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileViewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetViewById(int viewId)
     {
@@ -54,7 +54,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     }
 
     [HttpGet("profile/{profileId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProfileViewDto>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetViewsByProfileId(int profileId)
     {
@@ -71,7 +71,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     }
 
     [HttpDelete("{viewId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteViewById(int viewId)
     {
@@ -88,7 +88,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     }
 
     [HttpDelete("before/{date}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteOldViews(DateTime date)
     {

@@ -1,15 +1,17 @@
 ﻿using MatrimonyApiService.Commons;
+using MatrimonyApiService.Match;
+using MatrimonyApiService.ProfileView;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger ): ControllerBase
+public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
 {
-
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileById(int id)
     {
@@ -26,7 +28,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet("user/{userId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileByUserId(int userId)
     {
@@ -41,8 +43,9 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
+
     [HttpGet("manager/{managerId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfilePreviewForManager(int managerId)
     {
@@ -59,7 +62,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet("preview/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfilePreviewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfilePreviewById(int id)
     {
@@ -76,16 +79,16 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddProfile(ProfileDto profileDto)
     {
         try
         {
             var profile = await profileService.AddProfile(profileDto);
-            return CreatedAtAction(nameof(GetProfileById), new { id = profile.ProfileId }, profile);
+            return StatusCode(201, profile);
         }
-        catch (Exception ex)
+        catch (DbUpdateException ex)
         {
             logger.LogError(ex.Message);
             return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
@@ -93,7 +96,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
     {
@@ -110,7 +113,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteProfileById(int id)
     {
@@ -127,7 +130,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet("{profileId}/matches")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MatchDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMatches(int profileId)
     {
@@ -144,7 +147,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet("{profileId}/views")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProfileViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetViews(int profileId)
     {
@@ -161,7 +164,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
         var profiles = await profileService.GetAll();

@@ -2,6 +2,7 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Match;
 
@@ -64,8 +65,19 @@ public class MatchController(IMatchService matchService, ILogger<MatchController
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(MatchDto dto)
     {
-        var match = await matchService.Add(dto);
-        return Ok(match);
+        try
+        {
+            var match = await matchService.Add(dto);
+            return Ok(match);
+        }
+        catch (DbUpdateException e)
+        {
+            var message = e.Message;
+            if (e.InnerException != null)
+                message = e.InnerException.Message;
+
+            return BadRequest(new ErrorModel(400, message));
+        }
     }
 
     [HttpPut]

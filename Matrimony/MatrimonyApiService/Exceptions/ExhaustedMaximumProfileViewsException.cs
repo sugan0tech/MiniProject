@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class ExhaustedMaximumProfileViewsException: Exception
+public class ExhaustedMaximumProfileViewsException : Exception
 {
     public ExhaustedMaximumProfileViewsException()
     {

@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class InvalidMatchForProfile: Exception
+public class InvalidMatchForProfile : Exception
 {
     public InvalidMatchForProfile()
     {

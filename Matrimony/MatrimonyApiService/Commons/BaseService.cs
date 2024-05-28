@@ -6,7 +6,10 @@ namespace MatrimonyApiService.Commons;
 /// A base service implementation for entities.
 /// </summary>
 /// <typeparam name="TBaseEntity">The type of the entity.</typeparam>
-public abstract class BaseService<TBaseEntity, TDTO>(IBaseRepo<TBaseEntity> repo, IMapper mapper, ILogger<BaseService<TBaseEntity, TDTO>> logger)
+public abstract class BaseService<TBaseEntity, TDTO>(
+    IBaseRepo<TBaseEntity> repo,
+    IMapper mapper,
+    ILogger<BaseService<TBaseEntity, TDTO>> logger)
     : IBaseService<TBaseEntity, TDTO> where TBaseEntity : BaseEntity
 {
     /// <summary>
@@ -35,7 +38,7 @@ public abstract class BaseService<TBaseEntity, TDTO>(IBaseRepo<TBaseEntity> repo
     /// <returns>A list of all entities.</returns>
     public async Task<List<TDTO>> GetAll()
     {
-        var entities=  await repo.GetAll();
+        var entities = await repo.GetAll();
         return entities.ConvertAll(input => mapper.Map<TDTO>(input)).ToList();
     }
 
@@ -79,7 +82,7 @@ public abstract class BaseService<TBaseEntity, TDTO>(IBaseRepo<TBaseEntity> repo
     {
         try
         {
-            var deletedEntity =  await repo.DeleteById(id);
+            var deletedEntity = await repo.DeleteById(id);
             return mapper.Map<TDTO>(deletedEntity);
         }
         catch (KeyNotFoundException ex)

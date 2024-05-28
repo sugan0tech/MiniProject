@@ -10,25 +10,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.5" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-        <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.27.1" />
-        <PackageReference Include="Moq" Version="4.20.70" />
-        <PackageReference Include="NUnit" Version="4.1.0" />
-        <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.27.1"/>
+        <PackageReference Include="Moq" Version="4.20.70"/>
+        <PackageReference Include="NUnit" Version="4.1.0"/>
+        <PackageReference Include="NUnit.Analyzers" Version="3.9.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Microsoft.Playwright.NUnit" />
-        <Using Include="NUnit.Framework" />
-        <Using Include="System.Text.RegularExpressions" />
-        <Using Include="System.Threading.Tasks" />
+        <Using Include="Microsoft.Playwright.NUnit"/>
+        <Using Include="NUnit.Framework"/>
+        <Using Include="System.Text.RegularExpressions"/>
+        <Using Include="System.Threading.Tasks"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MatrimonyApiService\MatrimonyApiService.csproj" />
+        <ProjectReference Include="..\MatrimonyApiService\MatrimonyApiService.csproj"/>
     </ItemGroup>
 
 </Project>

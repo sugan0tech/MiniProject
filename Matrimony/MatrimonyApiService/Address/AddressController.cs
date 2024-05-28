@@ -42,16 +42,9 @@ public class AddressController(IAddressService addressService, ILogger<AddressCo
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddAddress([FromBody] AddressDto addressDto)
     {
-        try
-        {
-            var createdAddress = await addressService.AddAddress(addressDto);
-            return StatusCode(201, createdAddress);
-        }
-        catch (ArgumentNullException e)
-        {
-            logger.LogError(e.Message);
-            return BadRequest(new ErrorModel(400, e.Message));
-        }
+        logger.LogInformation(addressDto.ToString());
+        var createdAddress = await addressService.AddAddress(addressDto);
+        return StatusCode(201, createdAddress);
     }
 
     [HttpPut]

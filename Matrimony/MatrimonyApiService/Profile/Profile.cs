@@ -95,7 +95,7 @@ public class Profile : BaseEntity
     [MaxLength(50)]
     [EnumTypeValidation(typeof(Habit))]
     public required string Habit { get; set; }
-    
+
     [NotMapped]
     public Habit HabitEnum
     {
@@ -151,7 +151,7 @@ public class Profile : BaseEntity
 
     private int CalculateAge()
     {
-        int age = DateTime.Today.Year - DateOfBirth.Year;
+        var age = DateTime.Today.Year - DateOfBirth.Year;
         return age;
     }
 }

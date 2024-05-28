@@ -10,7 +10,6 @@ namespace MatrimonyApiService.User;
 [ApiController]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {
-
     [HttpGet("{userId}/view-profile/{profileId}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
@@ -25,12 +24,14 @@ public class UserController(IUserService userService, ILogger<UserController> lo
         catch (NonPremiumUserException ex)
         {
             logger.LogWarning(ex.Message);
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
         catch (ExhaustedMaximumProfileViewsException ex)
         {
             logger.LogWarning(ex.Message);
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
         catch (KeyNotFoundException ex)
         {

@@ -1,6 +1,6 @@
 ﻿namespace MatrimonyApiService.Exceptions;
 
-public class AuthenticationException: Exception
+public class AuthenticationException : Exception
 {
     public AuthenticationException()
     {

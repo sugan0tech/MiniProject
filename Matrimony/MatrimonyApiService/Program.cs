@@ -43,7 +43,7 @@ public class Program
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
                 Description =
-                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\""
             });
             option.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -59,7 +59,7 @@ public class Program
                     new string[] { }
                 }
             });
-        });        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        }); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddLogging(l => l.AddLog4Net());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -91,6 +91,7 @@ public class Program
         builder.Services.AddLogging(l => l.AddLog4Net());
 
         #endregion
+
         #region Services
 
         builder.Services.AddScoped<IAddressService, AddressService>();
@@ -117,14 +118,15 @@ public class Program
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
                 };
-
             });
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy("AdminPolicy", policyBuilder =>  policyBuilder.RequireRole(Role.Admin.ToString()));
-            options.AddPolicy("UserPolicy", policyBuilder =>  policyBuilder.RequireRole(Role.User.ToString(), Role.Admin.ToString()));
+            options.AddPolicy("AdminPolicy", policyBuilder => policyBuilder.RequireRole(Role.Admin.ToString()));
+            options.AddPolicy("UserPolicy",
+                policyBuilder => policyBuilder.RequireRole(Role.User.ToString(), Role.Admin.ToString()));
         });
 
         #endregion

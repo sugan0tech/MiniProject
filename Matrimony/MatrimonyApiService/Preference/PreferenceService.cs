@@ -3,7 +3,8 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.Preference;
 
-public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper mapper, ILogger<PreferenceService> logger) : IPreferenceService
+public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper mapper, ILogger<PreferenceService> logger)
+    : IPreferenceService
 {
     /// <inheritdoc/>
     public async Task<PreferenceDto> Add(PreferenceDto preferenceDto)
@@ -24,7 +25,7 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 
@@ -40,7 +41,7 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
-            throw ;
+            throw;
         }
     }
 }
