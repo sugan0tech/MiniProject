@@ -15,7 +15,6 @@ public class ProfileServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.Profile.Profile>> _repoMock;
     private Mock<IPreferenceService> _preferenceServiceMock;
-    private Mock<IProfileViewService> _profileViewServiceMock;
     private Mock<IMapper> _mapperMock;
     private Mock<ILogger<ProfileService>> _loggerMock;
     private ProfileService _profileService;
@@ -25,11 +24,10 @@ public class ProfileServiceTests
     {
         _repoMock = new Mock<IBaseRepo<MatrimonyApiService.Profile.Profile>>();
         _preferenceServiceMock = new Mock<IPreferenceService>();
-        _profileViewServiceMock = new Mock<IProfileViewService>();
         _mapperMock = new Mock<IMapper>();
         _loggerMock = new Mock<ILogger<ProfileService>>();
         _profileService = new ProfileService(_repoMock.Object, _preferenceServiceMock.Object,
-            _profileViewServiceMock.Object, _mapperMock.Object, _loggerMock.Object);
+             _mapperMock.Object, _loggerMock.Object);
 
         var profile = new MatrimonyApiService.Profile.Profile
         {
@@ -425,116 +423,10 @@ public class ProfileServiceTests
         _mapperMock.Setup(m => m.Map<ProfilePreviewDto>(It.IsAny<MatrimonyApiService.Profile.Profile>()))
             .Returns(new ProfilePreviewDto());
 
-        var result = await _profileService.GetMatches(profileId);
+        var result = await _profileService.GetProfileMatches(profileId);
 
         ClassicAssert.NotNull(result);
         ClassicAssert.AreEqual(1, result.Count);
     }
 
-    [Test]
-    public async Task GetViews_ShouldReturnProfileViews()
-    {
-        var profile = new MatrimonyApiService.Profile.Profile
-        {
-            Id = 1,
-            DateOfBirth = new DateTime(1990, 5, 15),
-            Education = "NoEducation",
-            AnnualIncome = 50000,
-            Occupation = "Engineer",
-            MaritalStatus = "Single",
-            MotherTongue = "English",
-            Religion = "Christian",
-            Ethnicity = "Indian",
-            Habit = "PetLover",
-            Gender = "Male",
-            Weight = 70,
-            Height = 175,
-            MembershipId = 1,
-            ManagedById = 1,
-            UserId = 1,
-            ManagedByRelation = "Friend",
-            RelationEnum = Relation.Friend,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        };
-        var user = new MatrimonyApiService.User.User
-        {
-            Email = "user@example.com",
-            FirstName = "John",
-            LastName = "Doe",
-            PhoneNumber = "1234567890",
-            IsVerified = true,
-            Password = "password"u8.ToArray(),
-            HashKey = "key"u8.ToArray()
-        };
-        var membership = new MatrimonyApiService.Membership.Membership
-        {
-            Id = 1, Type = MemberShip.PremiumUser.ToString(), ProfileId = 1,
-            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
-        };
-        profile.Membership = membership;
-        profile.MembershipId = 1;
-
-        var profileId = 1;
-        var profileViews = new List<ProfileViewDto>
-        {
-            new() { ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddMonths(-2) },
-            new() { ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddMonths(-1) }
-        };
-
-        _repoMock.Setup(r => r.GetById(profileId)).ReturnsAsync(profile);
-        _profileViewServiceMock.Setup(p => p.GetViewsByProfileId(profileId)).ReturnsAsync(profileViews);
-
-        var result = await _profileService.GetViews(profileId);
-
-        ClassicAssert.NotNull(result);
-        ClassicAssert.AreEqual(2, result.Count);
-    }
-
-    [Test]
-    public void GetViews_ShouldThrowNonPremiumUserException_WhenMembershipIsFree()
-    {
-        var profile = new MatrimonyApiService.Profile.Profile
-        {
-            Id = 1,
-            DateOfBirth = new DateTime(1990, 5, 15),
-            Education = "NoEducation",
-            AnnualIncome = 50000,
-            Occupation = "Engineer",
-            MaritalStatus = "Single",
-            MotherTongue = "English",
-            Religion = "Christian",
-            Ethnicity = "Indian",
-            Habit = "PetLover",
-            Gender = "Male",
-            Weight = 70,
-            Height = 175,
-            MembershipId = 1,
-            ManagedById = 1,
-            UserId = 1,
-            ManagedByRelation = "Friend",
-            RelationEnum = Relation.Friend,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        };
-        var user = new MatrimonyApiService.User.User
-        {
-            Email = "user@example.com",
-            FirstName = "John",
-            LastName = "Doe",
-            PhoneNumber = "1234567890",
-            IsVerified = true,
-            Password = "password"u8.ToArray(),
-            HashKey = "key"u8.ToArray()
-        };
-        var membership = new MatrimonyApiService.Membership.Membership
-        {
-            Type = MemberShip.FreeUser.ToString(), ProfileId = 1,
-            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
-        };
-        var profileId = 1;
-        _repoMock.Setup(r => r.GetById(profileId)).ReturnsAsync(profile);
-
-        Assert.ThrowsAsync<NonPremiumUserException>(() => _profileService.GetViews(profileId));
-    }
 }

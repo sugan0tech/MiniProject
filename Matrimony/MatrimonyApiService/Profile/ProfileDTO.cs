@@ -35,7 +35,8 @@ public record ProfileDto
 
     public string? Bio { get; init; }
     public byte[]? ProfilePicture { get; init; }
-    public bool Habits { get; init; }
+    [EnumTypeValidation(typeof(Habit))]
+    public string Habit { get; init; }
 
     [EnumTypeValidation(typeof(Gender))] public string Gender { get; init; }
 

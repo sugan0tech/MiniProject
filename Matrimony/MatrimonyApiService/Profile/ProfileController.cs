@@ -51,7 +51,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     {
         try
         {
-            var profiles = await profileService.GetProfilePreviewForManager(managerId);
+            var profiles = await profileService.GetProfilesByManager(managerId);
             return Ok(profiles);
         }
         catch (KeyNotFoundException ex)
@@ -136,25 +136,8 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     {
         try
         {
-            var matches = await profileService.GetMatches(profileId);
+            var matches = await profileService.GetProfileMatches(profileId);
             return Ok(matches);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-    }
-
-    [HttpGet("{profileId}/views")]
-    [ProducesResponseType(typeof(List<ProfileViewDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetViews(int profileId)
-    {
-        try
-        {
-            var views = await profileService.GetViews(profileId);
-            return Ok(views);
         }
         catch (KeyNotFoundException ex)
         {

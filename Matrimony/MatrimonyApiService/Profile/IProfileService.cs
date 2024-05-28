@@ -14,7 +14,7 @@ public interface IProfileService
     /// <summary>
     /// Gets profile by given id
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
     Task<ProfileDto> GetProfileByUserId(int userId);
 
@@ -23,7 +23,7 @@ public interface IProfileService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<List<ProfilePreviewDto>> GetProfilePreviewForManager(int id);
+    Task<List<ProfilePreviewDto>> GetProfilesByManager(int id);
 
     /// <summary>
     /// Gets profile Preview by given id
@@ -69,14 +69,7 @@ public interface IProfileService
     /// </summary>
     /// <param name="profileId"></param>
     /// <returns></returns>
-    Task<List<ProfilePreviewDto>> GetMatches(int profileId);
-
-    /// <summary>
-    ///  Get Matches for the profile, with preference
-    /// </summary>
-    /// <param name="profileId"></param>
-    /// <returns></returns>
-    Task<List<ProfileViewDto>> GetViews(int profileId);
+    Task<List<ProfilePreviewDto>> GetProfileMatches(int profileId);
 
     /// <summary>
     /// Tobe used by admins only

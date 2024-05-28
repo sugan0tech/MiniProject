@@ -56,6 +56,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     [HttpGet("profile/{profileId}")]
     [ProducesResponseType(typeof(List<ProfileViewDto>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetViewsByProfileId(int profileId)
     {
         try
@@ -67,6 +68,11 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (NonPremiumUserException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
 

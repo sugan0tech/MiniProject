@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Membership;
 
 namespace MatrimonyApiService.ProfileView;
 
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 public class ProfileViewService(
     IBaseRepo<ProfileView> profileViewRepo,
+    IMembershipService membershipService,
     IMapper mapper,
     ILogger<ProfileViewService> logger) : IProfileViewService
 {
@@ -43,9 +46,31 @@ public class ProfileViewService(
 
     public async Task<List<ProfileViewDto>> GetViewsByProfileId(int profileId)
     {
-        var views = await profileViewRepo.GetAll();
-        return views.FindAll(view => view.ViewedProfileAt.Equals(profileId))
-            .ConvertAll(view => mapper.Map<ProfileViewDto>(view)).ToList();
+        var allViews = await profileViewRepo.GetAll();
+        try
+        {
+            var membership = await membershipService.GetByProfileId(profileId);
+            var views = allViews.FindAll(view => view.ViewedProfileAt.Equals(profileId))
+                .ConvertAll(mapper.Map<ProfileViewDto>).ToList();
+            if (membership == null || membership.Type.Equals(MemberShip.FreeUser.ToString()))
+                throw new NonPremiumUserException("At least you have to be a basic user to access this feature");
+            if (membership.Type.Equals(MemberShip.BasicUser.ToString()))
+            {
+                var filteredViews = views
+                    .Where(view => view.ViewedProfileAt == profileId && view.ViewedAt > DateTime.Now.AddMonths(-1))
+                    .OrderBy(view => view.ViewedAt)
+                    .Take(5)
+                    .ToList();
+                return filteredViews;
+            }
+
+            return views;
+        }
+        catch (KeyNotFoundException e)
+        {
+            logger.LogError($"Profile with {profileId} not found" + e.Message);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -67,9 +92,9 @@ public class ProfileViewService(
     {
         if (DateTime.Now < before)
         {
-            logger.LogError($"{before} is in near feature, Cleanup dates should be atleast a day older");
+            logger.LogError($"{before} is in near feature, Cleanup dates should be at-least a day older");
             throw new InvalidDateTimeException(
-                $"{before} is in near feature, Cleanup dates should be atleast a day older");
+                $"{before} is in near feature, Cleanup dates should be at-least a day older");
         }
 
         var views = await profileViewRepo.GetAll();

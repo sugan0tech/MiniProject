@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
-using MatrimonyApiService.Commons.Enums;
-using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Preference;
-using MatrimonyApiService.ProfileView;
 
 namespace MatrimonyApiService.Profile;
 
 public class ProfileService(
     IBaseRepo<Profile> repo,
     IPreferenceService preferenceService,
-    IProfileViewService profileViewService,
     IMapper mapper,
     ILogger<ProfileService> logger) : IProfileService
 {
@@ -37,7 +33,7 @@ public class ProfileService(
         return mapper.Map<ProfileDto>(fetchedProfile);
     }
 
-    public async Task<List<ProfilePreviewDto>> GetProfilePreviewForManager(int managerId)
+    public async Task<List<ProfilePreviewDto>> GetProfilesByManager(int managerId)
     {
         var profiles = await repo.GetAll();
         return profiles.FindAll(profiles => profiles.ManagedById.Equals(managerId))
@@ -109,9 +105,8 @@ public class ProfileService(
         }
     }
 
-    // TODO to be migrated to match service
     /// <intheritdoc/>
-    public async Task<List<ProfilePreviewDto>> GetMatches(int profileId)
+    public async Task<List<ProfilePreviewDto>> GetProfileMatches(int profileId)
     {
         try
         {
@@ -149,35 +144,5 @@ public class ProfileService(
     {
         var profiles = await repo.GetAll();
         return profiles.ConvertAll(profile => mapper.Map<ProfileDto>(profile)).ToList();
-    }
-
-    // Todo be migrated to profile view service
-    /// <intheritdoc/>
-    public async Task<List<ProfileViewDto>> GetViews(int profileId)
-    {
-        try
-        {
-            var profile = await repo.GetById(profileId);
-            var membership = profile.Membership;
-            var views = await profileViewService.GetViewsByProfileId(profileId);
-            if (membership == null || membership.Type.Equals(MemberShip.FreeUser.ToString()))
-                throw new NonPremiumUserException("Atleast you have to be a basic user to access this feature");
-            if (membership.Type.Equals(MemberShip.BasicUser.ToString()))
-            {
-                var filteredViews = views
-                    .Where(view => view.ViewedProfileAt == profileId && view.ViewedAt > DateTime.Now.AddMonths(-1))
-                    .OrderBy(view => view.ViewedAt)
-                    .Take(5)
-                    .ToList();
-                return filteredViews;
-            }
-
-            return views;
-        }
-        catch (KeyNotFoundException e)
-        {
-            logger.LogError($"Profile with {profileId} not found");
-            throw;
-        }
     }
 }

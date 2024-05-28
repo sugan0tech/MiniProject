@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Membership;
 using MatrimonyApiService.ProfileView;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,6 +14,7 @@ public class ProfileViewServiceTests
 {
     private Mock<IBaseRepo<MatrimonyApiService.ProfileView.ProfileView>> _mockRepo;
     private Mock<IMapper> _mockMapper;
+    private Mock<IMembershipService> _membershipServiceMock;
     private Mock<ILogger<ProfileViewService>> _mockLogger;
     private ProfileViewService _profileViewService;
 
@@ -20,8 +23,10 @@ public class ProfileViewServiceTests
     {
         _mockRepo = new Mock<IBaseRepo<MatrimonyApiService.ProfileView.ProfileView>>();
         _mockMapper = new Mock<IMapper>();
+        _membershipServiceMock = new Mock<IMembershipService>();
         _mockLogger = new Mock<ILogger<ProfileViewService>>();
-        _profileViewService = new ProfileViewService(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+        _profileViewService = new ProfileViewService(_mockRepo.Object, _membershipServiceMock.Object,
+            _mockMapper.Object, _mockLogger.Object);
     }
 
     [Test]
@@ -287,5 +292,123 @@ public class ProfileViewServiceTests
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<InvalidDateTimeException>(async () => await _profileViewService.DeleteOldViews(beforeDate));
+    }
+
+    [Test]
+    public async Task GetViews_ShouldReturnProfileViews()
+    {
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            Id = 1,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            AnnualIncome = 50000,
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Indian",
+            Habit = "PetLover",
+            Gender = "Male",
+            Weight = 70,
+            Height = 175,
+            MembershipId = 1,
+            ManagedById = 1,
+            UserId = 1,
+            ManagedByRelation = "Friend",
+            RelationEnum = Relation.Friend,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+        var user = new MatrimonyApiService.User.User
+        {
+            Email = "user@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
+        };
+        var membershipDto = new MembershipDto
+        {
+            MembershipId = 1, Type = MemberShip.PremiumUser.ToString(), ProfileId = 1,
+            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
+        };
+        var membership = new MatrimonyApiService.Membership.Membership
+        {
+            Id = 1, Type = MemberShip.PremiumUser.ToString(), ProfileId = 1,
+            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
+        };
+        profile.Membership = membership;
+        profile.MembershipId = 1;
+
+        var profileId = 1;
+        var profileViews = new List<ProfileViewDto>
+        {
+            new() { ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddMonths(-2) },
+            new() { ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddMonths(-1) }
+        };
+
+        var profileView = new MatrimonyApiService.ProfileView.ProfileView
+            { Id = 1, ViewerId = 1, ViewedProfileAt = 2, ViewedAt = DateTime.Now.AddDays(-2) };
+        
+        _mockRepo.Setup(r => r.GetById(profileId)).ReturnsAsync(profileView);
+        _membershipServiceMock.Setup(p => p.GetByProfileId(profileId)).ReturnsAsync(membershipDto);
+
+        var result = await _profileViewService.GetViewsByProfileId(profileId);
+
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(2, result.Count);
+    }
+
+    [Test]
+    public void GetViews_ShouldThrowNonPremiumUserException_WhenMembershipIsFree()
+    {
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            Id = 1,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            AnnualIncome = 50000,
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Indian",
+            Habit = "PetLover",
+            Gender = "Male",
+            Weight = 70,
+            Height = 175,
+            MembershipId = 1,
+            ManagedById = 1,
+            UserId = 1,
+            ManagedByRelation = "Friend",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+        var user = new MatrimonyApiService.User.User
+        {
+            Email = "user@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            IsVerified = true,
+            Password = "password"u8.ToArray(),
+            HashKey = "key"u8.ToArray()
+        };
+        var membership = new MatrimonyApiService.Membership.Membership
+        {
+            Type = MemberShip.FreeUser.ToString(), ProfileId = 1,
+            Description = "Premium membership", EndsAt = DateTime.Now.AddMonths(1), IsTrail = false
+        };
+        
+        var profileView = new MatrimonyApiService.ProfileView.ProfileView
+            { Id = 1, ViewerId = 1, ViewedProfileAt = 2, ViewedAt = DateTime.Now.AddDays(-2) };
+        
+        var profileId = 1;
+        _mockRepo.Setup(r => r.GetById(profileId)).ReturnsAsync(profileView);
+
+        Assert.ThrowsAsync<NonPremiumUserException>(() => _profileViewService.GetViewsByProfileId(profileId));
     }
 }

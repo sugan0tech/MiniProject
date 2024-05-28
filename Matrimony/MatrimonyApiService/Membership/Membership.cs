@@ -24,4 +24,8 @@ public class Membership : BaseEntity
     public DateTime EndsAt { get; set; }
     public bool IsTrail { get; set; }
     public bool IsTrailEnded { get; set; }
+    public int ViewsCount { get; set; }
+    public int ChatCount { get; set; }
+    public int RequestCount { get; set; }
+    public int ViewersViewCount { get; set; }
 }
