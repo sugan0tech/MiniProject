@@ -47,7 +47,7 @@ public abstract class BaseService<TBaseEntity, TDTO>(IBaseRepo<TBaseEntity> repo
     /// <exception cref="ArgumentNullException">Thrown if the provided entity is null.</exception>
     public async Task<TDTO> Add(TDTO entity)
     {
-        var res = await repo.Add(entity);
+        var res = await repo.Add(mapper.Map<TBaseEntity>(entity));
         return mapper.Map<TDTO>(res);
     }
 
@@ -56,11 +56,11 @@ public abstract class BaseService<TBaseEntity, TDTO>(IBaseRepo<TBaseEntity> repo
     /// </summary>
     /// <param name="updateEntity">The entity to update.</param>
     /// <returns>The updated entity.</returns>
-    public async Task<TDTO> Update(TBaseEntity updateEntity)
+    public async Task<TDTO> Update(TDTO updateEntity)
     {
         try
         {
-            var entity = await repo.Update(updateEntity);
+            var entity = await repo.Update(mapper.Map<TBaseEntity>(updateEntity));
             return mapper.Map<TDTO>(entity);
         }
         catch (KeyNotFoundException ex)

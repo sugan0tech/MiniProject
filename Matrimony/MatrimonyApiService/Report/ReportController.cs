@@ -5,7 +5,7 @@ namespace MatrimonyApiService.Report;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReportController(IBaseService<Report> reportService, ILogger<ReportController> logger) : ControllerBase
+public class ReportController(IBaseService<Report, ReportDto> reportService, ILogger<ReportController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
