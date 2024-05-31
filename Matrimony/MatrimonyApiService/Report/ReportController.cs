@@ -1,16 +1,19 @@
 ﻿using MatrimonyApiService.Commons;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Report;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ReportController(IBaseService<Report, ReportDto> reportService, ILogger<ReportController> logger)
     : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Get(int id)
     {
         try
@@ -27,6 +30,7 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ReportDto>), StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var reports = await reportService.GetAll();
@@ -53,6 +57,7 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteById(int id)
     {
         try

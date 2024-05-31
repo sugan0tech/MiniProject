@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using MatrimonyApiService.Address;
 using MatrimonyApiService.Auth;
@@ -19,6 +20,7 @@ using Microsoft.OpenApi.Models;
 
 namespace MatrimonyApiService;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)

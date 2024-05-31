@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Address;
+﻿using System.Diagnostics.CodeAnalysis;
+using MatrimonyApiService.Address;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
@@ -10,6 +11,7 @@ using MatrimonyApiService.User;
 
 namespace MatrimonyApiService;
 
+[ExcludeFromCodeCoverage]
 public class MappingProfile : AutoMapper.Profile
 {
     public MappingProfile()
