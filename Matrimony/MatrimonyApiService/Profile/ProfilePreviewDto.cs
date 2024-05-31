@@ -1,5 +1,6 @@
 ﻿using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MatrimonyApiService.Profile;
 
@@ -24,5 +25,6 @@ public record ProfilePreviewDto
     [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
 
+    [ExcludeFromCodeCoverage]
     public byte[]? ProfilePicture { get; init; }
 }

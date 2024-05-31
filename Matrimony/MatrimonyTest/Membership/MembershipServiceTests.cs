@@ -6,6 +6,7 @@ using Moq;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Profile;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NUnit.Framework.Legacy;
 using MembershipService = MatrimonyApiService.Membership.MembershipService;
 
@@ -103,6 +104,18 @@ public class MembershipServiceTests
 
         // ClassicAssert
         ClassicAssert.AreEqual(membershipDto, result);
+    }
+    
+    
+    [Test]
+    public async Task GetByUserId_InValidUserId_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var userId = 1;
+        _mockProflieService.Setup(service => service.GetProfileByUserId(userId)).ThrowsAsync(new KeyNotFoundException());
+
+        // Act & Assert
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByUserId(userId));
     }
 
     [Test]

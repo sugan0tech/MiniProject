@@ -151,7 +151,7 @@ public class ProfileServiceTests
             ManagedByRelation = Relation.Self.ToString()
         };
         var profiles = new List<MatrimonyApiService.Profile.Profile> { profile };
-        var profilePreviewDto = new ProfilePreviewDto { ProfileId = 1 };
+        var profilePreviewDto = new ProfilePreviewDto { ProfileId = 1 , MaritalStatus = "Single"};
 
         _repoMock.Setup(r => r.GetAll()).ReturnsAsync(profiles);
         _mapperMock.Setup(m => m.Map<ProfilePreviewDto>(profile)).Returns(profilePreviewDto);

@@ -228,6 +228,7 @@ public class UserServiceTests
             PhoneNumber = "88787",
             IsVerified = true,
             Password = [],
+            LoginAttempts = 0,
             HashKey = []
         };
         var userDto = new UserDto

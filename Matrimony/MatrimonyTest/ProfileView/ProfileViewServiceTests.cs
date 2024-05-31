@@ -416,6 +416,25 @@ public class ProfileViewServiceTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(5, result.Count);
     }
+    
+    
+    
+    [Test]
+    public void GetViewsBy_InvalidProfileId_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var profileId = 1;
+        var views = new List<MatrimonyApiService.ProfileView.ProfileView>
+        {
+            new() { Id = 1, ViewerId = 1, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-10) },
+            new() { Id = 2, ViewerId = 2, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-20) }
+        };
+
+        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ThrowsAsync(new KeyNotFoundException());
+
+        // Act & Assert
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.GetViewsByProfileId(profileId));
+    }
     [Test]
     public async Task DeleteViewById_ValidId_DeletesProfileView()
     {

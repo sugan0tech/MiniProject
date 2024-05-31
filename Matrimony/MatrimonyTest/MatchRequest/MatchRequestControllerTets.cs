@@ -239,6 +239,37 @@ public class MatchRequestControllerTests
     }
 
     [Test]
+    public async Task MatchRequestToProfile_ReturnsNotFound_WhenDuplicateRequestException()
+    {
+        // Arrange
+        var senderId = 1;
+        var targetId = 2;
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new DuplicateRequestException("msg"));
+
+        // Act
+        var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as BadRequestObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
+    }
+    
+    [Test]
+    public async Task MatchRequestToProfile_ReturnsNotFound_MatchRequestToSelfException()
+    {
+        // Arrange
+        var senderId = 1;
+        var targetId = 2;
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new MatchRequestToSelfException("msg"));
+
+        // Act
+        var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as BadRequestObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
+    }
+    [Test]
     public async Task DeleteById_ReturnsOk_WhenMatchIsDeleted()
     {
         // Arrange

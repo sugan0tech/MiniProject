@@ -216,4 +216,24 @@ public class AuthControllerTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
     }
+
+    [Test]
+    public async Task ResetPassword_ReturnsUnauthorized_WhenUserWrongPassword()
+    {
+        // Arrange
+        var resetPasswordDto = new ResetPasswordDto
+        {
+            Email = "test@example.com",
+            Password = "oldPassword123",
+            NewPassword = "newPassword123"
+        };
+        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto)).ThrowsAsync(new AuthenticationException("Wrong password or email"));
+
+        // Act
+        var result = await _authController.ResetPassword(resetPasswordDto) as UnauthorizedObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
+    }
 }

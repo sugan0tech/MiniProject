@@ -307,7 +307,7 @@ public class MatchRequestServiceTests
         var matches = new List<MatrimonyApiService.MatchRequest.MatchRequest>
         {
             new() { Id = 1, ReceivedProfileId = profileId },
-            new() { Id = 2, ReceivedProfileId = 2 }
+            new() { Id = 2, ReceivedProfileId = 2 , ProfileOneLike = true}
         };
         var expectedMatches = new List<MatchRequestDto>
         {
