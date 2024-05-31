@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.User;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MatrimonyApiService.Auth;
@@ -18,11 +19,11 @@ public class TokenService : ITokenService
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
     }
 
-    public string GenerateToken(User.User user)
+    public string GenerateToken(UserDto user)
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserId.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, user.Role)
         };

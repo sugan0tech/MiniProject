@@ -27,7 +27,7 @@ public class AuthService(
             var isPasswordSame = ComparePassword(hash, user.Password);
             if (isPasswordSame)
             {
-                logger.LogInformation($"Successfully logged as Id :{user.Id}");
+                logger.LogInformation($"Successfully logged as Id :{user.UserId}");
                 return new AuthReturnDto { Token = tokenService.GenerateToken(user) };
             }
 
@@ -57,7 +57,7 @@ public class AuthService(
         try
         {
             var hasher = new HMACSHA512();
-            var user = new User.User
+            var user = new UserDto
             {
                 Email = dto.Email,
                 FirstName = dto.FirstName,

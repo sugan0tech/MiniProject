@@ -40,9 +40,9 @@ public interface IMembershipService
     /// <summary>
     ///  validates given membershipId if it's expired.
     /// </summary>
-    /// <param name="dto"></param>
+    /// <param name="membershipId"></param>
     /// <returns></returns>
-    Task Validate(int membershiptId);
+    Task Validate(int membershipId);
 
     /// <summary>
     ///  validates given membershipDto if it's expired.

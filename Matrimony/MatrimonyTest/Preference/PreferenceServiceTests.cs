@@ -23,7 +23,7 @@ public class PreferenceServiceTests
         _mockProfileService = new Mock<IProfileService>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILogger<PreferenceService>>();
-        _preferenceService = new PreferenceService(_mockRepo.Object, _mockProfileService.Object, _mockMapper.Object,
+        _preferenceService = new PreferenceService(_mockRepo.Object, _mockMapper.Object,
             _mockLogger.Object);
     }
 

@@ -1,7 +1,7 @@
 ﻿#nullable disable
 namespace MatrimonyApiService.User;
 
-public record UserDto
+public record UserUpdateDto
 {
     public int UserId { get; set; }
     public string Email { get; init; }
@@ -10,9 +10,6 @@ public record UserDto
     public string PhoneNumber { get; init; }
     public int AddressId { get; init; }
     public bool IsVerified { get; init; }
-    
-    public byte[] Password { get; set; }
-    public byte[] HashKey { get; set; }
     public int LoginAttempts { get; init; }
     public string Role { get; init; }
 }

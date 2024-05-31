@@ -23,21 +23,21 @@ public interface IUserService
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    Task<UserDto> Add(User user);
+    Task<UserDto> Add(UserDto user);
 
     /// <summary>
     ///  To update user, to be used in Auth service
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    Task<UserDto> Update(User user);
+    Task<UserDto> Update(UserDto user);
 
     /// <summary>
     /// Get's user by Email
     /// </summary>
     /// <param name="email"></param>
     /// <returns></returns>
-    Task<User> GetByEmail(string email);
+    Task<UserDto> GetByEmail(string email);
 
     /// <summary>
     ///  If called validates the given user;

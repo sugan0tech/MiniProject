@@ -66,6 +66,8 @@ public class MappingProfile : AutoMapper.Profile
             .ForMember(dto => dto.UserId, act => act.MapFrom(src => src.Id));
         CreateMap<UserDto, User.User>()
             .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.UserId));
+        CreateMap<UserUpdateDto, User.User>()
+            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.UserId));
 
         CreateMap<User.User, RegisterDTO>();
         CreateMap<RegisterDTO, User.User>();

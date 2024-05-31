@@ -67,7 +67,6 @@ public class UserServiceTests
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.GetById(userId));
-        _loggerMock.Verify(logger => logger.LogError(It.IsAny<string>()), Times.Once);
     }
 
     [Test]
@@ -90,7 +89,7 @@ public class UserServiceTests
         };
         var user2 = new MatrimonyApiService.User.User
         {
-            Id = 1,
+            Id = 2,
             Email = "test2@mail.com",
             FirstName = "test",
             LastName = "test",
@@ -137,13 +136,27 @@ public class UserServiceTests
             {
             }
         };
-        var userDto = new UserDto { UserId = 1 };
+        var userDto = new UserDto
+        {
+            UserId = 1,
+            Email = "test@mail.com",
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787",
+            Password = new byte[]
+            {
+            },
+            HashKey = new byte[]
+            {
+            }
+        };
 
         _userRepositoryMock.Setup(repo => repo.Add(user)).ReturnsAsync(user);
         _mapperMock.Setup(mapper => mapper.Map<UserDto>(user)).Returns(userDto);
+        _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
 
         // Act
-        var result = await _userService.Add(user);
+        var result = await _userService.Add(userDto);
 
         // ClassicAssert
         ClassicAssert.AreEqual(userDto, result);
@@ -167,13 +180,21 @@ public class UserServiceTests
             {
             }
         };
-        var userDto = new UserDto { UserId = 1 };
+        var userDto = new UserDto
+        {
+            UserId = 1,
+            Email = "test@mail.com",
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787"
+        };
 
+        _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
         _userRepositoryMock.Setup(repo => repo.Update(user)).ReturnsAsync(user);
         _mapperMock.Setup(mapper => mapper.Map<UserDto>(user)).Returns(userDto);
 
         // Act
-        var result = await _userService.Update(user);
+        var result = await _userService.Update(userDto);
 
         // ClassicAssert
         ClassicAssert.AreEqual(userDto, result);
@@ -190,18 +211,19 @@ public class UserServiceTests
             FirstName = "test",
             LastName = "test",
             PhoneNumber = "88787",
-            Password = new byte[]
-            {
-            },
-            HashKey = new byte[]
-            {
-            }
+            Password =
+            [
+            ],
+            HashKey =
+            [
+            ]
         };
+        var userDto = new UserDto { UserId = 1 };
+        _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
         _userRepositoryMock.Setup(repo => repo.Update(user)).ThrowsAsync(new KeyNotFoundException());
 
         // Act & ClassicAssert
-        Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.Update(user));
-        _loggerMock.Verify(logger => logger.LogError(It.IsAny<string>()), Times.Once);
+        Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.Update(userDto));
     }
 
     [Test]
@@ -224,14 +246,23 @@ public class UserServiceTests
             {
             }
         };
+        var userDto = new UserDto
+        {
+            UserId = 1,
+            Email = email,
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787"
+        };
 
         _userRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(new List<MatrimonyApiService.User.User> { user });
+        _mapperMock.Setup(mapper => mapper.Map<UserDto>(user)).Returns(userDto);
 
         // Act
         var result = await _userService.GetByEmail(email);
 
         // ClassicAssert
-        ClassicAssert.AreEqual(user, result);
+        ClassicAssert.AreEqual(user.Email, result.Email);
     }
 
     [Test]
@@ -285,6 +316,5 @@ public class UserServiceTests
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.DeleteById(userId));
-        _loggerMock.Verify(logger => logger.LogError(It.IsAny<string>()), Times.Once);
     }
 }

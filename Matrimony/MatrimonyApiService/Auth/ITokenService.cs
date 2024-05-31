@@ -1,7 +1,9 @@
-﻿namespace MatrimonyApiService.Auth;
+﻿using MatrimonyApiService.User;
+
+namespace MatrimonyApiService.Auth;
 
 public interface ITokenService
 {
-    public string GenerateToken(User.User user);
+    public string GenerateToken(UserDto user);
     public PayloadDto GetPayload(string token);
 }

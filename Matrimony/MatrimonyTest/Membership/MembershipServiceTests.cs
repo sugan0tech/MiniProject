@@ -174,11 +174,15 @@ public class MembershipServiceTests
     public void Update_InvalidDto_ThrowsKeyNotFoundException()
     {
         // Arrange
+        var membership = new MatrimonyApiService.Membership.Membership
+            { Id = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" , IsTrail = true };
+        
         var membershipDto = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = "Premium", Description = "Test Description" };
+            { MembershipId  = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" , IsTrail = true };
 
-        _mockRepo.Setup(repo => repo.GetById(membershipDto.MembershipId))
-            .ReturnsAsync((MatrimonyApiService.Membership.Membership)null);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Membership.Membership>(membershipDto))
+            .Returns(membership);
+        _mockRepo.Setup(repo => repo.Update(membership)).Throws(new KeyNotFoundException());
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.Update(membershipDto));

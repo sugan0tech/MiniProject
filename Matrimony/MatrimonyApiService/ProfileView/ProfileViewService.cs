@@ -24,7 +24,7 @@ public class ProfileViewService(
     {
         await profileService.GetProfileById(profileId); // validate profile
         await userService.GetById(viewerId); // validate viewer (user) id
-        var membership = await membershipService.GetByProfileId(profileId);
+        var membership = await membershipService.GetByProfileId(viewerId);
         if (!membership.IsTrail)
         {
             if (membership.Type.Equals(MemberShip.FreeUser.ToString()))

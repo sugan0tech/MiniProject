@@ -28,9 +28,9 @@ public class AuthServiceTests
     public void Login_ValidUser_ReturnsUserAuthReturnDto()
     {
         var loginDto = new LoginDTO { Email = "test@test.com", Password = "password" };
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto
         {
-            Id = 1,
+            UserId = 1,
             Email = loginDto.Email,
             FirstName = "John",
             LastName = "Doe",
@@ -58,9 +58,9 @@ public class AuthServiceTests
     public void Login_UserNotVerified_ThrowsUserNotVerifiedException()
     {
         var loginDto = new LoginDTO { Email = "test@test.com", Password = "password" };
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto
         {
-            Id = 1,
+            UserId = 1,
             Email = loginDto.Email,
             FirstName = "John",
             LastName = "Doe",
@@ -84,9 +84,9 @@ public class AuthServiceTests
     public void Login_InvalidPassword_ThrowsAuthenticationException()
     {
         var loginDto = new LoginDTO { Email = "test@test.com", Password = "wrongpassword" };
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto
         {
-            Id = 1,
+            UserId = 1,
             Email = loginDto.Email,
             FirstName = "John",
             LastName = "Doe",
@@ -129,7 +129,7 @@ public class AuthServiceTests
             Email = "test@test.com", Password = "password", FirstName = "Test", LastName = "User",
             PhoneNumber = "1234567890", AddressId = 1
         };
-        _userServiceMock.Setup(u => u.Add(It.IsAny<MatrimonyApiService.User.User>())).Throws(new Exception());
+        _userServiceMock.Setup(u => u.Add(It.IsAny<UserDto>())).Throws(new Exception());
 
         Assert.ThrowsAsync<AuthenticationException>(() => _authService.Register(registerDto));
     }
@@ -163,9 +163,9 @@ public class AuthServiceTests
     {
         var resetPasswordDto = new ResetPasswordDto
             { Email = "test@test.com", Password = "wrongpassword", NewPassword = "newpassword" };
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto()
         {
-            Id = 1,
+            UserId = 1,
             Email = resetPasswordDto.Email,
             FirstName = "John",
             LastName = "Doe",

@@ -20,7 +20,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpPost]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add([FromBody] User user)
+    public async Task<IActionResult> Add([FromBody] UserDto user)
     {
         var createdUser = await userService.Add(user);
         return StatusCode(StatusCodes.Status201Created, createdUser);
@@ -30,7 +30,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update([FromBody] User user)
+    public async Task<IActionResult> Update([FromBody] UserDto user)
     {
         try
         {

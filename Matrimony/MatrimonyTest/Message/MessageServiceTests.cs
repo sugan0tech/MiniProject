@@ -60,7 +60,7 @@ public class MessageServiceTests
 
         // Act & ClassicAssert
         var ex = Assert.ThrowsAsync<Exception>(async () => await _messageService.AddMessage(messageDto));
-        ClassicAssert.AreEqual("Error adding message.", ex.Message);
+        ClassicAssert.AreEqual("Error adding message", ex.Message);
     }
 
     [Test]

@@ -18,7 +18,6 @@ public class MembershipService(
     {
         try
         {
-            await profileService.GetProfileById(profileId); // validation
             var memberships = await repo.GetAll();
             if (memberships == null)
                 throw new KeyNotFoundException("No Memberships Found");
@@ -86,11 +85,9 @@ public class MembershipService(
     {
         try
         {
+            dto.EndsAt = DateTime.Today.AddDays(dto.IsTrail ? 7 : 30);
+
             var updatedMembership = mapper.Map<Membership>(dto);
-            if (updatedMembership.IsTrail)
-                updatedMembership.EndsAt = DateTime.Today.AddDays(7);
-            else
-                updatedMembership.EndsAt = DateTime.Today.AddDays(30);
             
             var result = await repo.Update(updatedMembership);
             return mapper.Map<MembershipDto>(result);

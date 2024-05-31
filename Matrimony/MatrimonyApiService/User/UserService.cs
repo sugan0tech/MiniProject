@@ -31,18 +31,20 @@ public class UserService(
     }
 
     /// <intheritdoc/>
-    public async Task<UserDto> Add(User user)
+    public async Task<UserDto> Add(UserDto dto)
     {
+        var user = mapper.Map<User>(dto);
         user.IsVerified = false;
         var usr = await repo.Add(user);
         return mapper.Map<UserDto>(usr);
     }
 
     /// <intheritdoc/>
-    public async Task<UserDto> Update(User user)
+    public async Task<UserDto> Update(UserDto dto)
     {
         try
         {
+            var user = mapper.Map<User>(dto);
             var usr = await repo.Update(user);
             return mapper.Map<UserDto>(usr);
         }
@@ -54,13 +56,13 @@ public class UserService(
     }
 
     /// <intheritdoc/>
-    public async Task<User> GetByEmail(string email)
+    public async Task<UserDto> GetByEmail(string email)
     {
         var users = await repo.GetAll();
         var user = users.Find(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
 
         if (user == null) throw new UserNotFoundException(email);
-        return user;
+        return mapper.Map<UserDto>(user);
     }
 
     /// <intheritdoc/>
@@ -70,7 +72,8 @@ public class UserService(
         {
             var user = await repo.GetById(userId);
             user.IsVerified = status;
-            return await Update(user);
+            var modifiedUserDto = mapper.Map<UserDto>(user);
+            return await Update(modifiedUserDto);
         }
         catch (KeyNotFoundException e)
         {

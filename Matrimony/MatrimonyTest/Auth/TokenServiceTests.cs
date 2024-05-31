@@ -1,5 +1,7 @@
 ﻿using MatrimonyApiService.Auth;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.User;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -23,21 +25,16 @@ public class TokenServiceTests
     [Test]
     public void GenerateToken_ValidUser_ReturnsToken()
     {
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto
         {
-            Id = 1,
+            UserId = 1,
             Email = "user@example.com",
+            Role = Role.User.ToString(),
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            Password = new byte[]
-            {
-                // Populate password bytes here
-            },
-            HashKey = new byte[]
-            {
-                // Populate hash key bytes here
-            }
+            Password = "idi"u8.ToArray(),
+            HashKey = "sid"u8.ToArray()
         };
         var token = _tokenService.GenerateToken(user);
 
@@ -48,27 +45,22 @@ public class TokenServiceTests
     [Test]
     public void GetPayload_ValidToken_ReturnsPayloadDto()
     {
-        var user = new MatrimonyApiService.User.User
+        var user = new UserDto
         {
-            Id = 1,
+            UserId = 1,
             Email = "user@example.com",
+            Role = Role.User.ToString(),
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            Password = new byte[]
-            {
-                // Populate password bytes here
-            },
-            HashKey = new byte[]
-            {
-                // Populate hash key bytes here
-            }
+            Password = "idi"u8.ToArray(),
+            HashKey = "sid"u8.ToArray()
         };
         var token = _tokenService.GenerateToken(user);
         var payload = _tokenService.GetPayload(token);
 
         ClassicAssert.IsNotNull(payload);
-        ClassicAssert.AreEqual(user.Id, payload.Id);
+        ClassicAssert.AreEqual(user.UserId, payload.Id);
         ClassicAssert.AreEqual(user.Email, payload.Email);
     }
 

@@ -67,7 +67,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
         }
         catch (DbUpdateConcurrencyException)
         {
-            throw new KeyNotFoundException($"Unable to Update entity with id {updateEntity.Id}");
+            throw new KeyNotFoundException($"{typeof(TBaseEntity).Name} with key {updateEntity.Id} not found!!!");
         }
     }
 

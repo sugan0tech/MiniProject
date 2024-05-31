@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MatrimonyApiService.Commons.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Commons;
 

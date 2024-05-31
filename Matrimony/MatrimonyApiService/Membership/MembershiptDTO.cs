@@ -10,9 +10,9 @@ public record MembershipDto
 
     public int ProfileId { get; init; }
 
-    [Required] [MaxLength(100)] public string Description { get; init; }
+    [Required] [MaxLength(100)] public string? Description { get; init; }
 
-    public DateTime EndsAt { get; init; }
+    public DateTime EndsAt { get; set; }
     public bool IsTrail { get; init; }
     public bool IsTrailEnded { get; init; }
     public int ViewsCount { get; set; }
