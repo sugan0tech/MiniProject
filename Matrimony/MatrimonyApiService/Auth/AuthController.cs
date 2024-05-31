@@ -15,7 +15,7 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<AuthReturnDto>> Login([FromBody] LoginDTO loginDto)
+    public async Task<ActionResult> Login([FromBody] LoginDTO loginDto)
     {
         try
         {
@@ -71,8 +71,8 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
     {
         try
         {
-            await authService.ResetPassword(resetPasswordDto);
-            return Ok("Password reset successful");
+            var dto = await authService.ResetPassword(resetPasswordDto);
+            return Ok(dto);
         }
         catch (UserNotVerifiedException e)
         {

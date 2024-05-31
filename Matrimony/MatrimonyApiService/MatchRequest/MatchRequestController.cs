@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace MatrimonyApiService.MatchRequest;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger)
     : ControllerBase
 {
@@ -148,6 +150,7 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var matches = await matchRequestService.GetAll();

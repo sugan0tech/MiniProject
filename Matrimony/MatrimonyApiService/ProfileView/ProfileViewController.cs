@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.ProfileView;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger)
     : ControllerBase
 {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace MatrimonyApiService.Message;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class MessageController(IMessageService messageService, ILogger<MessageController> logger) : ControllerBase
 {
     [HttpPost]

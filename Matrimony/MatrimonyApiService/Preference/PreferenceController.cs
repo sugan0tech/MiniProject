@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Preference;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PreferenceController(IPreferenceService preferenceService, ILogger<PreferenceController> logger)
     : ControllerBase
 {
@@ -19,8 +21,16 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add(PreferenceDto preferenceDto)
     {
-        var addedPreference = await preferenceService.Add(preferenceDto);
-        return Ok(addedPreference);
+        try
+        {
+            var addedPreference = await preferenceService.Add(preferenceDto);
+            return Ok(addedPreference);
+        }
+        catch (ValidationException e)
+        {
+            logger.LogError(e.Message);
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>
@@ -65,6 +75,11 @@ public class PreferenceController(IPreferenceService preferenceService, ILogger<
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (ValidationException e)
+        {
+            logger.LogError(e.Message);
+            return BadRequest(e.Message);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
@@ -148,6 +150,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var profiles = await profileService.GetAll();

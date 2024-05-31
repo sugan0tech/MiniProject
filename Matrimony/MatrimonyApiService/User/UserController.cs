@@ -1,16 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.User;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var users = await userService.GetAll();
@@ -81,7 +84,8 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpPost("validate/{userId}/{status}")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteById(int userId, bool status)
+    [Authorize(Policy = "AdminPolicy")]
+    public async Task<IActionResult> Validate(int userId, bool status)
     {
         try
         {

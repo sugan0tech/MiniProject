@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using MatrimonyApiService.Commons;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace MatrimonyApiService.Address;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class AddressController(IAddressService addressService, ILogger<AddressController> logger, IMapper mapper)
     : ControllerBase
 {
@@ -31,6 +33,7 @@ public class AddressController(IAddressService addressService, ILogger<AddressCo
 
     [HttpGet]
     [ProducesResponseType(typeof(List<AddressDto>), StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAllAddresses()
     {
         var addresses = await addressService.GetAllAddresses();
