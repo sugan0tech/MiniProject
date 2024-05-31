@@ -63,6 +63,60 @@ public class MembershipServiceTests
         Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByProfileId(personId));
     }
 
+
+    [Test]
+    public async Task GetByUserId_validUserId_ReturnsMembership()
+    {
+        // Arrange
+        var personId = 1;
+        var userId = 1;
+        var membership = new MatrimonyApiService.Membership.Membership
+            { Id = 1, ProfileId = personId, Type = "Premium", Description = "Test Description" };
+        var membershipDto = new MembershipDto
+            { MembershipId = 1, ProfileId = personId, Type = "Premium", Description = "Test Description" };
+
+        var profile = new ProfileDto
+        {
+            ProfileId = personId,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            Occupation = "Engineer",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Height = 175,
+            MaritalStatus = MaritalStatus.Single.ToString(),
+            Ethnicity = Ethnicity.Indian.ToString(),
+            Habit = Habit.Cooking.ToString(),
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString(),
+            MembershipId = membership.Id
+        };
+
+
+        _mockProflieService.Setup(service => service.GetProfileByUserId(userId)).ReturnsAsync(profile);
+        _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(new List<MatrimonyApiService.Membership.Membership>
+            { membership });
+        _mockMapper.Setup(mapper => mapper.Map<MembershipDto>(membership)).Returns(membershipDto);
+
+        // Act
+        var result = await _membershipService.GetByUserId(userId);
+
+        // ClassicAssert
+        ClassicAssert.AreEqual(membershipDto, result);
+    }
+
+    [Test]
+    public void GetByUserId_InvalidUserId_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var personId = 1;
+        _mockProflieService.Setup(service => service.GetProfileByUserId(It.IsAny<int>()))
+            .ThrowsAsync(new KeyNotFoundException());
+
+        // Act & ClassicAssert
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByProfileId(personId));
+    }
+
     [Test]
     public async Task DeleteById_ValidMembershipId_ReturnsDeletedMembershipDto()
     {
@@ -71,7 +125,10 @@ public class MembershipServiceTests
         var membership = new MatrimonyApiService.Membership.Membership
             { Id = membershipId, ProfileId = 1, Type = "Premium", Description = "Test Description" };
         var membershipDto = new MembershipDto
-            { MembershipId = membershipId, ProfileId = 1, Type = "Premium", Description = "Test Description" };
+        {
+            MembershipId = membershipId, ProfileId = 1, Type = "Premium", Description = "Test Description",
+            IsTrail = true, IsTrailEnded = false, ViewsCount = 1, ChatCount = 1, RequestCount = 1, ViewersViewCount = 1
+        };
 
         _mockRepo.Setup(repo => repo.DeleteById(membershipId)).ReturnsAsync(membership);
         _mockMapper.Setup(mapper => mapper.Map<MembershipDto>(membership)).Returns(membershipDto);
@@ -175,10 +232,16 @@ public class MembershipServiceTests
     {
         // Arrange
         var membership = new MatrimonyApiService.Membership.Membership
-            { Id = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" , IsTrail = true };
-        
+        {
+            Id = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description",
+            IsTrail = true
+        };
+
         var membershipDto = new MembershipDto
-            { MembershipId  = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" , IsTrail = true };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description",
+            IsTrail = true
+        };
 
         _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Membership.Membership>(membershipDto))
             .Returns(membership);

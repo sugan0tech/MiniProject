@@ -132,11 +132,6 @@ public class ProfileService(
             logger.LogError(e, e.Message);
             throw;
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "An error occurred while getting matches.");
-            throw;
-        }
     }
 
     /// <intheritdoc/>

@@ -53,10 +53,6 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         {
             return Unauthorized(new ErrorModel(401, e.Message));
         }
-        catch (UserNotFoundException e)
-        {
-            return NotFound(new ErrorModel(404, e.Message));
-        }
         catch (AuthenticationException e)
         {
             return Unauthorized(new ErrorModel(401, e.Message));

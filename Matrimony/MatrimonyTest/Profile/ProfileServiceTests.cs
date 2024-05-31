@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
-using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.Profile;
-using MatrimonyApiService.ProfileView;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -52,6 +50,14 @@ public class ProfileServiceTests
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
+        profile.EducationEnum = Education.NoEducation;
+        profile.OccupationEnum = Occupation.Business;
+        profile.MaritalStatusEnum = MaritalStatus.Single;
+        profile.MotherTongueEnum = MotherTongue.English;
+        profile.ReligionEnum = Religion.Christian;
+        profile.EthnicityEnum = Ethnicity.Indian;
+        profile.HabitEnum = Habit.Cooking;
+        profile.GenderEnum = Gender.Female;
         var user = new MatrimonyApiService.User.User
         {
             Email = "user@example.com",
@@ -121,6 +127,42 @@ public class ProfileServiceTests
         ClassicAssert.NotNull(result);
         ClassicAssert.AreEqual(profileId, result.ProfileId);
     }
+    
+    [Test]
+    public async Task GetProfilesByManager_ShouldReturnProfiles_WhenProfilesExist()
+    {
+        var managerId = 1;
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            Id = 1,
+            ManagedById = managerId,
+            DateOfBirth = new DateTime(1990,
+                5,
+                15),
+            Education = "NoEducation",
+            Occupation = "Engineer",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Height = 175,
+            MaritalStatus = MaritalStatus.Single.ToString(),
+            Ethnicity = Ethnicity.Indian.ToString(),
+            Habit = Habit.Cooking.ToString(),
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString()
+        };
+        var profiles = new List<MatrimonyApiService.Profile.Profile> { profile };
+        var profilePreviewDto = new ProfilePreviewDto { ProfileId = 1 };
+
+        _repoMock.Setup(r => r.GetAll()).ReturnsAsync(profiles);
+        _mapperMock.Setup(m => m.Map<ProfilePreviewDto>(profile)).Returns(profilePreviewDto);
+
+        var result = await _profileService.GetProfilesByManager(managerId);
+
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(1, result.Count);
+        ClassicAssert.AreEqual(profilePreviewDto.ProfileId, result.First().ProfileId);
+    }
+
 
     [Test]
     public void GetProfileById_ShouldThrowKeyNotFoundException_WhenProfileDoesNotExist()
@@ -335,6 +377,46 @@ public class ProfileServiceTests
     }
 
     [Test]
+    public async Task GetProfilePreviewById_ShouldReturnProfilePreview_WhenProfileExists()
+    {
+        var profileId = 1;
+        var profile = new MatrimonyApiService.Profile.Profile
+        {
+            Id = profileId,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            Occupation = "Engineer",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Height = 175,
+            MaritalStatus = MaritalStatus.Single.ToString(),
+            Ethnicity = Ethnicity.Indian.ToString(),
+            Habit = Habit.Cooking.ToString(),
+            Gender = Gender.Male.ToString(),
+            ManagedByRelation = Relation.Self.ToString()
+        };
+        var profilePreviewDto = new ProfilePreviewDto { ProfileId = profileId };
+
+        _repoMock.Setup(r => r.GetById(profileId)).ReturnsAsync(profile);
+        _mapperMock.Setup(m => m.Map<ProfilePreviewDto>(profile)).Returns(profilePreviewDto);
+
+        var result = await _profileService.GetProfilePreviewById(profileId);
+
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(profilePreviewDto.ProfileId, result.ProfileId);
+    }
+
+    [Test]
+    public void GetProfilePreviewById_ShouldThrowKeyNotFoundException_WhenProfileDoesNotExist()
+    {
+        var profileId = 1;
+
+        _repoMock.Setup(r => r.GetById(profileId)).ThrowsAsync(new KeyNotFoundException());
+
+        Assert.ThrowsAsync<KeyNotFoundException>(() => _profileService.GetProfilePreviewById(profileId));
+    }
+
+    [Test]
     public async Task GetMatches_ShouldReturnMatchedProfiles()
     {
         var profileId = 1;
@@ -362,7 +444,7 @@ public class ProfileServiceTests
             MotherTongue = "English",
             Religion = "Christian",
             Ethnicity = "Indian",
-            Habit = "PetLover",
+            Habit = Habit.PetsLover.ToString(),
             Gender = "Male",
             Weight = 70,
             Height = 175,
@@ -382,13 +464,13 @@ public class ProfileServiceTests
             DateOfBirth = new DateTime(1990, 5, 15),
             Education = "NoEducation",
             AnnualIncome = 50000,
-            Occupation = "Engineer",
-            MaritalStatus = "Single",
-            MotherTongue = "English",
-            Religion = Religion.Christian.ToString(),
-            Ethnicity = "Indian",
-            Habit = "PetLover",
-            Gender = "Male",
+            Occupation = profile1.OccupationEnum.ToString(),
+            MaritalStatus = profile1.MaritalStatusEnum.ToString(),
+            MotherTongue = profile1.MotherTongueEnum.ToString(),
+            Religion = profile1.ReligionEnum.ToString(),
+            Ethnicity = profile1.EthnicityEnum.ToString(),
+            Habit = profile1.HabitEnum.ToString(),
+            Gender = Gender.Female.ToString(),
             Weight = 70,
             Height = 175,
             MembershipId = 1,
@@ -429,4 +511,95 @@ public class ProfileServiceTests
         ClassicAssert.AreEqual(1, result.Count);
     }
 
+    [Test]
+    public async Task GetAll_ShouldReturnAllProfiles()
+    {
+        var preference = new MatrimonyApiService.Preference.Preference
+        {
+            MotherTongue = "English",
+            Religion = Religion.Christian.ToString(),
+            Education = Education.NoEducation.ToString(),
+            Occupation = "Engineer",
+            MinHeight = 165,
+            MaxHeight = 176,
+            MinAge = 25,
+            MaxAge = 35
+        };
+        var profile1 = new MatrimonyApiService.Profile.Profile
+        {
+            Id = 1,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            AnnualIncome = 50000,
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = "Christian",
+            Ethnicity = "Indian",
+            Habit = "PetLover",
+            Gender = "Male",
+            Weight = 70,
+            Height = 175,
+            MembershipId = 1,
+            ManagedById = 1,
+            UserId = 1,
+            ManagedByRelation = "Friend",
+            RelationEnum = Relation.Friend,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            PreferenceId = 1,
+            Preference = preference
+        };
+        var profile2 = new MatrimonyApiService.Profile.Profile
+        {
+            Id = 2,
+            DateOfBirth = new DateTime(1990, 5, 15),
+            Education = "NoEducation",
+            AnnualIncome = 50000,
+            Occupation = "Engineer",
+            MaritalStatus = "Single",
+            MotherTongue = "English",
+            Religion = Religion.Christian.ToString(),
+            Ethnicity = "Indian",
+            Habit = "PetLover",
+            Gender = "Male",
+            Weight = 70,
+            Height = 175,
+            MembershipId = 1,
+            ManagedById = 1,
+            UserId = 1,
+            ManagedByRelation = "Friend",
+            RelationEnum = Relation.Friend,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+        var profiles = new List<MatrimonyApiService.Profile.Profile>
+        {
+            profile1,
+            profile2
+        };
+        var profileDtos = profiles.Select(p => new ProfileDto { ProfileId = p.Id }).ToList();
+
+        _repoMock.Setup(r => r.GetAll()).ReturnsAsync(profiles);
+        _mapperMock.Setup(m => m.Map<ProfileDto>(It.IsAny<MatrimonyApiService.Profile.Profile>()))
+            .Returns((MatrimonyApiService.Profile.Profile p) => profileDtos.First(d => d.ProfileId == p.Id));
+
+        var result = await _profileService.GetAll();
+
+        ClassicAssert.NotNull(result);
+        ClassicAssert.AreEqual(profileDtos.Count, result.Count);
+        ClassicAssert.AreEqual(profileDtos.First().ProfileId, result.First().ProfileId);
+    }
+
+
+    [Test]
+    public void GetProfileMatches_InvalidProfile_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var profileId = 1;
+        _repoMock.Setup(repo => repo.GetById(1)).ThrowsAsync(new KeyNotFoundException());
+
+        // Act & ClassicAssert
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileService.GetProfileMatches(profileId));
+    }
 }

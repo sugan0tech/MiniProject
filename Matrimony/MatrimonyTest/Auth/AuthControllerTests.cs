@@ -55,6 +55,22 @@ public class AuthControllerTests
         ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
     }
 
+    
+    [Test]
+    public async Task Login_ReturnsUnauthorized_CredentialsAreWrong()
+    {
+        // Arrange
+        var loginDto = new LoginDTO { Email = "test@example.com", Password = "password123" };
+        _authServiceMock.Setup(service => service.Login(loginDto)).ThrowsAsync(new AuthenticationException("User not verified"));
+
+        // Act
+        var result = await _authController.Login(loginDto) as UnauthorizedObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
+    }
+    
     [Test]
     public async Task Login_ReturnsNotFound_WhenUserNotFound()
     {
@@ -107,6 +123,29 @@ public class AuthControllerTests
             Password = "password123"
         };
         _authServiceMock.Setup(service => service.Register(registerDto)).ThrowsAsync(new UserNotVerifiedException("User not verified"));
+
+        // Act
+        var result = await _authController.Register(registerDto) as UnauthorizedObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
+    }
+
+    [Test]
+    public async Task Register_ReturnsUnauthorized_WhenUserWithWrongCreds()
+    {
+        // Arrange
+        var registerDto = new RegisterDTO
+        {
+            Email = "test@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            AddressId = 1,
+            Password = "password123"
+        };
+        _authServiceMock.Setup(service => service.Register(registerDto)).ThrowsAsync(new AuthenticationException("User not verified"));
 
         // Act
         var result = await _authController.Register(registerDto) as UnauthorizedObjectResult;

@@ -23,6 +23,72 @@ public class ProfileControllerTests
     }
 
     [Test]
+    public async Task GetProfilePreviewForManager_ReturnsOk_WhenProfilesExist()
+    {
+        // Arrange
+        var managerId = 1;
+        var profiles = new List<ProfilePreviewDto> { new ProfilePreviewDto { ProfileId = 1, Education = "School", Ethnicity = "Indian", MotherTongue = "Tamil", Religion = "Hindu", Occupation = "Doctor"} };
+        _profileServiceMock.Setup(service => service.GetProfilesByManager(managerId)).ReturnsAsync(profiles);
+
+        // Act
+        var result = await _profileController.GetProfilePreviewForManager(managerId) as OkObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
+        ClassicAssert.AreEqual(profiles, result.Value);
+    }
+
+    [Test]
+    public async Task GetProfilePreviewForManager_ReturnsNotFound_WhenProfilesDoNotExist()
+    {
+        // Arrange
+        var managerId = 1;
+        _profileServiceMock.Setup(service => service.GetProfilesByManager(managerId)).ThrowsAsync(new KeyNotFoundException("Manager not found"));
+
+        // Act
+        var result = await _profileController.GetProfilePreviewForManager(managerId) as NotFoundObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    [Test]
+    public async Task GetProfilePreviewById_ReturnsOk_WhenProfilePreviewExists()
+    {
+        // Arrange
+        var profileId = 1;
+        var profilePreviewDto = new ProfilePreviewDto { ProfileId = profileId };
+        _profileServiceMock.Setup(service => service.GetProfilePreviewById(profileId)).ReturnsAsync(profilePreviewDto);
+
+        // Act
+        var result = await _profileController.GetProfilePreviewById(profileId) as OkObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
+        ClassicAssert.AreEqual(profilePreviewDto, result.Value);
+    }
+
+    [Test]
+    public async Task GetProfilePreviewById_ReturnsNotFound_WhenProfilePreviewDoesNotExist()
+    {
+        // Arrange
+        var profileId = 1;
+        _profileServiceMock.Setup(service => service.GetProfilePreviewById(profileId)).ThrowsAsync(new KeyNotFoundException("Profile preview not found"));
+
+        // Act
+        var result = await _profileController.GetProfilePreviewById(profileId) as NotFoundObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    // Existing test cases...
+
+    [Test]
     public async Task GetProfileById_ReturnsOk_WhenProfileExists()
     {
         // Arrange

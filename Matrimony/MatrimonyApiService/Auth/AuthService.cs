@@ -35,7 +35,7 @@ public class AuthService(
         }
         catch (UserNotFoundException e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e.Message);
             throw;
         }
     }
@@ -74,7 +74,7 @@ public class AuthService(
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e.Message);
         }
 
         throw new Exceptions.AuthenticationException("Not able to register at this moment");
@@ -97,12 +97,12 @@ public class AuthService(
         }
         catch (UserNotFoundException e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e.Message);
             throw;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.LogError(e.Message);
             throw new Exceptions.AuthenticationException("Failed to reset password");
         }
     }

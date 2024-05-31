@@ -44,6 +44,17 @@ public class AddressServiceTests
         ClassicAssert.AreEqual(expectedAddressDto, result);
     }
 
+    [Test]
+    public void GetAddressById_InValidId_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var id = 1;
+
+        _mockRepo.Setup(repo => repo.GetById(id)).ThrowsAsync(new KeyNotFoundException());
+
+        // Act &  Assert
+        Assert.ThrowsAsync<KeyNotFoundException>(async () => await _addressService.GetAddressById(id));
+    }
 
     [Test]
     public async Task GetAllAddresses_ShouldReturnListOfAddressDto()

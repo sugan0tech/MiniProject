@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Runtime.InteropServices.JavaScript;
+using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
@@ -199,7 +200,68 @@ public class UserServiceTests
         // ClassicAssert
         ClassicAssert.AreEqual(userDto, result);
     }
+    
+    [Test]
+    public async Task ValidateUser_WithStats_ShouldUpdate()
+    {
+        // Arrange
+        var user = new MatrimonyApiService.User.User
+        {
+            Id = 1,
+            Email = "test@mail.com",
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787",
+            Password = new byte[]
+            {
+            },
+            HashKey = new byte[]
+            {
+            }
+        };
+        var updatedUser = new MatrimonyApiService.User.User
+        {
+            Id = 1,
+            Email = "test@mail.com",
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787",
+            IsVerified = true,
+            Password = [],
+            HashKey = []
+        };
+        var userDto = new UserDto
+        {
+            UserId = 1,
+            Email = "test@mail.com",
+            FirstName = "test",
+            LastName = "test",
+            PhoneNumber = "88787",
+            IsVerified = true
+        };
 
+        _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
+        _mapperMock.Setup(mapper => mapper.Map<UserDto>(updatedUser)).Returns(userDto);
+        _userRepositoryMock.Setup(repo => repo.Update(user)).ReturnsAsync(user);
+        _userRepositoryMock.Setup(repo => repo.GetById(1)).ReturnsAsync(user);
+        _mapperMock.Setup(mapper => mapper.Map<UserDto>(user)).Returns(userDto);
+
+        // Act
+        var result = await _userService.Validate(1, true);
+
+        // ClassicAssert
+        ClassicAssert.AreEqual(true, result.IsVerified);
+    }
+
+    [Test]
+    public async Task ValidateInvalidUser_WithStats_ShouldThrowKeyNotFoundException()
+    {
+        _userRepositoryMock.Setup(repo => repo.GetById(It.IsAny<int>())).ThrowsAsync(new KeyNotFoundException());
+
+        // Act & Assert
+        Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.Validate(1, true));
+    }
+    
     [Test]
     public void Update_ShouldThrowKeyNotFoundException_WhenUserDoesNotExist()
     {

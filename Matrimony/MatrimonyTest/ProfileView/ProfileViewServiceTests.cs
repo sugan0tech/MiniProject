@@ -370,6 +370,52 @@ public class ProfileViewServiceTests
         }
     }
 
+    
+    [Test]
+    public async Task GetViewsByProfileId_BasicUser_ReturnsOnlyFive()
+    {
+        // Arrange
+        var profileId = 1;
+        var views = new List<MatrimonyApiService.ProfileView.ProfileView>
+        {
+            new() { Id = 1, ViewerId = 1, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-10) },
+            new() { Id = 2, ViewerId = 2, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-20) },
+            new() { Id = 3, ViewerId = 3, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) },
+            new() { Id = 4, ViewerId = 4, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) },
+            new() { Id = 5, ViewerId = 5, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) },
+            new() { Id = 6, ViewerId = 5, ViewedProfileAt = profileId, ViewedAt = DateTime.Now.AddDays(-30) }
+        };
+
+        var viewDtos = views.ConvertAll(view => new ProfileViewDto
+        {
+            ProfileViewId = view.Id,
+            ViewerId = view.ViewerId,
+            ViewedProfileAt = view.ViewedProfileAt,
+            ViewedAt = view.ViewedAt
+        });
+        
+        var membership = new MembershipDto
+            { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 45 };
+
+        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
+
+        _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(views);
+        _mockMapper.Setup(mapper => mapper.Map<ProfileViewDto>(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
+            .Returns((MatrimonyApiService.ProfileView.ProfileView src) => new ProfileViewDto
+            {
+                ProfileViewId = src.Id,
+                ViewerId = src.ViewerId,
+                ViewedProfileAt = src.ViewedProfileAt,
+                ViewedAt = src.ViewedAt
+            });
+
+        // Act
+        var result = await _profileViewService.GetViewsByProfileId(profileId);
+
+        // Assert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(5, result.Count);
+    }
     [Test]
     public async Task DeleteViewById_ValidId_DeletesProfileView()
     {

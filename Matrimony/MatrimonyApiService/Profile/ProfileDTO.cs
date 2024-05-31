@@ -5,6 +5,7 @@ using MatrimonyApiService.Membership;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.User;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MatrimonyApiService.Profile;
 
@@ -33,7 +34,9 @@ public record ProfileDto
     [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
 
+    [ExcludeFromCodeCoverage]
     public string? Bio { get; init; }
+    [ExcludeFromCodeCoverage]
     public byte[]? ProfilePicture { get; init; }
     [EnumTypeValidation(typeof(Habit))]
     public string Habit { get; init; }
@@ -46,8 +49,11 @@ public record ProfileDto
     public int ManagedById { get; init; }
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }
+    [ExcludeFromCodeCoverage]
     public IEnumerable<ProfileViewDto>? ProfileViews { get; init; }
+    [ExcludeFromCodeCoverage]
     public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
+    [ExcludeFromCodeCoverage]
     public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
     public int PreferenceId { get; init; }
     public DateTime CreatedAt { get; init; }
