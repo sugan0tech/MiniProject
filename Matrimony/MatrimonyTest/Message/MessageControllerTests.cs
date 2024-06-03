@@ -1,4 +1,6 @@
-﻿using MatrimonyApiService.Exceptions;
+﻿using System.Security.Claims;
+using MatrimonyApiService.Commons.Validations;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ public class MessageControllerTests
     private Mock<IMessageService> _messageServiceMock;
     private Mock<ILogger<MessageController>> _loggerMock;
     private MessageController _messageController;
+    private List<Claim> _claims;
 
     [SetUp]
     public void SetUp()
@@ -21,13 +24,26 @@ public class MessageControllerTests
         _messageServiceMock = new Mock<IMessageService>();
         _loggerMock = new Mock<ILogger<MessageController>>();
         _messageController = new MessageController(_messageServiceMock.Object, _loggerMock.Object);
+
+        _claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, "1"),
+            new Claim(ClaimTypes.Email, "test@example.com"),
+            new Claim(ClaimTypes.Role, "User")
+        };
+        var identity = new ClaimsIdentity(_claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        _messageController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
     }
 
     [Test]
     public async Task AddMessage_ReturnsOk_WhenMessageIsAdded()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1 };
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 1};
         _messageServiceMock.Setup(service => service.AddMessage(messageDto)).ReturnsAsync(messageDto);
 
         // Act
@@ -43,8 +59,9 @@ public class MessageControllerTests
     public async Task AddMessage_ReturnsBadRequest_WhenDbUpdateExceptionOccurs()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1 };
-        var dbUpdateException = new DbUpdateException("Database update error", new Exception("Inner exception message"));
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 1};
+        var dbUpdateException =
+            new DbUpdateException("Database update error", new Exception("Inner exception message"));
         _messageServiceMock.Setup(service => service.AddMessage(messageDto)).ThrowsAsync(dbUpdateException);
 
         // Act
@@ -56,11 +73,25 @@ public class MessageControllerTests
     }
 
     [Test]
+    public async Task AddMessage_ReturnsForBidden_WhenAuthenticationExceptionOccurs()
+    {
+        // Arrange
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3};
+
+        // Act
+        var result = await _messageController.AddMessage(messageDto) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
     public async Task GetMessageById_ReturnsOk_WhenMessageExists()
     {
         // Arrange
         var messageId = 1;
-        var messageDto = new MessageDto { MessageId = messageId };
+        var messageDto = new MessageDto { MessageId = messageId , SenderId = 1};
         _messageServiceMock.Setup(service => service.GetMessageById(messageId)).ReturnsAsync(messageDto);
 
         // Act
@@ -77,7 +108,8 @@ public class MessageControllerTests
     {
         // Arrange
         var messageId = 1;
-        _messageServiceMock.Setup(service => service.GetMessageById(messageId)).ThrowsAsync(new KeyNotFoundException("Message not found"));
+        _messageServiceMock.Setup(service => service.GetMessageById(messageId))
+            .ThrowsAsync(new KeyNotFoundException("Message not found"));
 
         // Act
         var result = await _messageController.GetMessageById(messageId) as NotFoundObjectResult;
@@ -85,6 +117,21 @@ public class MessageControllerTests
         // ClassicAssert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    [Test]
+    public async Task GetMessageById_ReturnsForBidden_WhenSenderOrReceiverNotAuthorized()
+    {
+        // Arrange
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3};
+
+        // Act
+        _messageServiceMock.Setup(service => service.GetMessageById(1)).ReturnsAsync(messageDto);
+        var result = await _messageController.GetMessageById(1) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
     }
 
     [Test]
@@ -109,7 +156,8 @@ public class MessageControllerTests
     {
         // Arrange
         var messageId = 1;
-        _messageServiceMock.Setup(service => service.DeleteMessageById(messageId)).ThrowsAsync(new KeyNotFoundException("Message not found"));
+        _messageServiceMock.Setup(service => service.DeleteMessageById(messageId))
+            .ThrowsAsync(new KeyNotFoundException("Message not found"));
 
         // Act
         var result = await _messageController.DeleteMessageById(messageId) as NotFoundObjectResult;
@@ -157,7 +205,22 @@ public class MessageControllerTests
     {
         // Arrange
         var userId = 1;
-        _messageServiceMock.Setup(service => service.GetSentMessages(userId)).ThrowsAsync(new NonPremiumUserException("User is not premium"));
+        _messageServiceMock.Setup(service => service.GetSentMessages(userId))
+            .ThrowsAsync(new NonPremiumUserException("User is not premium"));
+
+        // Act
+        var result = await _messageController.GetSentMessages(userId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
+    public async Task GetSentMessages_ReturnsForbidden_WhenUserIsWrong()
+    {
+        // Arrange
+        var userId = 2;
 
         // Act
         var result = await _messageController.GetSentMessages(userId) as ObjectResult;
@@ -172,7 +235,8 @@ public class MessageControllerTests
     {
         // Arrange
         var userId = 1;
-        _messageServiceMock.Setup(service => service.GetSentMessages(userId)).ThrowsAsync(new KeyNotFoundException("Messages not found"));
+        _messageServiceMock.Setup(service => service.GetSentMessages(userId))
+            .ThrowsAsync(new KeyNotFoundException("Messages not found"));
 
         // Act
         var result = await _messageController.GetSentMessages(userId) as NotFoundObjectResult;
@@ -204,7 +268,22 @@ public class MessageControllerTests
     {
         // Arrange
         var userId = 1;
-        _messageServiceMock.Setup(service => service.GetReceivedMessages(userId)).ThrowsAsync(new NonPremiumUserException("User is not premium"));
+        _messageServiceMock.Setup(service => service.GetReceivedMessages(userId))
+            .ThrowsAsync(new NonPremiumUserException("User is not premium"));
+
+        // Act
+        var result = await _messageController.GetReceivedMessages(userId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
+    public async Task GetReceivedMessages_ReturnsForbidden_WhenUserDontHaveAccess()
+    {
+        // Arrange
+        var userId = 2;
 
         // Act
         var result = await _messageController.GetReceivedMessages(userId) as ObjectResult;
@@ -219,7 +298,8 @@ public class MessageControllerTests
     {
         // Arrange
         var userId = 1;
-        _messageServiceMock.Setup(service => service.GetReceivedMessages(userId)).ThrowsAsync(new KeyNotFoundException("Messages not found"));
+        _messageServiceMock.Setup(service => service.GetReceivedMessages(userId))
+            .ThrowsAsync(new KeyNotFoundException("Messages not found"));
 
         // Act
         var result = await _messageController.GetReceivedMessages(userId) as NotFoundObjectResult;

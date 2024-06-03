@@ -1,4 +1,6 @@
 ﻿using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
 using Microsoft.AspNetCore.Authorization;
@@ -32,10 +34,12 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     [HttpGet("user/{userId}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetProfileByUserId(int userId)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, userId);
             var profile = await profileService.GetProfileByUserId(userId);
             return Ok(profile);
         }
@@ -44,15 +48,22 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
     }
 
     [HttpGet("manager/{managerId}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetProfilePreviewForManager(int managerId)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, managerId);
             var profiles = await profileService.GetProfilesByManager(managerId);
             return Ok(profiles);
         }
@@ -60,6 +71,11 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
 
@@ -83,10 +99,12 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     [HttpPost]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> AddProfile(ProfileDto profileDto)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
             var profile = await profileService.AddProfile(profileDto);
             return StatusCode(201, profile);
         }
@@ -95,15 +113,22 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             logger.LogError(ex.Message);
             return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
     }
 
     [HttpPut]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
             var profile = await profileService.UpdateProfile(profileDto);
             return Ok(profile);
         }
@@ -112,22 +137,35 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
     }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteProfileById(int id)
     {
         try
         {
-            var profile = await profileService.DeleteProfileById(id);
+            var profile = await profileService.GetProfileById(id);
+            ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
+            profile = await profileService.DeleteProfileById(id);
             return Ok(profile);
         }
         catch (KeyNotFoundException ex)
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
 

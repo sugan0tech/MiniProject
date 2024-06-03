@@ -1,10 +1,12 @@
-﻿using MatrimonyApiService.Profile;
+﻿using System.Security.Claims;
+using MatrimonyApiService.Profile;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
+using ProfileDto = MatrimonyApiService.Profile.ProfileDto;
 
 namespace MatrimonyTest.Profile;
 
@@ -13,6 +15,7 @@ public class ProfileControllerTests
     private Mock<IProfileService> _profileServiceMock;
     private Mock<ILogger<ProfileController>> _loggerMock;
     private ProfileController _profileController;
+    private List<Claim> _claims;
 
     [SetUp]
     public void SetUp()
@@ -20,6 +23,19 @@ public class ProfileControllerTests
         _profileServiceMock = new Mock<IProfileService>();
         _loggerMock = new Mock<ILogger<ProfileController>>();
         _profileController = new ProfileController(_profileServiceMock.Object, _loggerMock.Object);
+        
+        _claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, "1"),
+            new Claim(ClaimTypes.Email, "test@example.com"),
+            new Claim(ClaimTypes.Role, "User")
+        };
+        var identity = new ClaimsIdentity(_claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        _profileController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
     }
 
     [Test]
@@ -52,6 +68,20 @@ public class ProfileControllerTests
         // ClassicAssert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    [Test]
+    public async Task GetProfilePreviewForManager_ReturnsForbidden_WhenProfilesDoNotExistforManager()
+    {
+        // Arrange
+        var managerId = 2;
+
+        // Act
+        var result = await _profileController.GetProfilePreviewForManager(managerId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
     }
 
     [Test]
@@ -153,10 +183,24 @@ public class ProfileControllerTests
     }
 
     [Test]
+    public async Task GetProfileByUserId_ReturnsForbidden_WhenProfileAttachedToDifferentUser()
+    {
+        // Arrange
+        var userId = 2;
+
+        // Act
+        var result = await _profileController.GetProfileByUserId(userId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
     public async Task AddProfile_ReturnsCreated_WhenProfileIsAdded()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1 };
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
         _profileServiceMock.Setup(service => service.AddProfile(profileDto)).ReturnsAsync(profileDto);
 
         // Act
@@ -172,7 +216,7 @@ public class ProfileControllerTests
     public async Task AddProfile_ReturnsBadRequest_WhenDbUpdateExceptionOccurs()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1 };
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
         _profileServiceMock.Setup(service => service.AddProfile(profileDto)).ThrowsAsync(new DbUpdateException("Database error"));
 
         // Act
@@ -184,10 +228,24 @@ public class ProfileControllerTests
     }
 
     [Test]
+    public async Task AddProfile_ReturnsForbidden_WhenDidforWrongManager()
+    {
+        // Arrange
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2};
+
+        // Act
+        var result = await _profileController.AddProfile(profileDto) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
     public async Task UpdateProfile_ReturnsOk_WhenProfileIsUpdated()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1 };
+        var profileDto = new ProfileDto { ProfileId = 1 , ManagedById = 1};
         _profileServiceMock.Setup(service => service.UpdateProfile(profileDto)).ReturnsAsync(profileDto);
 
         // Act
@@ -203,7 +261,7 @@ public class ProfileControllerTests
     public async Task UpdateProfile_ReturnsNotFound_WhenProfileDoesNotExist()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1 };
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
         _profileServiceMock.Setup(service => service.UpdateProfile(profileDto)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
@@ -215,11 +273,26 @@ public class ProfileControllerTests
     }
 
     [Test]
+    public async Task UpdateProfile_ReturnsForBidden_WhenManagerNotExist()
+    {
+        // Arrange
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2};
+
+        // Act
+        var result = await _profileController.UpdateProfile(profileDto) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
     public async Task DeleteProfileById_ReturnsOk_WhenProfileIsDeleted()
     {
         // Arrange
         var profileId = 1;
         var profileDto = new ProfileDto { ProfileId = profileId };
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 1});
         _profileServiceMock.Setup(service => service.DeleteProfileById(profileId)).ReturnsAsync(profileDto);
 
         // Act
@@ -236,6 +309,7 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 1});
         _profileServiceMock.Setup(service => service.DeleteProfileById(profileId)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
@@ -244,6 +318,21 @@ public class ProfileControllerTests
         // ClassicAssert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    [Test]
+    public async Task DeleteProfileById_ReturnsForbidden_WhenManagerDoesNotExist()
+    {
+        // Arrange
+        var profileId = 1;
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 2});
+
+        // Act
+        var result = await _profileController.DeleteProfileById(profileId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
     }
 
     [Test]

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace MatrimonyApiService.User;
 
 [Route("api/[controller]")]
 [ApiController]
-// [Authorize]
+[Authorize]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
@@ -68,10 +69,12 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteById(int id)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, id);
             var deletedUser = await userService.DeleteById(id);
             return Ok(deletedUser);
         }
@@ -80,8 +83,13 @@ public class UserController(IUserService userService, ILogger<UserController> lo
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
     }
-    
+
     [HttpPost("validate/{userId}/{status}")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

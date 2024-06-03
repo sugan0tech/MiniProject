@@ -3,6 +3,7 @@ using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -153,6 +154,29 @@ public class AuthControllerTests
         // ClassicAssert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
+    }
+
+    [Test]
+    public async Task Register_ReturnsBadRequest_WhenRegisteringWithSameEmail()
+    {
+        // Arrange
+        var registerDto = new RegisterDTO
+        {
+            Email = "test@example.com",
+            FirstName = "John",
+            LastName = "Doe",
+            PhoneNumber = "1234567890",
+            AddressId = 1,
+            Password = "password123"
+        };
+        _authServiceMock.Setup(service => service.Register(registerDto)).ThrowsAsync(new DbUpdateException());
+
+        // Act
+        var result = await _authController.Register(registerDto) as BadRequestObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
     }
 
     [Test]

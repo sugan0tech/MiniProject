@@ -7,7 +7,7 @@ namespace MatrimonyApiService.Membership;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
+[Authorize]
 public class MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger)
     : ControllerBase
 {
@@ -48,6 +48,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
     [HttpDelete("{membershipId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteById(int membershipId)
     {
         try
@@ -65,6 +66,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
     [HttpPost]
     [ProducesResponseType(typeof(MembershipDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Add(MembershipDto dto)
     {
         try
@@ -82,6 +84,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
     [HttpPut]
     [ProducesResponseType(typeof(MembershipDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Update(MembershipDto dto)
     {
         try
@@ -131,6 +134,7 @@ public class MembershipController(IMembershipService membershipService, ILogger<
 
     [HttpPost("validate/all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> ValidateAll()
     {
         await membershipService.ValidateAll();

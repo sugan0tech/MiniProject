@@ -1,6 +1,7 @@
 ﻿using MatrimonyApiService.Auth;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
@@ -146,6 +147,24 @@ public class AuthServiceTests
         _userServiceMock.Setup(u => u.Add(It.IsAny<UserDto>())).Throws(new Exception());
 
         Assert.ThrowsAsync<MatrimonyApiService.Exceptions.AuthenticationException>(() => _authService.Register(registerDto));
+    }
+
+    [Test]
+    public void Register_ThrowsException_ThrowsDbUpdateExceptionForNonUniqueValue()
+    {
+        var registerDto = new RegisterDTO
+        {
+            Email = "test@test.com",
+            Password = "password",
+            FirstName = "Test",
+            LastName = "User",
+            PhoneNumber = "1234567890",
+            AddressId = 1
+        };
+
+        _userServiceMock.Setup(u => u.Add(It.IsAny<UserDto>())).Throws(new DbUpdateException());
+
+        Assert.ThrowsAsync<DbUpdateException>(() => _authService.Register(registerDto));
     }
 
     [Test]

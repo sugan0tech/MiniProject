@@ -1,5 +1,7 @@
-﻿using MatrimonyApiService.Exceptions;
+﻿using System.Security.Claims;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,6 +14,7 @@ public class UserControllerTests
     private Mock<IUserService> _mockUserService;
     private Mock<ILogger<UserController>> _mockLogger;
     private UserController _controller;
+    private List<Claim> _claims;
 
     [SetUp]
     public void Setup()
@@ -19,6 +22,19 @@ public class UserControllerTests
         _mockUserService = new Mock<IUserService>();
         _mockLogger = new Mock<ILogger<UserController>>();
         _controller = new UserController(_mockUserService.Object, _mockLogger.Object);
+
+        _claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, "1"),
+            new Claim(ClaimTypes.Email, "test@example.com"),
+            new Claim(ClaimTypes.Role, "User")
+        };
+        var identity = new ClaimsIdentity(_claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        _controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
     }
 
     [Test]
@@ -134,9 +150,33 @@ public class UserControllerTests
     }
 
     [Test]
-    public async Task DeleteById_ShouldReturnNotFoundWhenUserNotFound()
+    public async Task DeleteById_ShouldReturnNotFoundWhenUserInvalid()
+    {
+        // Act
+        var result = await _controller.DeleteById(999);
+
+        // ClassicAssert
+        ClassicAssert.IsInstanceOf<ObjectResult>(result);
+        var forbidden = result as ObjectResult;
+        ClassicAssert.AreEqual(403, forbidden.StatusCode);
+    }
+
+    [Test]
+    public async Task DeleteById_ShouldReturnNotFoundWhenUserNotFoundWithToken()
     {
         // Arrange
+        _claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, "1"),
+            new Claim(ClaimTypes.Email, "test@example.com"),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+        var identity = new ClaimsIdentity(_claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        _controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
         _mockUserService.Setup(service => service.DeleteById(It.IsAny<int>())).Throws(new KeyNotFoundException("User not found"));
 
         // Act

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, viewerId);
             await profileViewService.AddView(viewerId, profileId);
             return Ok();
         }
@@ -38,11 +40,17 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
             logger.LogError(ex.Message);
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> AddView(ProfileViewDto profileViewDto)
     {
         await profileViewService.AddView(profileViewDto);
@@ -52,6 +60,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     [HttpGet("{viewId}")]
     [ProducesResponseType(typeof(ProfileViewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetViewById(int viewId)
     {
         try
@@ -92,6 +101,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     [HttpDelete("{viewId}")]
     [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteViewById(int viewId)
     {
         try
@@ -109,6 +119,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     [HttpDelete("before/{date}")]
     [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteOldViews(DateTime date)
     {
         try

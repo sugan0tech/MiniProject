@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Exceptions;
+﻿using System.Security.Claims;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.ProfileView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ public class ProfileViewControllerTests
     private Mock<IProfileViewService> _profileViewServiceMock;
     private Mock<ILogger<ProfileViewController>> _loggerMock;
     private ProfileViewController _profileViewController;
+    private List<Claim> _claims;
 
     [SetUp]
     public void SetUp()
@@ -20,6 +22,19 @@ public class ProfileViewControllerTests
         _profileViewServiceMock = new Mock<IProfileViewService>();
         _loggerMock = new Mock<ILogger<ProfileViewController>>();
         _profileViewController = new ProfileViewController(_profileViewServiceMock.Object, _loggerMock.Object);
+        
+        _claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, "1"),
+            new Claim(ClaimTypes.Email, "test@example.com"),
+            new Claim(ClaimTypes.Role, "User")
+        };
+        var identity = new ClaimsIdentity(_claims);
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        _profileViewController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+        };
     }
 
     [Test]
@@ -51,6 +66,54 @@ public class ProfileViewControllerTests
         // ClassicAssert
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status404NotFound, result.StatusCode);
+    }
+
+    [Test]
+    public async Task AddView_ByIds_ReturnsForbiddenw_WhenNonPremiumUserAccessed()
+    {
+        // Arrange
+        var viewerId = 1;
+        var profileId = 1;
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new NonPremiumUserException("msg"));
+
+        // Act
+        var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
+    public async Task AddView_ByIds_ReturnsForBiden_WhenMaxProfileViewExhausted()
+    {
+        // Arrange
+        var viewerId = 1;
+        var profileId = 1;
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new ExhaustedMaximumProfileViewsException("msg"));
+
+        // Act
+        var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
+    }
+
+    [Test]
+    public async Task AddView_ByIds_ReturnsForBiden_WhenInaccessibleViewer()
+    {
+        // Arrange
+        var viewerId = 1;
+        var profileId = 1;
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new AuthenticationException("msg"));
+
+        // Act
+        var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
+
+        // ClassicAssert
+        ClassicAssert.IsNotNull(result);
+        ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, result.StatusCode);
     }
 
     [Test]

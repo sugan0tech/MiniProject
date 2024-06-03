@@ -1,4 +1,6 @@
 ﻿using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
+using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,10 +42,12 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
     [HttpPost]
     [ProducesResponseType(typeof(ReportDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Add(ReportDto report)
     {
         try
         {
+            ControllerValidator.ValidateUserPrivilege(User.Claims, report.ReportedById);
             var addedReport = await reportService.Add(report);
             return Ok(addedReport);
         }
@@ -51,6 +55,11 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
         {
             logger.LogError(ex.Message);
             return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
 
