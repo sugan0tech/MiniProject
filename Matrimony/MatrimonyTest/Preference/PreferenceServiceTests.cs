@@ -89,7 +89,7 @@ public class PreferenceServiceTests
         var preferenceDto = new PreferenceDto
         {
             PreferenceId = preferenceId, MotherTongue = "English", Religion = "Christian", Education = "Bachelor",
-            Occupation = "Engineer", MinHeight = 150, MaxHeight = 180, MinAge = 25, MaxAge = 35,
+            Occupation = preference.OccupationEnum.ToString(), MinHeight = 150, MaxHeight = 180, MinAge = 25, MaxAge = 35,
             PreferenceForId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow
         };
 

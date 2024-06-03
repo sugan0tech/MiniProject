@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using AutoMapper;
+﻿using AutoMapper;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
@@ -191,8 +190,10 @@ public class UserServiceTests
         };
 
         _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
+        _userRepositoryMock.Setup(repo => repo.GetById(user.Id)).ReturnsAsync(user);
         _userRepositoryMock.Setup(repo => repo.Update(user)).ReturnsAsync(user);
         _mapperMock.Setup(mapper => mapper.Map<UserDto>(user)).Returns(userDto);
+        _mapperMock.Setup(mapper => mapper.Map(userDto, user)).Returns(user);
 
         // Act
         var result = await _userService.Update(userDto);
@@ -282,8 +283,10 @@ public class UserServiceTests
             ]
         };
         var userDto = new UserDto { UserId = 1 };
+        _userRepositoryMock.Setup(repo => repo.GetById(user.Id)).ReturnsAsync(user);
         _mapperMock.Setup(mapper => mapper.Map<MatrimonyApiService.User.User>(userDto)).Returns(user);
         _userRepositoryMock.Setup(repo => repo.Update(user)).ThrowsAsync(new KeyNotFoundException());
+        _mapperMock.Setup(mapper => mapper.Map(userDto, user)).Returns(user);
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.Update(userDto));

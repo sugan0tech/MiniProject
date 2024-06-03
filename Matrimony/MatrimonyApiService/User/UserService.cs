@@ -44,7 +44,16 @@ public class UserService(
     {
         try
         {
-            var user = mapper.Map<User>(dto);
+            // var user = mapper.Map<User>(dto);
+            var user = await repo.GetById(dto.UserId);
+            var pswd = user.Password;
+            var hashkey = user.HashKey;
+            user = mapper.Map(dto, user);
+            if (user.Password.Length == 0 && user.HashKey.Length == 0)
+            {
+                user.Password = pswd;
+                user.HashKey = hashkey;
+            }
             var usr = await repo.Update(user);
             return mapper.Map<UserDto>(usr);
         }
@@ -72,8 +81,7 @@ public class UserService(
         {
             var user = await repo.GetById(userId);
             user.IsVerified = status;
-            var modifiedUserDto = mapper.Map<UserDto>(user);
-            return await Update(modifiedUserDto);
+            return mapper.Map<UserDto>(await repo.Update(user));
         }
         catch (KeyNotFoundException e)
         {

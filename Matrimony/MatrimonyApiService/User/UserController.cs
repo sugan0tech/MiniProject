@@ -8,7 +8,7 @@ namespace MatrimonyApiService.User;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]

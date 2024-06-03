@@ -65,9 +65,14 @@ public class MappingProfile : AutoMapper.Profile
 
         // User mappings
         CreateMap<User.User, UserDto>()
-            .ForMember(dto => dto.UserId, act => act.MapFrom(src => src.Id));
+            .ForMember(dto => dto.UserId, act => act.MapFrom(src => src.Id))
+            .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
         CreateMap<UserDto, User.User>()
-            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.UserId));
+            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.UserId))
+            .ForMember(entity => entity.Password, opt => opt.Condition(src => src.Password is { Length: > 0 }))
+            .ForMember(entity => entity.HashKey, opt => opt.Condition(src => src.HashKey is { Length: > 0 }))
+            .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
+
 
         CreateMap<User.User, RegisterDTO>();
         CreateMap<RegisterDTO, User.User>();
