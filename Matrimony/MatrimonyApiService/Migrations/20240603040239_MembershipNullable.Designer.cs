@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240603040239_MembershipNullable")]
+    partial class MembershipNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,7 +291,7 @@ namespace MatrimonyApiService.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("PreferenceId")
+                    b.Property<int>("PreferenceId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("ProfilePicture")
@@ -317,8 +320,7 @@ namespace MatrimonyApiService.Migrations
                         .HasFilter("[MembershipId] IS NOT NULL");
 
                     b.HasIndex("PreferenceId")
-                        .IsUnique()
-                        .HasFilter("[PreferenceId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -478,8 +480,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("AddressId1");
 
-                    b.HasIndex(new[] { "Email" }, "Email_Ind")
-                        .IsUnique();
+                    b.HasIndex(new[] { "Email" }, "Email_Ind");
 
                     b.ToTable("Users");
                 });
@@ -538,7 +539,8 @@ namespace MatrimonyApiService.Migrations
                     b.HasOne("MatrimonyApiService.Preference.Preference", "Preference")
                         .WithOne("PreferenceFor")
                         .HasForeignKey("MatrimonyApiService.Profile.Profile", "PreferenceId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("MatrimonyApiService.User.User", "User")
                         .WithOne()

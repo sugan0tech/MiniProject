@@ -9,7 +9,7 @@ namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]

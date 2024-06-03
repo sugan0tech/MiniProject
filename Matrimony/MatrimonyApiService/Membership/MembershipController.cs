@@ -7,7 +7,7 @@ namespace MatrimonyApiService.Membership;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger)
     : ControllerBase
 {

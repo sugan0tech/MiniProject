@@ -69,7 +69,11 @@ public class Program
         #region Context
 
         builder.Services.AddDbContext<MatrimonyContext>(optionsBuilder =>
-            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")));
+            {
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+                optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }
+        );
 
         #endregion
 

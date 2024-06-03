@@ -59,8 +59,10 @@ public class ProfileService(
     public async Task<ProfileDto> AddProfile(ProfileDto dto)
     {
         var profile = mapper.Map<Profile>(dto);
+        var savedProfile = await repo.Add(profile);
         var preference = new PreferenceDto
         {
+            PreferenceForId = savedProfile.Id,
             MotherTongue = profile.MotherTongue,
             Religion = profile.Religion,
             Education = profile.Education,
@@ -68,11 +70,14 @@ public class ProfileService(
             MinHeight = profile.Height - 1,
             MaxHeight = profile.Height + 1,
             MinAge = profile.Age - 5,
-            MaxAge = profile.Age + 5
+            MaxAge = profile.Age + 5,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
         preference = await preferenceService.Add(preference);
         profile.PreferenceId = preference.PreferenceId;
-        return mapper.Map<ProfileDto>(await repo.Add(profile));
+        await repo.Update(savedProfile);
+        return mapper.Map<ProfileDto>(savedProfile);
     }
 
     /// <intheritdoc/>
@@ -111,7 +116,7 @@ public class ProfileService(
         try
         {
             var profile = await repo.GetById(profileId);
-            var preference = await preferenceService.GetById(profile.PreferenceId);
+            var preference = await preferenceService.GetById((int)profile.PreferenceId!);
             var profiles = await repo.GetAll();
             var matchedProfiles = profiles.Where(p =>
                 (preference.MotherTongue == "ALL" || p.MotherTongue == preference.MotherTongue) &&

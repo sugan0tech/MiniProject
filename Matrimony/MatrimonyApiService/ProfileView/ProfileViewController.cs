@@ -8,13 +8,14 @@ namespace MatrimonyApiService.ProfileView;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger)
     : ControllerBase
 {
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
     [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> AddView(int viewerId, int profileId)
     {
         try
@@ -26,6 +27,16 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (NonPremiumUserException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
+        catch (ExhaustedMaximumProfileViewsException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
 

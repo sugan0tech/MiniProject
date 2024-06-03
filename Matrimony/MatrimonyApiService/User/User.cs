@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.User;
 
-[Index(nameof(Email), Name = "Email_Ind")]
+[Index(nameof(Email), Name = "Email_Ind", IsUnique = true)]
 public class User : BaseEntity
 {
     // [Key] public int UserId { get; set; }

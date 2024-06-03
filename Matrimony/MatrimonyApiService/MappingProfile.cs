@@ -48,9 +48,11 @@ public class MappingProfile : AutoMapper.Profile
 
         // Profile mappings
         CreateMap<Profile.Profile, ProfileDto>()
-            .ForMember(dto => dto.ProfileId, act => act.MapFrom(src => src.Id));
+            .ForMember(dto => dto.ProfileId, act => act.MapFrom(src => src.Id))
+            .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
         CreateMap<ProfileDto, Profile.Profile>()
-            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.ProfileId));
+            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.ProfileId))
+            .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
 
         CreateMap<Profile.Profile, ProfilePreviewDto>()
             .ForMember(dto => dto.ProfileId, act => act.MapFrom(src => src.Id));

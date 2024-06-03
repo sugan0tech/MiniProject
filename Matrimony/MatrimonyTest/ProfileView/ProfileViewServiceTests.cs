@@ -54,7 +54,8 @@ public class ProfileViewServiceTests
         var membership = new MembershipDto
             { MembershipId = 1, ProfileId = 1, Type = "Premium", Description = "Test Description", IsTrail = true };
 
-        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
+        _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto { });
+        _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
         _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
             .ReturnsAsync(profileView);
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto { });
@@ -104,7 +105,8 @@ public class ProfileViewServiceTests
         var membership = new MembershipDto
             { MembershipId = 1, ProfileId = 1, Type = MemberShip.FreeUser.ToString(), Description = "Test Description", IsTrail = false };
 
-        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
+        _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto { });
+        _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
         _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
             .ReturnsAsync(profileView);
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(profile);
@@ -151,7 +153,8 @@ public class ProfileViewServiceTests
         var membership = new MembershipDto
             { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 50 };
 
-        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
+        _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto());
+        _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
         _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
             .ReturnsAsync(profileView);
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(profile);
@@ -198,7 +201,8 @@ public class ProfileViewServiceTests
         var membership = new MembershipDto
             { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 49 };
 
-        _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
+        _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto());
+        _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
         _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.ProfileView.ProfileView>()))
             .ReturnsAsync(profileView);
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(profile);

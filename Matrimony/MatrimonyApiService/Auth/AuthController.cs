@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Auth;
 
@@ -48,6 +49,14 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         {
             var success = await authService.Register(registerDto);
             return Ok(new { Success = success });
+        }
+        catch (DbUpdateException e)
+        {
+            var message = e.Message;
+            if (e.InnerException != null)
+                message = e.InnerException.Message;
+
+            return BadRequest(new ErrorModel(400, message));
         }
         catch (UserNotVerifiedException e)
         {

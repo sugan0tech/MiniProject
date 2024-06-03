@@ -23,6 +23,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpPost]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Add([FromBody] UserDto user)
     {
         var createdUser = await userService.Add(user);

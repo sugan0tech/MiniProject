@@ -121,7 +121,7 @@ public class Profile : BaseEntity
     public int Weight { get; set; }
     public int Height { get; set; }
 
-    [ForeignKey("MembershipId")] public int MembershipId { get; set; }
+    [ForeignKey("MembershipId")] public int? MembershipId { get; set; }
     public Membership.Membership? Membership { get; set; }
 
     [ForeignKey("ManagedById")] public int ManagedById { get; set; }
@@ -152,7 +152,7 @@ public class Profile : BaseEntity
     [ExcludeFromCodeCoverage]
     public IEnumerable<MatchRequest.MatchRequest>? ReceivedMatches { get; set; }
 
-    [ForeignKey("PreferenceId")] public int PreferenceId { get; set; }
+    [ForeignKey("PreferenceId")] public int? PreferenceId { get; set; }
     public Preference.Preference? Preference { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -2,6 +2,7 @@
 using System.Text;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
+using Microsoft.EntityFrameworkCore;
 using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
 namespace MatrimonyApiService.Auth;
@@ -71,6 +72,11 @@ public class AuthService(
             };
             await userService.Add(user);
             return true;
+        }
+        catch (DbUpdateException e)
+        {
+            logger.LogError(e.Message);
+            throw;
         }
         catch (Exception e)
         {
