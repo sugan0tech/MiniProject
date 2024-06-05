@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using MatrimonyApiService.Address;
+using MatrimonyApiService.AddressCQRS;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
@@ -74,6 +75,13 @@ public class Program
                 optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
         );
+        
+        builder.Services.AddDbContext<EventStoreDbContext>(optionsBuilder =>
+            {
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("eventStore"));
+                optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }
+        );
 
         #endregion
 
@@ -89,6 +97,8 @@ public class Program
         builder.Services.AddScoped<IBaseRepo<Message.Message>, MessageRepo>();
         builder.Services.AddScoped<IBaseRepo<Membership.Membership>, MembershipRepo>();
         builder.Services.AddScoped<IBaseRepo<Report.Report>, ReportRepo>();
+
+        builder.Services.AddScoped<IEventStore, EventStore>();
 
         #endregion
 
