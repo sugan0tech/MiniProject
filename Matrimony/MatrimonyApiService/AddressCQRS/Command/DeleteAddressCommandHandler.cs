@@ -1,4 +1,5 @@
-﻿using MatrimonyApiService.Commons;
+﻿using MatrimonyApiService.AddressCQRS.Event;
+using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.AddressCQRS.Command;
 

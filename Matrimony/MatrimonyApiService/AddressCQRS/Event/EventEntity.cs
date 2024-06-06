@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MatrimonyApiService.AddressCQRS;
+namespace MatrimonyApiService.AddressCQRS.Event;
 
 public class EventEntity
 {

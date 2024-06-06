@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MatrimonyApiService.AddressCQRS;
+namespace MatrimonyApiService.AddressCQRS.Event;
 
 public class EventStoreDbContext : DbContext
 {

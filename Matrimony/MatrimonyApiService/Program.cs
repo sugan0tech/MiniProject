@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using MatrimonyApiService.Address;
 using MatrimonyApiService.AddressCQRS;
+using MatrimonyApiService.AddressCQRS.Event;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;

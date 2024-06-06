@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace MatrimonyApiService.AddressCQRS;
+namespace MatrimonyApiService.AddressCQRS.Event;
 
 public class EventStore : IEventStore
 {

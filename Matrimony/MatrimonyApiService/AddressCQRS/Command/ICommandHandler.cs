@@ -1,4 +1,4 @@
-﻿namespace MatrimonyApiService.AddressCQRS;
+﻿namespace MatrimonyApiService.AddressCQRS.Command;
 
 public interface ICommandHandler<TCommand>
 {

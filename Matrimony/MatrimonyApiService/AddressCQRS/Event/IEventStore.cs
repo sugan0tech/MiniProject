@@ -1,4 +1,4 @@
-﻿namespace MatrimonyApiService.AddressCQRS;
+﻿namespace MatrimonyApiService.AddressCQRS.Event;
 
 public interface IEventStore
 {
