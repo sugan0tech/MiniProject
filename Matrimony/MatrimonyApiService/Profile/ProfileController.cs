@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace MatrimonyApiService.Profile;
 [ApiController]
 [Route("api/[controller]")]
 // [Authorize]
-public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
+public class ProfileController(IProfileService profileService, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
@@ -119,6 +120,30 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
+    
+    [HttpPost("mediate")]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> AddProfile(CreateProfileCommand command)
+    {
+        try
+        {
+            var value = await mediator.Send(command);
+            return StatusCode(201, value);
+        }
+        catch (DbUpdateException ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
+    }
+
 
     [HttpPut]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
