@@ -2,13 +2,8 @@
 
 namespace MatrimonyApiService.AddressCQRS.Event;
 
-public class EventStoreDbContext : DbContext
+public class EventStoreDbContext(DbContextOptions<EventStoreDbContext> options) : DbContext(options)
 {
-    public EventStoreDbContext(DbContextOptions<EventStoreDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<EventEntity> Events { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

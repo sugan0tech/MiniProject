@@ -3,15 +3,8 @@ using Newtonsoft.Json;
 
 namespace MatrimonyApiService.AddressCQRS.Event;
 
-public class EventStore : IEventStore
+public class EventStore(EventStoreDbContext context) : IEventStore
 {
-    private readonly EventStoreDbContext _context;
-
-    public EventStore(EventStoreDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task SaveEventAsync<TEvent>(TEvent @event)
     {
         var eventEntity = new EventEntity
@@ -21,14 +14,14 @@ public class EventStore : IEventStore
             CreatedAt = DateTime.UtcNow
         };
 
-        _context.Events.Add(eventEntity);
-        await _context.SaveChangesAsync();
+        context.Events.Add(eventEntity);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<TEvent>> GetEventsAsync<TEvent>()
     {
         var eventTypeName = typeof(TEvent).Name;
-        var events = await _context.Events
+        var events = await context.Events
             .Where(e => e.EventType == eventTypeName)
             .ToListAsync();
 
