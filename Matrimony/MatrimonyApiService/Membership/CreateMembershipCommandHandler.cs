@@ -2,17 +2,11 @@
 
 namespace MatrimonyApiService.Membership;
 
-public class CreateMembershipCommandHandler : IRequestHandler<CreateMembershipCommand, MembershipDto>
+public class CreateMembershipCommandHandler(IMembershipService membershipService)
+    : IRequestHandler<CreateMembershipCommand, MembershipDto>
 {
-    private readonly IMembershipService _membershipService;
-
-    public CreateMembershipCommandHandler(IMembershipService membershipService)
-    {
-        _membershipService = membershipService;
-    }
-
     public async Task<MembershipDto> Handle(CreateMembershipCommand request, CancellationToken cancellationToken)
     {
-        return await _membershipService.Add(request.MembershipDto);
+        return await membershipService.Add(request.MembershipDto);
     }
 }

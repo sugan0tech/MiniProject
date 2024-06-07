@@ -178,7 +178,7 @@ public class ProfileController(IProfileService profileService, IMediator mediato
         try
         {
             var profile = await profileService.GetProfileById(id);
-            ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
+            // ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
             profile = await profileService.DeleteProfileById(id);
             return Ok(profile);
         }
@@ -194,6 +194,31 @@ public class ProfileController(IProfileService profileService, IMediator mediato
         }
     }
 
+    [HttpDelete("mediate/{id}")]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteProfileByIdMediator(int id)
+    {
+        try
+        {
+            var profile = await profileService.GetProfileById(id);
+            // ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
+            profile = await mediator.Send(new DeleteProfileCommand(id));
+            return Ok(profile);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (AuthenticationException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
+    }
+    
     [HttpGet("{profileId}/matches")]
     [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -213,7 +238,7 @@ public class ProfileController(IProfileService profileService, IMediator mediato
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
-    [Authorize(Policy = "AdminPolicy")]
+    // [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var profiles = await profileService.GetAll();
