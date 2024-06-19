@@ -137,6 +137,15 @@ public class Program
 
         #endregion
 
+        #region Cors
+
+        builder.Services.AddCors(opts =>
+        {
+            opts.AddPolicy("AllowAll", opts => { opts.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
+        });
+
+        #endregion
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -146,6 +155,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors();
         app.UseAuthorization();
 
 

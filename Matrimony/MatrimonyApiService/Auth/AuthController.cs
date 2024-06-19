@@ -2,6 +2,7 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace MatrimonyApiService.Auth;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ControllerBase
 {
     [HttpPost("login")]
