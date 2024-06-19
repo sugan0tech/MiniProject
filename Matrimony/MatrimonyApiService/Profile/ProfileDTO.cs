@@ -45,7 +45,7 @@ public record ProfileDto
 
     public int Weight { get; init; }
     public int Height { get; init; }
-    public int? MembershipId { get; init; }
+    public int? MembershipId { get; set; }
     public int ManagedById { get; init; }
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }

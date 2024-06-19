@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using MatrimonyApiService.Profile;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public class ProfileControllerTests
 {
     private Mock<IProfileService> _profileServiceMock;
     private Mock<ILogger<ProfileController>> _loggerMock;
+    private Mock<IMediator> _mediatorMock;
     private ProfileController _profileController;
     private List<Claim> _claims;
 
@@ -22,7 +24,8 @@ public class ProfileControllerTests
     {
         _profileServiceMock = new Mock<IProfileService>();
         _loggerMock = new Mock<ILogger<ProfileController>>();
-        _profileController = new ProfileController(_profileServiceMock.Object, _loggerMock.Object);
+        _mediatorMock = new Mock<IMediator>();
+        _profileController = new ProfileController(_profileServiceMock.Object, _mediatorMock.Object, _loggerMock.Object);
         
         _claims = new List<Claim>
         {

@@ -36,7 +36,7 @@ public class ProfileService(
     public async Task<List<ProfilePreviewDto>> GetProfilesByManager(int managerId)
     {
         var profiles = await repo.GetAll();
-        return profiles.FindAll(profiles => profiles.ManagedById.Equals(managerId))
+        return profiles.FindAll(profs => profs.ManagedById.Equals(managerId))
             .ConvertAll(profile => mapper.Map<ProfilePreviewDto>(profile)).ToList();
     }
 
