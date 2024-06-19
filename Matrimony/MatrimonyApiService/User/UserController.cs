@@ -9,12 +9,12 @@ namespace MatrimonyApiService.User;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
-    [Authorize(Policy = "AdminPolicy")]
+    // [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var users = await userService.GetAll();
@@ -24,7 +24,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpPost]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
-    [Authorize(Policy = "AdminPolicy")]
+    // [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Add([FromBody] UserDto user)
     {
         var createdUser = await userService.Add(user);
@@ -93,7 +93,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     [HttpPost("validate/{userId}/{status}")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    [Authorize(Policy = "AdminPolicy")]
+    // [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> Validate(int userId, bool status)
     {
         try

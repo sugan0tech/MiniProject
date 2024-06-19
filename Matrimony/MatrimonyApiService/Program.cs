@@ -100,6 +100,11 @@ public class Program
 
         #region Services
 
+        builder.Services.AddMediatR(options =>
+        {
+            options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+        });
+
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();

@@ -23,6 +23,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
         var entity = await context.Set<TBaseEntity>().SingleOrDefaultAsync(entity => entity.Id.Equals(id));
         if (entity == null)
             throw new KeyNotFoundException($"{typeof(TBaseEntity).Name} with key {id} not found!!!");
+        context.Entry(entity).State = EntityState.Detached;
         return entity;
     }
 
@@ -48,6 +49,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
 
         await context.AddAsync(entity);
         await context.SaveChangesAsync();
+        context.Entry(entity).State = EntityState.Detached;
         return entity;
     }
 
@@ -63,6 +65,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
             context.Update(updateEntity);
             await context.SaveChangesAsync();
 
+            context.Entry(updateEntity).State = EntityState.Detached;
             return updateEntity;
         }
         catch (DbUpdateConcurrencyException)
