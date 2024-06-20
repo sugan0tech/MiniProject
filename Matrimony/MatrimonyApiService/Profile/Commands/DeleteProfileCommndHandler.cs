@@ -1,8 +1,9 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.Membership;
+using MatrimonyApiService.Membership.Commands;
 using MediatR;
 
-namespace MatrimonyApiService.Profile;
+namespace MatrimonyApiService.Profile.Commands;
 public class DeleteProfileCommandHandler(IProfileService profileService, IMediator mediator, MatrimonyContext context)
     : IRequestHandler<DeleteProfileCommand, ProfileDto>
 {

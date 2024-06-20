@@ -1,7 +1,6 @@
-﻿using MatrimonyApiService.Profile;
-using MediatR;
+﻿using MediatR;
 
-namespace MatrimonyApiService.Membership;
+namespace MatrimonyApiService.Membership.Commands;
 
 public class DeleteMembershipCommandHandler(IMembershipService membershipService)
     : IRequestHandler<DeleteMembershipCommand, MembershipDto>

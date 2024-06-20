@@ -19,4 +19,9 @@ public interface IPreferenceService
     /// Updates an existing preference asynchronously.
     /// </summary>
     Task<PreferenceDto> Update(PreferenceDto preferenceDto);
+    
+    /// <summary>
+    /// Delete preference with the given Id.
+    /// </summary>
+    Task<PreferenceDto> Delete(int id);
 }

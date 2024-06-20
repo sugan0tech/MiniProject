@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MatrimonyApiService.Membership;
+namespace MatrimonyApiService.Membership.Commands;
 
 public class CreateMembershipCommandHandler(IMembershipService membershipService)
     : IRequestHandler<CreateMembershipCommand, MembershipDto>

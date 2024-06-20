@@ -2,7 +2,7 @@
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
-using MatrimonyApiService.ProfileView;
+using MatrimonyApiService.Profile.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -96,32 +96,8 @@ public class ProfileController(IProfileService profileService, IMediator mediato
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
-
-    [HttpPost]
-    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> AddProfile(ProfileDto profileDto)
-    {
-        try
-        {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
-            var profile = await profileService.AddProfile(profileDto);
-            return StatusCode(201, profile);
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogError(ex.Message);
-            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
-        }
-        catch (AuthenticationException ex)
-        {
-            logger.LogError(ex.Message);
-            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
-        }
-    }
     
-    [HttpPost("mediate")]
+    [HttpPost]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
@@ -174,31 +150,6 @@ public class ProfileController(IProfileService profileService, IMediator mediato
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteProfileById(int id)
-    {
-        try
-        {
-            var profile = await profileService.GetProfileById(id);
-            // ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
-            profile = await profileService.DeleteProfileById(id);
-            return Ok(profile);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            logger.LogError(ex.Message);
-            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
-        }
-        catch (AuthenticationException ex)
-        {
-            logger.LogError(ex.Message);
-            return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
-        }
-    }
-
-    [HttpDelete("mediate/{id}")]
-    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> DeleteProfileByIdMediator(int id)
     {
         try
         {

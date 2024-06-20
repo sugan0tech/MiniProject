@@ -10,6 +10,16 @@ namespace MatrimonyApiService.Preference;
 public class Preference : BaseEntity
 {
     // [Key] public int PreferenceId { get; set; }
+    [MaxLength(25)]
+    [EnumTypeValidation(typeof(Gender))]
+    public required string Gender { get; set; }
+    
+    [NotMapped]
+    public Gender GenderEnum
+    {
+        get => Enum.Parse<Gender>(Gender);
+        set => Gender = value.ToString();
+    }
 
     [MaxLength(25)]
     [EnumTypeValidation(typeof(MotherTongue))]

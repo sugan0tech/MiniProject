@@ -1,9 +1,10 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Membership;
+using MatrimonyApiService.Membership.Commands;
 using MediatR;
 
-namespace MatrimonyApiService.Profile;
+namespace MatrimonyApiService.Profile.Commands;
 
 public class CreateProfileCommandHandler(IProfileService profileService, IMediator mediator, MatrimonyContext context)
     : IRequestHandler<CreateProfileCommand, ProfileDto>

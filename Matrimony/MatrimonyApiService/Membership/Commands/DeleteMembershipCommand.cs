@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-namespace MatrimonyApiService.Membership;
+namespace MatrimonyApiService.Membership.Commands;
 public record DeleteMembershipCommand(int membershipId) : IRequest<MembershipDto>;
