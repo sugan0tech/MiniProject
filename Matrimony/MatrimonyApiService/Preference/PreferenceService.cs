@@ -28,6 +28,22 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
             throw;
         }
     }
+    
+    /// <inheritdoc/>
+    public async Task<PreferenceDto> GetByProfileId(int profileId)
+    {
+        try
+        {
+            var entities = await preferenceRepo.GetAll();
+            return mapper.Map<PreferenceDto>(entities.Find(p => p.PreferenceForId.Equals(profileId)));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            throw;
+        }
+    }
+
 
     /// <inheritdoc/>
     public async Task<PreferenceDto> Update(PreferenceDto preferenceDto)

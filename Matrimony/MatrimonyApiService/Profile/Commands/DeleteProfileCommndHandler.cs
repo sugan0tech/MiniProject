@@ -1,6 +1,6 @@
 ﻿using MatrimonyApiService.Commons;
-using MatrimonyApiService.Membership;
 using MatrimonyApiService.Membership.Commands;
+using MatrimonyApiService.Preference.Commands;
 using MediatR;
 
 namespace MatrimonyApiService.Profile.Commands;
@@ -16,6 +16,7 @@ public class DeleteProfileCommandHandler(IProfileService profileService, IMediat
             var profile = await profileService.DeleteProfileById(request.profileId);
 
             await mediator.Send(new DeleteMembershipCommand((int) profile.MembershipId), cancellationToken);
+            await mediator.Send(new DeletePreferenceCommand((int)profile.PreferenceId), cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
 

@@ -2,6 +2,8 @@
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Membership.Commands;
+using MatrimonyApiService.Preference;
+using MatrimonyApiService.Preference.Commands;
 using MediatR;
 
 namespace MatrimonyApiService.Profile.Commands;
@@ -17,6 +19,7 @@ public class CreateProfileCommandHandler(IProfileService profileService, IMediat
         {
             var profile = await profileService.AddProfile(request.ProfileDto);
 
+            // Creating membership
             var membershipDto = new MembershipDto
             {
                 ProfileId = profile.ProfileId,
@@ -26,9 +29,31 @@ public class CreateProfileCommandHandler(IProfileService profileService, IMediat
                 IsTrailEnded = false
             };
 
-            var value = await mediator.Send(new CreateMembershipCommand(membershipDto));
+            var membership = await mediator.Send(new CreateMembershipCommand(membershipDto));
 
-            profile.MembershipId = value.MembershipId;
+            // Creating Preference
+            var preferenceDto = new PreferenceDto
+            {
+                PreferenceForId = profile.ProfileId,
+                Gender = profile.Gender.Equals(Gender.Male.ToString())
+                    ? Gender.Female.ToString()
+                    : Gender.Male.ToString(),
+                MotherTongue = profile.MotherTongue,
+                Religion = profile.Religion,
+                Education = profile.Education,
+                Occupation = profile.Occupation,
+                MinHeight = profile.Height - 1,
+                MaxHeight = profile.Height + 1,
+                MinAge = profile.Age - 5,
+                MaxAge = profile.Age + 5,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            var preference = await mediator.Send(new CreatePreferenceCommand(preferenceDto));
+
+            profile.MembershipId = membership.MembershipId;
+            profile.PreferenceId = preference.PreferenceId;
             await profileService.UpdateProfile(profile);
 
             await transaction.CommitAsync(cancellationToken);
@@ -41,5 +66,4 @@ public class CreateProfileCommandHandler(IProfileService profileService, IMediat
             throw new Exception("Transaction failed, rolling back.", ex);
         }
     }
-
 }

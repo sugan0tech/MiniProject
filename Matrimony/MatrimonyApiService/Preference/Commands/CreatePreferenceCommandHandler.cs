@@ -6,7 +6,6 @@ public class CreatePreferenceCommandHandler(IPreferenceService preferenceService
 {
     public Task<PreferenceDto> Handle(CreatePreferenceCommand request, CancellationToken cancellationToken)
     {
-        preferenceService.Add(request.PreferenceDto);
-        throw new NotImplementedException();
+        return preferenceService.Add(request.PreferenceDto);
     }
 }

@@ -55,7 +55,7 @@ public record ProfileDto
     public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
     [ExcludeFromCodeCoverage]
     public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
-    public int? PreferenceId { get; init; }
+    public int? PreferenceId { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }
