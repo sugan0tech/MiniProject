@@ -6,6 +6,7 @@ namespace MatrimonyApiService.Commons;
 public class MatrimonyContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<User.User> Users { get; set; }
+    public DbSet<UserSession.UserSession> UserSessions { get; set; }
     public DbSet<Profile.Profile> Profiles { get; set; }
     public DbSet<ProfileView.ProfileView> ProfileViews { get; set; }
     public DbSet<Message.Message> Messages { get; set; }
@@ -43,6 +44,12 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
             .HasForeignKey(view => view.ViewerId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>().Navigation<Address.Address>(user => user.Address).AutoInclude();
+
+        #endregion
+
+        #region UserSession
+
+        modelBuilder.Entity<UserSession.UserSession>();
 
         #endregion
 
@@ -108,9 +115,6 @@ public class MatrimonyContext(DbContextOptions options) : DbContext(options)
             .WithOne(preference => preference.PreferenceFor)
             .HasForeignKey<Preference.Preference>(preference => preference.PreferenceForId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Profile.Profile>()
-            .Navigation(profile => profile.Preference)
-            .AutoInclude();
 
         #endregion
 

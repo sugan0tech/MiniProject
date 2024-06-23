@@ -13,6 +13,7 @@ using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
+using MatrimonyApiService.UserSession;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -81,6 +82,7 @@ public class Program
 
         builder.Services.AddScoped<IBaseRepo<Address.Address>, AddressRepo>();
         builder.Services.AddScoped<IBaseRepo<User.User>, UserRepo>();
+        builder.Services.AddScoped<IBaseRepo<UserSession.UserSession>, UserSessionRepo>();
         builder.Services.AddScoped<IBaseRepo<Profile.Profile>, ProfileRepo>();
         builder.Services.AddScoped<IBaseRepo<Staff.Staff>, StaffRepo>();
         builder.Services.AddScoped<IBaseRepo<ProfileView.ProfileView>, ProfileViewRepo>();
@@ -112,6 +114,7 @@ public class Program
         builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IUserSessionService, UserSessionService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();

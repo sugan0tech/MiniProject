@@ -1,4 +1,4 @@
-﻿namespace MatrimonyApiService.Auth;
+﻿namespace MatrimonyApiService.Auth ;
 
 public record PayloadDto
 {

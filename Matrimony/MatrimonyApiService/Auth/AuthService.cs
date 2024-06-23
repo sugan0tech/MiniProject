@@ -2,6 +2,7 @@
 using System.Text;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
+using MatrimonyApiService.UserSession;
 using Microsoft.EntityFrameworkCore;
 using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
@@ -10,8 +11,11 @@ namespace MatrimonyApiService.Auth;
 public class AuthService(
     IUserService userService,
     ITokenService tokenService,
+    IUserSessionService userSessionService,
+    IHttpContextAccessor httpContextAccessor,
     ILogger<AuthService> logger) : IAuthService
 {
+    /// <intheritdoc/>
     public async Task<AuthReturnDto> Login(LoginDTO loginDto)
     {
         try
@@ -29,7 +33,20 @@ public class AuthService(
             if (isPasswordSame)
             {
                 logger.LogInformation($"Successfully logged as Id :{user.UserId}");
-                return new AuthReturnDto { Token = tokenService.GenerateToken(user) };
+                var tokens = tokenService.GenerateTokens(user);
+                var newSession = new UserSessionDto
+                {
+                    UserId = user.UserId,
+                    CreatedAt = DateTime.Now,
+                    ExpiresAt = DateTime.Now.AddMonths(6),
+                    DeviceType = GetDeviceType(GetUserAgent()),
+                    IpAddress = GetClientIpAddress(),
+                    UserAgent = GetUserAgent(),
+                    IsValid = true,
+                    RefreshToken = tokens.RefreshToken
+                };
+                await userSessionService.Add(newSession);
+                return tokens;
             }
 
             throw new Exceptions.AuthenticationException("Invalid username or password");
@@ -41,18 +58,34 @@ public class AuthService(
         }
     }
 
-    private bool ComparePassword(byte[] encryptedPassword, byte[] password)
+    /// <intheritdoc/>
+    public async Task Logout(string accessToken)
     {
-        if (encryptedPassword.Length != password.Length)
-            return false;
-
-        for (var i = 0; i < encryptedPassword.Length; i++)
-            if (encryptedPassword[i] != password[i])
-                return false;
-
-        return true;
+        await userSessionService.Invalidate(accessToken);
     }
 
+    /// <intheritdoc/>
+    public async Task<AuthReturnDto> GetAccessToken(string refreshToken)
+    {
+        try
+        {
+            if (!await userSessionService.IsValid(refreshToken))
+                throw new Exceptions.AuthenticationException("Invalid Token, login again please");
+
+            var payload = tokenService.GetPayload(refreshToken);
+            var user = await userService.GetById(payload.Id);
+
+            return new AuthReturnDto
+                { AccessToken = tokenService.GenerateAccessToken(user), RefreshToken = refreshToken };
+        }
+        catch (UserNotFoundException e)
+        {
+            logger.LogError(e.Message);
+            throw;
+        }
+    }
+
+    /// <intheritdoc/>
     public async Task<bool> Register(RegisterDTO dto)
     {
         try
@@ -86,6 +119,7 @@ public class AuthService(
         throw new Exceptions.AuthenticationException("Not able to register at this moment");
     }
 
+    /// <intheritdoc/>
     public async Task<AuthReturnDto> ResetPassword(ResetPasswordDto resetPasswordDto)
     {
         try
@@ -99,7 +133,23 @@ public class AuthService(
                 throw new AuthenticationException("Invalid Password");
             user.Password = hasher.ComputeHash(Encoding.UTF8.GetBytes(resetPasswordDto.NewPassword));
             await userService.Update(user);
-            return new AuthReturnDto { Token = tokenService.GenerateToken(user) };
+
+            // logs out from all other devices
+            await userSessionService.InvalidateAllPerUser(user.UserId);
+            var tokens = tokenService.GenerateTokens(user);
+            var newSession = new UserSessionDto
+            {
+                UserId = user.UserId,
+                CreatedAt = DateTime.Now,
+                ExpiresAt = DateTime.Now.AddMonths(6),
+                DeviceType = GetDeviceType(GetUserAgent()),
+                IpAddress = GetClientIpAddress(),
+                UserAgent = GetUserAgent(),
+                IsValid = true,
+                RefreshToken = tokens.RefreshToken
+            };
+            await userSessionService.Add(newSession);
+            return tokens;
         }
         catch (UserNotFoundException e)
         {
@@ -112,4 +162,49 @@ public class AuthService(
             throw new Exceptions.AuthenticationException("Failed to reset password");
         }
     }
+
+    private bool ComparePassword(byte[] encryptedPassword, byte[] password)
+    {
+        if (encryptedPassword.Length != password.Length)
+            return false;
+
+        for (var i = 0; i < encryptedPassword.Length; i++)
+            if (encryptedPassword[i] != password[i])
+                return false;
+
+        return true;
+    }
+
+    #region ClientInfoHandlers
+
+    private string GetClientIpAddress()
+    {
+        var ipAddress = httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+        return string.IsNullOrWhiteSpace(ipAddress) ? "Unknown IP" : ipAddress;
+    }
+
+    private string GetUserAgent()
+    {
+        return httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString() ??
+               throw new InvalidOperationException("User Agent not found");
+    }
+
+    private string GetDeviceType(string userAgent)
+    {
+        if (string.IsNullOrWhiteSpace(userAgent)) return "Unknown Device";
+
+        if (userAgent.Contains("Mobile", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Mobile";
+        }
+
+        if (userAgent.Contains("Tablet", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Tablet";
+        }
+
+        return "Desktop";
+    }
+
+    #endregion
 }

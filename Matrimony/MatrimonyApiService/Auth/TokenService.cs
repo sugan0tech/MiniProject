@@ -11,6 +11,7 @@ public class TokenService : ITokenService
 {
     private readonly SymmetricSecurityKey _key;
 
+    /// <intheritdoc/>
     public TokenService(IConfiguration configuration)
     {
         var secretKey = configuration.GetSection("TokenKey").GetSection("JWT").Value;
@@ -19,7 +20,8 @@ public class TokenService : ITokenService
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
     }
 
-    public string GenerateToken(UserDto user)
+    /// <intheritdoc/>
+    public string GenerateToken(UserDto user, DateTime expiration)
     {
         var claims = new List<Claim>
         {
@@ -28,12 +30,33 @@ public class TokenService : ITokenService
             new(ClaimTypes.Role, user.Role)
         };
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
-        var myToken = new JwtSecurityToken(null, null, claims, expires: DateTime.Now.AddDays(2),
+        var myToken = new JwtSecurityToken(null, null, claims, expires: expiration,
             signingCredentials: credentials);
         var token = new JwtSecurityTokenHandler().WriteToken(myToken);
         return token;
     }
 
+    /// <intheritdoc/>
+    public string GenerateAccessToken(UserDto user)
+    {
+        return GenerateToken(user, DateTime.Now.AddMinutes(30)); // Short-lived access token
+    }
+
+    /// <intheritdoc/>
+    public string GenerateRefreshToken(UserDto user)
+    {
+        return GenerateToken(user, DateTime.Now.AddMonths(6)); // Long-lived refresh token
+    }
+
+    /// <intheritdoc/>
+    public AuthReturnDto GenerateTokens(UserDto user)
+    {
+        var accessToken = GenerateToken(user, DateTime.Now.AddMinutes(30)); // Short-lived access token
+        var refreshToken = GenerateToken(user, DateTime.Now.AddMonths(6)); // Long-lived refresh token
+        return new AuthReturnDto { AccessToken = accessToken, RefreshToken = refreshToken };
+    }
+
+    /// <intheritdoc/>
     public PayloadDto GetPayload(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -3,8 +3,10 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 
 namespace MatrimonyApiService.Auth;
 
@@ -30,6 +32,55 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         catch (UserNotVerifiedException e)
         {
             return Unauthorized(new ErrorModel(401, e.Message));
+        }
+        catch (UserNotFoundException e)
+        {
+            return NotFound(new ErrorModel(404, e.Message));
+        }
+        catch (AuthenticationException e)
+        {
+            return Unauthorized(new ErrorModel(401, e.Message));
+        }
+    }
+
+    [HttpPost("logout")]
+    [ProducesResponseType(typeof(Ok), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Logout()
+    {
+        try
+        {
+            if (Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+            {
+                var token = authHeader.ToString().Split(' ').Last();
+                await authService.Logout(token);
+                return Ok();
+            }
+
+            return BadRequest(new ErrorModel(400, "Authorization header not found."));
+        }
+        catch (AuthenticationException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
+    }
+
+    [HttpGet("access-token")]
+    [ProducesResponseType(typeof(AuthReturnDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAccessToken()
+    {
+        try
+        {
+            if (Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+            {
+                var token = authHeader.ToString().Split(' ').Last();
+                var dto = await authService.GetAccessToken(token);
+                return Ok(dto);
+            }
+
+            return BadRequest(new ErrorModel(400, "Authorization header not found."));
         }
         catch (UserNotFoundException e)
         {

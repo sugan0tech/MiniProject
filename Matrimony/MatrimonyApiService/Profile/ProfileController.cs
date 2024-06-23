@@ -4,7 +4,6 @@ using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Profile.Commands;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -101,10 +100,11 @@ public class ProfileController(IProfileService profileService, IMediator mediato
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> AddProfile(CreateProfileCommand command)
+    public async Task<IActionResult> AddProfile(ProfileDto profileDto)
     {
         try
         {
+            var command = new CreateProfileCommand(profileDto);
             var value = await mediator.Send(command);
             return StatusCode(201, value);
         }
