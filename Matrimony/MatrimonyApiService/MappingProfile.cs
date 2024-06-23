@@ -8,6 +8,7 @@ using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.User;
+using MatrimonyApiService.UserSession;
 
 namespace MatrimonyApiService;
 
@@ -78,6 +79,10 @@ public class MappingProfile : AutoMapper.Profile
 
         CreateMap<User.User, RegisterDTO>();
         CreateMap<RegisterDTO, User.User>();
+
+        // User sessions
+        CreateMap<UserSessionDto, UserSession.UserSession>();
+        CreateMap<UserSession.UserSession, UserSessionDto>();
 
         // Report mappings
         CreateMap<Report.Report, ReportDto>();

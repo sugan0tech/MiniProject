@@ -36,7 +36,7 @@ public class ProfileService(
     public async Task<List<ProfilePreviewDto>> GetProfilesByManager(int managerId)
     {
         var profiles = await repo.GetAll();
-        return profiles.FindAll(profiles => profiles.ManagedById.Equals(managerId))
+        return profiles.FindAll(profs => profs.ManagedById.Equals(managerId))
             .ConvertAll(profile => mapper.Map<ProfilePreviewDto>(profile)).ToList();
     }
 
@@ -60,23 +60,6 @@ public class ProfileService(
     {
         var profile = mapper.Map<Profile>(dto);
         var savedProfile = await repo.Add(profile);
-        var preference = new PreferenceDto
-        {
-            PreferenceForId = savedProfile.Id,
-            MotherTongue = profile.MotherTongue,
-            Religion = profile.Religion,
-            Education = profile.Education,
-            Occupation = profile.Occupation,
-            MinHeight = profile.Height - 1,
-            MaxHeight = profile.Height + 1,
-            MinAge = profile.Age - 5,
-            MaxAge = profile.Age + 5,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        };
-        preference = await preferenceService.Add(preference);
-        profile.PreferenceId = preference.PreferenceId;
-        await repo.Update(savedProfile);
         return mapper.Map<ProfileDto>(savedProfile);
     }
 
@@ -116,16 +99,18 @@ public class ProfileService(
         try
         {
             var profile = await repo.GetById(profileId);
-            var preference = await preferenceService.GetById((int)profile.PreferenceId!);
+            var preference = await preferenceService.GetByProfileId(profile.Id);
             var profiles = await repo.GetAll();
             var matchedProfiles = profiles.Where(p =>
+                preference.Gender == p.Gender &&
                 (preference.MotherTongue == "ALL" || p.MotherTongue == preference.MotherTongue) &&
                 (preference.Religion == "ALL" || p.Religion == preference.Religion) &&
                 (preference.Education == "ALL" || p.Education == preference.Education) &&
                 (preference.Occupation == "ALL" || p.Occupation == preference.Occupation) &&
                 p.Height >= preference.MinHeight && p.Height <= preference.MaxHeight &&
                 p.Age >= preference.MinAge && p.Age <= preference.MaxAge &&
-                p.Id != profileId
+                p.Id != profileId &&
+                profile.ManagedById != p.ManagedById
             ).ToList();
 
             var matchedProfileDtos = matchedProfiles.Select(p => mapper.Map<ProfilePreviewDto>(p)).ToList();

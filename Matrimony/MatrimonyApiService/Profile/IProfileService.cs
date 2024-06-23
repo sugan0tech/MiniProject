@@ -1,6 +1,4 @@
-﻿using MatrimonyApiService.ProfileView;
-
-namespace MatrimonyApiService.Profile;
+﻿namespace MatrimonyApiService.Profile;
 
 public interface IProfileService
 {

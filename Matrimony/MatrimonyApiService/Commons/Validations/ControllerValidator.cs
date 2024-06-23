@@ -11,6 +11,8 @@ public class ControllerValidator
         var usrId = enumerable.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
         var role = enumerable.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         var email = enumerable.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (role is "RefreshToken")
+            throw new AuthenticationException($"Using Refresh Token type is prohibitted");
         if (role is "Admin")
             return;
         if (usrId != null && parameterUserId.Equals(int.Parse(usrId)))

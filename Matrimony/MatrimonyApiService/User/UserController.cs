@@ -3,12 +3,14 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.User;
 
 [Route("api/[controller]")]
 [ApiController]
+[EnableCors("AllowAll")]
 [Authorize]
 public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
 {

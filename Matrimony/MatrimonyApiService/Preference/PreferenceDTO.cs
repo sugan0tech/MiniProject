@@ -5,7 +5,7 @@ namespace MatrimonyApiService.Preference;
 public record PreferenceDto
 {
     public int PreferenceId { get; init; }
-
+    public string Gender { get; set; }
     public string MotherTongue { get; init; }
     public string Religion { get; init; }
     public string Education { get; init; }

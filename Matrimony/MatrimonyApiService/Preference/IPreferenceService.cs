@@ -16,7 +16,17 @@ public interface IPreferenceService
     Task<PreferenceDto> GetById(int id);
 
     /// <summary>
+    /// Retrieves a preference by its profile identifier asynchronously.
+    /// </summary>
+    Task<PreferenceDto> GetByProfileId(int id);
+    
+    /// <summary>
     /// Updates an existing preference asynchronously.
     /// </summary>
     Task<PreferenceDto> Update(PreferenceDto preferenceDto);
+    
+    /// <summary>
+    /// Delete preference with the given Id.
+    /// </summary>
+    Task<PreferenceDto> Delete(int id);
 }

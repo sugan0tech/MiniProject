@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240623112325_AddUserSessionEntity")]
+    partial class AddUserSessionEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -518,8 +521,8 @@ namespace MatrimonyApiService.Migrations
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
-                        .HasMaxLength(526)
-                        .HasColumnType("nvarchar(526)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UserAgent")
                         .IsRequired()

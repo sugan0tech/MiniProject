@@ -45,7 +45,7 @@ public record ProfileDto
 
     public int Weight { get; init; }
     public int Height { get; init; }
-    public int? MembershipId { get; init; }
+    public int? MembershipId { get; set; }
     public int ManagedById { get; init; }
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }
@@ -55,7 +55,7 @@ public record ProfileDto
     public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
     [ExcludeFromCodeCoverage]
     public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
-    public int? PreferenceId { get; init; }
+    public int? PreferenceId { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }

@@ -17,6 +17,7 @@ using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
+using MatrimonyApiService.UserSession;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +70,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddLogging(l => l.AddLog4Net());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddHttpContextAccessor();
 
         #region Context
 
@@ -92,6 +94,7 @@ public class Program
 
         builder.Services.AddScoped<IBaseRepo<Address.Address>, AddressRepo>();
         builder.Services.AddScoped<IBaseRepo<User.User>, UserRepo>();
+        builder.Services.AddScoped<IBaseRepo<UserSession.UserSession>, UserSessionRepo>();
         builder.Services.AddScoped<IBaseRepo<Profile.Profile>, ProfileRepo>();
         builder.Services.AddScoped<IBaseRepo<Staff.Staff>, StaffRepo>();
         builder.Services.AddScoped<IBaseRepo<ProfileView.ProfileView>, ProfileViewRepo>();
@@ -113,6 +116,11 @@ public class Program
 
         #region Services
 
+        builder.Services.AddMediatR(options =>
+        {
+            options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+        });
+
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
@@ -120,6 +128,7 @@ public class Program
         builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IUserSessionService, UserSessionService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();
@@ -143,6 +152,7 @@ public class Program
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
                 };
@@ -156,6 +166,15 @@ public class Program
 
         #endregion
 
+        #region Cors
+
+        builder.Services.AddCors(opts =>
+        {
+            opts.AddPolicy("AllowAll", opts => { opts.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
+        });
+
+        #endregion
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -165,6 +184,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors();
         app.UseAuthorization();
 
 

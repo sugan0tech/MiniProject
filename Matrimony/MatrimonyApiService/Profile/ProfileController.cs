@@ -2,7 +2,8 @@
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
-using MatrimonyApiService.ProfileView;
+using MatrimonyApiService.Profile.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,8 @@ namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
-public class ProfileController(IProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
+[Authorize]
+public class ProfileController(IProfileService profileService, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
@@ -95,7 +96,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
-
+    
     [HttpPost]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -104,9 +105,9 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
-            var profile = await profileService.AddProfile(profileDto);
-            return StatusCode(201, profile);
+            var command = new CreateProfileCommand(profileDto);
+            var value = await mediator.Send(command);
+            return StatusCode(201, value);
         }
         catch (DbUpdateException ex)
         {
@@ -119,6 +120,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
+
 
     [HttpPut]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
@@ -153,8 +155,8 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
         try
         {
             var profile = await profileService.GetProfileById(id);
-            ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
-            profile = await profileService.DeleteProfileById(id);
+            // ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
+            profile = await mediator.Send(new DeleteProfileCommand(id));
             return Ok(profile);
         }
         catch (KeyNotFoundException ex)
@@ -168,7 +170,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
-
+    
     [HttpGet("{profileId}/matches")]
     [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
@@ -188,7 +190,7 @@ public class ProfileController(IProfileService profileService, ILogger<ProfileCo
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
-    [Authorize(Policy = "AdminPolicy")]
+    // [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var profiles = await profileService.GetAll();

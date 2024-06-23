@@ -5,5 +5,6 @@ namespace MatrimonyApiService.User;
 [ExcludeFromCodeCoverage]
 public record AuthReturnDto
 {
-    public string Token { get; init; }
+    public required string AccessToken { get; init; }
+    public required string RefreshToken { get; init; }
 }

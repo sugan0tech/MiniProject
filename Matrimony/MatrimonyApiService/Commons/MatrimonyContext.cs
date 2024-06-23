@@ -6,6 +6,7 @@ namespace MatrimonyApiService.Commons;
 public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbContext(options)
 {
     public DbSet<User.User> Users { get; set; }
+    public DbSet<UserSession.UserSession> UserSessions { get; set; }
     public DbSet<Profile.Profile> Profiles { get; set; }
     public DbSet<ProfileView.ProfileView> ProfileViews { get; set; }
     public DbSet<Message.Message> Messages { get; set; }
@@ -46,6 +47,12 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
 
         #endregion
 
+        #region UserSession
+
+        modelBuilder.Entity<UserSession.UserSession>();
+
+        #endregion
+
         #region Profile
 
         #region User
@@ -70,9 +77,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(membership => membership.Profile)
             .HasForeignKey<Membership.Membership>(membership => membership.ProfileId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Profile.Profile>()
-            .Navigation(profile => profile.Membership)
-            .AutoInclude();
 
         #endregion
 
@@ -111,9 +115,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(preference => preference.PreferenceFor)
             .HasForeignKey<Preference.Preference>(preference => preference.PreferenceForId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Profile.Profile>()
-            .Navigation(profile => profile.Preference)
-            .AutoInclude();
 
         #endregion
 
