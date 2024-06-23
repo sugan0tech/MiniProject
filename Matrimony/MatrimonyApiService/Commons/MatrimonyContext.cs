@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Commons;
 
-public class MatrimonyContext(DbContextOptions options) : DbContext(options)
+public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbContext(options)
 {
     public DbSet<User.User> Users { get; set; }
     public DbSet<UserSession.UserSession> UserSessions { get; set; }

@@ -1,6 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using MatrimonyApiService.Address;
+using MatrimonyApiService.AddressCQRS;
+using MatrimonyApiService.AddressCQRS.Command;
+using MatrimonyApiService.AddressCQRS.Event;
+using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
@@ -76,6 +80,13 @@ public class Program
                 optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
         );
+        
+        builder.Services.AddDbContext<EventStoreDbContext>(optionsBuilder =>
+            {
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("eventStore"));
+                optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }
+        );
 
         #endregion
 
@@ -92,6 +103,8 @@ public class Program
         builder.Services.AddScoped<IBaseRepo<Message.Message>, MessageRepo>();
         builder.Services.AddScoped<IBaseRepo<Membership.Membership>, MembershipRepo>();
         builder.Services.AddScoped<IBaseRepo<Report.Report>, ReportRepo>();
+
+        builder.Services.AddScoped<IEventStore, EventStore>();
 
         #endregion
 
@@ -120,6 +133,12 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();
         builder.Services.AddScoped<IBaseService<Report.Report, ReportDto>, ReportService>();
+
+        builder.Services.AddScoped<ICommandHandler<CreateAddressCommand>, CreateAddressCommandHandler>();
+        builder.Services.AddScoped<ICommandHandler<UpdateAddressCommand>, UpdateAddressCommandHandler>();
+        builder.Services.AddScoped<ICommandHandler<DeleteAddressCommand>, DeleteAddressCommandHandler>();
+        builder.Services.AddScoped<IQueryHandler<GetAddressByIdQuery, AddressDto>, GetAddressByIdQueryHandler>();
+        builder.Services.AddScoped<IQueryHandler<GetAllAddressesQuery, List<AddressDto>>, GetAllAddressesQueryHandler>();
 
         #endregion
 
