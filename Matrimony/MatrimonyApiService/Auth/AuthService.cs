@@ -4,7 +4,6 @@ using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using MatrimonyApiService.UserSession;
 using Microsoft.EntityFrameworkCore;
-using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
 namespace MatrimonyApiService.Auth;
 
@@ -49,7 +48,7 @@ public class AuthService(
                 return tokens;
             }
 
-            throw new Exceptions.AuthenticationException("Invalid username or password");
+            throw new AuthenticationException("Invalid username or password");
         }
         catch (UserNotFoundException e)
         {
@@ -70,7 +69,7 @@ public class AuthService(
         try
         {
             if (!await userSessionService.IsValid(refreshToken))
-                throw new Exceptions.AuthenticationException("Invalid Token, login again please");
+                throw new AuthenticationException("Invalid Token, login again please");
 
             var payload = tokenService.GetPayload(refreshToken);
             var user = await userService.GetById(payload.Id);
@@ -116,7 +115,7 @@ public class AuthService(
             logger.LogError(e.Message);
         }
 
-        throw new Exceptions.AuthenticationException("Not able to register at this moment");
+        throw new AuthenticationException("Not able to register at this moment");
     }
 
     /// <intheritdoc/>
@@ -159,7 +158,7 @@ public class AuthService(
         catch (Exception e)
         {
             logger.LogError(e.Message);
-            throw new Exceptions.AuthenticationException("Failed to reset password");
+            throw new AuthenticationException("Failed to reset password");
         }
     }
 

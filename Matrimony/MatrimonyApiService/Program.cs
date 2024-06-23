@@ -66,6 +66,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddLogging(l => l.AddLog4Net());
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddHttpContextAccessor();
 
         #region Context
 
@@ -132,6 +133,7 @@ public class Program
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
                 };

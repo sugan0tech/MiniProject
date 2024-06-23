@@ -6,7 +6,7 @@ namespace MatrimonyApiService.UserSession;
 public class UserSession : BaseEntity
 {
     public int UserId { get; set; }
-    [MaxLength(255)] public required string RefreshToken { get; set; }
+    [MaxLength(526)] public required string RefreshToken { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime ExpiresAt { get; set; }
     public bool IsValid { get; set; }

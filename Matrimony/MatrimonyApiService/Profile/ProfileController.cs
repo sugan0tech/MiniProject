@@ -4,6 +4,7 @@ using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Profile.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,7 @@ namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
+[Authorize]
 public class ProfileController(IProfileService profileService, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
