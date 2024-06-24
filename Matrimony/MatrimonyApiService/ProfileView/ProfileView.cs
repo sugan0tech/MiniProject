@@ -9,6 +9,7 @@ public class ProfileView : BaseEntity
     // [Key] public int Id { get; set; }
     [ForeignKey("ViewerId")] public int ViewerId { get; set; }
     [ExcludeFromCodeCoverage]
+    //todo: to be of Profile not user
     public User.User? Viewer { get; set; }
     [ForeignKey("ViewedProfileId")] public int ViewedProfileAt { get; set; }
     [ExcludeFromCodeCoverage]

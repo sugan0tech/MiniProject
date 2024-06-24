@@ -18,6 +18,7 @@ public class MatchRequest : BaseEntity
     [ForeignKey("ReceivedProfileId")] public int ReceivedProfileId { get; set; }
     [ExcludeFromCodeCoverage]
     public Profile.Profile? ReceivedProfile { get; set; }
+    // Todo: Rejected flag
     public bool ProfileTwoLike { get; set; }
     [Range(1, 7)] public int Level { get; set; }
     public DateTime FoundAt { get; set; }

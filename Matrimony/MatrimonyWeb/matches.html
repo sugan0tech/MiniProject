@@ -1,19 +1,60 @@
 <div class="container mt-5">
-    <h2>Matches Found</h2>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Match 1</h5>
-            <p class="card-text">Age: 29, Location: New York</p>
-            <button class="btn btn-danger">Remove Match</button>
+    <h2>Match Management</h2>
+    <!-- Tabs for Different Match Categories -->
+    <ul class="nav nav-tabs" id="matchTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="sent-requests-tab" data-toggle="tab" href="#sent-requests" role="tab" aria-controls="sent-requests" aria-selected="true">Request Sent</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="accepted-requests-tab" data-toggle="tab" href="#accepted-requests" role="tab" aria-controls="accepted-requests" aria-selected="false">Request Accepted</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="received-requests-tab" data-toggle="tab" href="#received-requests" role="tab" aria-controls="received-requests" aria-selected="false">Request Received</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="matchTabsContent">
+        <!-- Request Sent Tab -->
+        <div class="tab-pane fade show active" id="sent-requests" role="tabpanel" aria-labelledby="sent-requests-tab">
+            <div id="sentMatches" class="mt-3">
+                <!-- Example Matches -->
+                <div class="card mb-3" data-match-id="1">
+                    <div class="card-body">
+                        <h5 class="card-title">Match 1: John Doe</h5>
+                        <p class="card-text">Age: 29, Location: New York</p>
+                        <button class="btn btn-danger" onclick="removeMatch('sent', 1)">Remove Match</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Match 2</h5>
-            <p class="card-text">Age: 32, Location: California</p>
-            <button class="btn btn-danger">Remove Match</button>
+        <!-- Request Accepted Tab -->
+        <div class="tab-pane fade" id="accepted-requests" role="tabpanel" aria-labelledby="accepted-requests-tab">
+            <div id="acceptedMatches" class="mt-3">
+                <!-- Example Matches -->
+                <div class="card mb-3" data-match-id="2">
+                    <div class="card-body">
+                        <h5 class="card-title">Match 2: Jane Smith</h5>
+                        <p class="card-text">Age: 32, Location: California</p>
+                        <button class="btn btn-danger" onclick="removeMatch('accepted', 2)">Remove Match</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Request Received Tab -->
+        <div class="tab-pane fade" id="received-requests" role="tabpanel" aria-labelledby="received-requests-tab">
+            <div id="receivedMatches" class="mt-3">
+                <!-- Example Matches -->
+                <div class="card mb-3" data-match-id="3">
+                    <div class="card-body">
+                        <h5 class="card-title">Match 3: Alex Johnson</h5>
+                        <p class="card-text">Age: 30, Location: Texas</p>
+                        <button class="btn btn-success" onclick="acceptMatch(3)">Accept Match</button>
+                        <button class="btn btn-danger" onclick="removeMatch('received', 3)">Remove Match</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script src="js/match.js"></script>
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
