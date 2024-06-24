@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Profile</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="index.html">Matrimony</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
@@ -52,6 +52,11 @@
         <button onclick="editProfile()" class="btn btn-warning mt-3">Edit Profile</button>
         <button onclick="removeProfile()" class="btn btn-danger mt-3">Remove Profile</button>
     </div>
-    <script src="js/scripts.js"></script>
+    <div class="fixed-bottom">
+        <footer class="bg-dark text-white text-center py-3">
+            <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="js/script.js"></script>
 </body>
 </html>
