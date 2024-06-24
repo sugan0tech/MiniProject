@@ -1,57 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="index.html">Matrimony</a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="user.html">User Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profiles.html">Profiles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="matches.html">Matches Found</a>
-                </li>
-            </ul>
+<div class="container mt-5">
+    <h2>User Profile</h2>
+    <form>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" value="John Doe" required>
         </div>
-        <button onclick="logout()" class="btn btn-outline-danger">Logout</button>
-    </nav>
-    <div class="container mt-5">
-        <h2>User Profile</h2>
-        <form>
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" value="John Doe" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email address:</label>
-                <input type="email" class="form-control" id="email" value="john@example.com" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-        <div class="mt-4">
-            <h3>Managed Profiles</h3>
-            <ul class="list-group">
-                <li class="list-group-item">Profile 1: <a href="#">View/Edit</a></li>
-                <li class="list-group-item">Profile 2: <a href="#">View/Edit</a></li>
-            </ul>
+        <div class="form-group">
+            <label for="email">Email address:</label>
+            <input type="email" class="form-control" id="email" value="john@example.com" required>
         </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+    <div class="mt-4">
+        <h3>Managed Profiles</h3>
+        <ul class="list-group">
+            <li class="list-group-item">Profile 1: <a href="#">View/Edit</a></li>
+            <li class="list-group-item">Profile 2: <a href="#">View/Edit</a></li>
+        </ul>
     </div>
-    <div class="fixed-bottom">
-        <footer class="bg-dark text-white text-center py-3">
-            <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
-        </footer>
-    </div>
-    <script src="js/script.js"></script>
-    <script src="js/auth.js"></script>
-</body>
-</html>
+</div>
+<script src="js/script.js"></script>
+<script src="js/auth.js"></script>

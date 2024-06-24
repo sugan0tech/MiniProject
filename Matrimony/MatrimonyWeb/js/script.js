@@ -78,3 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+
+function loadContent(file) {
+    fetch(file)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('content').innerHTML = data;
+        })
+        .catch(error => {
+            document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
