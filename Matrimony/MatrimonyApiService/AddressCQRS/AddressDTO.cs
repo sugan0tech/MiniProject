@@ -1,4 +1,4 @@
-﻿namespace MatrimonyApiService.Address;
+﻿namespace MatrimonyApiService.AddressCQRS;
 
 public record AddressDto
 {

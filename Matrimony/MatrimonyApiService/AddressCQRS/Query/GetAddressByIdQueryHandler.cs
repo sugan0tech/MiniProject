@@ -1,9 +1,8 @@
-﻿using MatrimonyApiService.Address;
-using MatrimonyApiService.Commons;
+﻿using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.AddressCQRS.Query;
 
-public class GetAddressByIdQueryHandler(IBaseRepo<Address.Address> repository)
+public class GetAddressByIdQueryHandler(IBaseRepo<Address> repository)
     : IQueryHandler<GetAddressByIdQuery, AddressDto>
 {
     public async Task<AddressDto> Handle(GetAddressByIdQuery query)

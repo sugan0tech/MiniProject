@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using MatrimonyApiService.Address;
+using MatrimonyApiService.AddressCQRS;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
@@ -18,9 +18,9 @@ public class MappingProfile : AutoMapper.Profile
     public MappingProfile()
     {
         // Address mappings
-        CreateMap<Address.Address, AddressDto>()
+        CreateMap<AddressCQRS.Address, AddressDto>()
             .ForMember(dto => dto.AddressId, act => act.MapFrom(src => src.Id));
-        CreateMap<AddressDto, Address.Address>()
+        CreateMap<AddressDto, AddressCQRS.Address>()
             .ForMember(dto => dto.Id, act => act.MapFrom(src => src.AddressId));
 
         // MatchRequest mappings

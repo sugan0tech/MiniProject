@@ -3,7 +3,7 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.AddressCQRS.Command;
 
-public class DeleteAddressCommandHandler(IBaseRepo<Address.Address> repository, IEventStore eventStore)
+public class DeleteAddressCommandHandler(IBaseRepo<Address> repository, IEventStore eventStore)
     : ICommandHandler<DeleteAddressCommand>
 {
     public async Task Handle(DeleteAddressCommand command)

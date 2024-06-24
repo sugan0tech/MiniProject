@@ -3,7 +3,7 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.AddressCQRS.Command;
 
-public class UpdateAddressCommandHandler(IBaseRepo<Address.Address> repository, IEventStore eventStore)
+public class UpdateAddressCommandHandler(IBaseRepo<Address> repository, IEventStore eventStore)
     : ICommandHandler<UpdateAddressCommand>
 {
     public async Task Handle(UpdateAddressCommand command)

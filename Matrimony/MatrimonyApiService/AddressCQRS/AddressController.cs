@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MatrimonyApiService.Address;
 using MatrimonyApiService.AddressCQRS.Command;
 using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Commons;

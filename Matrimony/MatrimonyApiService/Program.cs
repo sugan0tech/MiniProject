@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using MatrimonyApiService.Address;
 using MatrimonyApiService.AddressCQRS;
 using MatrimonyApiService.AddressCQRS.Command;
 using MatrimonyApiService.AddressCQRS.Event;
@@ -93,7 +92,7 @@ public class Program
 
         #region Repos
 
-        builder.Services.AddScoped<IBaseRepo<Address.Address>, AddressRepo>();
+        builder.Services.AddScoped<IBaseRepo<AddressCQRS.Address>, AddressRepo>();
         builder.Services.AddScoped<IBaseRepo<User.User>, UserRepo>();
         builder.Services.AddScoped<IBaseRepo<UserSession.UserSession>, UserSessionRepo>();
         builder.Services.AddScoped<IBaseRepo<Profile.Profile>, ProfileRepo>();
@@ -119,7 +118,6 @@ public class Program
 
         builder.Services.AddMediatR(options => { options.RegisterServicesFromAssemblies(typeof(Program).Assembly); });
 
-        builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<IPreferenceService, PreferenceService>();

@@ -3,12 +3,12 @@ using MatrimonyApiService.Commons;
 
 namespace MatrimonyApiService.AddressCQRS.Command;
 
-public class CreateAddressCommandHandler(IBaseRepo<Address.Address> repository, IEventStore eventStore)
+public class CreateAddressCommandHandler(IBaseRepo<Address> repository, IEventStore eventStore)
     : ICommandHandler<CreateAddressCommand>
 {
     public async Task Handle(CreateAddressCommand command)
     {
-        var address = new Address.Address
+        var address = new Address
         {
             UserId = command.UserId,
             Street = command.Street,

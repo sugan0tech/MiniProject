@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Address;
+using MatrimonyApiService.AddressCQRS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework.Legacy;
+using AddressController = MatrimonyApiService.Address.AddressController;
 
 namespace MatrimonyTest.Address;
 

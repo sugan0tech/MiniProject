@@ -24,7 +24,7 @@ public class User : BaseEntity
     public required string PhoneNumber { get; set; }
 
     [ForeignKey("AddressId")] public int AddressId;
-    public Address.Address? Address;
+    public AddressCQRS.Address? Address;
     public bool IsVerified { get; set; }
     public required byte[] Password { get; set; }
     public required byte[] HashKey { get; set; }

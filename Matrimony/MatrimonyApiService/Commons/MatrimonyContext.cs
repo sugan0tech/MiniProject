@@ -12,7 +12,7 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
     public DbSet<Message.Message> Messages { get; set; }
     public DbSet<Preference.Preference> Preferences { get; set; }
     public DbSet<Staff.Staff> Staffs { get; set; }
-    public DbSet<Address.Address> Addresses { get; set; }
+    public DbSet<AddressCQRS.Address> Addresses { get; set; }
     public DbSet<MatchRequest.MatchRequest> Matches { get; set; }
     public DbSet<Membership.Membership> Memberships { get; set; }
     public DbSet<Report.Report> Reports { get; set; }
@@ -21,7 +21,7 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
     {
         #region Address
 
-        modelBuilder.Entity<Address.Address>()
+        modelBuilder.Entity<AddressCQRS.Address>()
             .HasOne<User.User>(address => address.User)
             .WithOne(user => user.Address)
             .HasForeignKey<User.User>(user => user.AddressId)
@@ -32,9 +32,9 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
         #region User
 
         modelBuilder.Entity<User.User>()
-            .HasOne<Address.Address>(user => user.Address)
+            .HasOne<AddressCQRS.Address>(user => user.Address)
             .WithOne(address => address.User)
-            .HasForeignKey<Address.Address>(address => address.UserId)
+            .HasForeignKey<AddressCQRS.Address>(address => address.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>()
             .HasMany<Message.Message>(user => user.MessagesSent)
@@ -46,7 +46,7 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(message => message.Receiver)
             .HasForeignKey(message => message.ReceiverId)
             .OnDelete(DeleteBehavior.SetNull);
-        modelBuilder.Entity<User.User>().Navigation<Address.Address>(user => user.Address).AutoInclude();
+        modelBuilder.Entity<User.User>().Navigation<AddressCQRS.Address>(user => user.Address).AutoInclude();
 
         #endregion
 
@@ -166,9 +166,9 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
         #region Staff
 
         modelBuilder.Entity<Staff.Staff>()
-            .HasOne<Address.Address>(staff => staff.Address);
+            .HasOne<AddressCQRS.Address>(staff => staff.Address);
         modelBuilder.Entity<Staff.Staff>()
-            .Navigation<Address.Address>(staff => staff.Address)
+            .Navigation<AddressCQRS.Address>(staff => staff.Address)
             .AutoInclude();
 
         #endregion

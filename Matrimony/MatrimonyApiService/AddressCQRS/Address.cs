@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using MatrimonyApiService.Commons;
 
-namespace MatrimonyApiService.Address;
+namespace MatrimonyApiService.AddressCQRS;
 
 public class Address : BaseEntity
 {
