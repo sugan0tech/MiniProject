@@ -1,0 +1,88 @@
+<div class="container mt-5">
+    <h2>Edit Profile</h2>
+    <form id="editProfileForm" class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="editProfileId">Profile ID:</label>
+                <input type="text" id="editProfileId" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="editDateOfBirth">Date of Birth:</label>
+                <input type="date" id="editDateOfBirth" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editAge">Age:</label>
+                <input type="number" id="editAge" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editEducation">Education:</label>
+                <input type="text" id="editEducation" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editAnnualIncome">Annual Income:</label>
+                <input type="number" id="editAnnualIncome" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editOccupation">Occupation:</label>
+                <input type="text" id="editOccupation" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editMaritalStatus">Marital Status:</label>
+                <select id="editMaritalStatus" class="form-control">
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editMotherTongue">Mother Tongue:</label>
+                <input type="text" id="editMotherTongue" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editReligion">Religion:</label>
+                <input type="text" id="editReligion" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editEthnicity">Ethnicity:</label>
+                <input type="text" id="editEthnicity" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editBio">Bio:</label>
+                <textarea id="editBio" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editHabit">Habit:</label>
+                <input type="text" id="editHabit" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editGender">Gender:</label>
+                <select id="editGender" class="form-control">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editWeight">Weight:</label>
+                <input type="number" id="editWeight" class="form-control" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="editHeight">Height:</label>
+                <input type="number" id="editHeight" class="form-control" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="editManagedByRelation">Managed By Relation:</label>
+                <input type="text" id="editManagedByRelation" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editProfilePicture">Profile Picture:</label>
+                <input type="file" id="editProfilePicture" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+            <button type="button" onclick="cancelEdit()" class="btn btn-secondary mt-3">Cancel</button>
+        </div>
+    </form>
+</div>
+<script src="js/script.js"></script>
+<script src="js/auth.js"></script>

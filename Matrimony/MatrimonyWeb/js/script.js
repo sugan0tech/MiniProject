@@ -50,7 +50,8 @@ function loadProfileDetails(profileId) {
 // Function to edit profile
 function editProfile() {
     const profileId = localStorage.getItem('currentProfileId');
-    window.location.href = `edit-profile.html?profileId=${profileId}`;
+    loadContent('edit-profile.html');
+    // window.location.href = `edit-profile.html?profileId=${profileId}`;
 }
 
 // Function to remove profile
@@ -66,7 +67,8 @@ function removeProfile() {
 // Function to view profile
 function viewProfile(profileId) {
     localStorage.setItem('currentProfileId', profileId);
-    window.location.href = 'view-profile.html';
+    loadContent('view-profile.html');
+    // window.location.href = 'view-profile.html';
 }
 
 // Function to initialize view profile page
