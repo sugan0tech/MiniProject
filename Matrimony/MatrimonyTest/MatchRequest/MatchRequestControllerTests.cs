@@ -62,7 +62,7 @@ public class MatchRequestControllerTests
         // Arrange
         var profileId = 1;
         var matches = new List<MatchRequestDto> { new MatchRequestDto { MatchId = 1 } };
-        _matchRequestServiceMock.Setup(service => service.GetAcceptedMatcheRequests(profileId)).ReturnsAsync(matches);
+        _matchRequestServiceMock.Setup(service => service.GetAcceptedMatchRequests(profileId)).ReturnsAsync(matches);
 
         // Act
         var result = await _matchRequestController.GetAcceptedMatches(profileId) as OkObjectResult;

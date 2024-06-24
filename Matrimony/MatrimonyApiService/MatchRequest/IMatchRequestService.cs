@@ -7,7 +7,7 @@ public interface IMatchRequestService
     /// </summary>
     /// <param name="profileId"></param>
     /// <returns> List of MatchRequestDTO's </returns>
-    Task<List<MatchRequestDto>> GetAcceptedMatcheRequests(int profileId);
+    Task<List<MatchRequestDto>> GetAcceptedMatchRequests(int profileId);
 
     /// <summary>
     ///  Returns All the matches Requests.

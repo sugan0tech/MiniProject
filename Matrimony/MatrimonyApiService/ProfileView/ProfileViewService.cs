@@ -23,8 +23,8 @@ public class ProfileViewService(
     public async Task AddView(int viewerId, int profileId)
     {
         await profileService.GetProfileById(profileId); // validate profile
-        await userService.GetById(viewerId); // validate viewer (user) id
-        var profile = await profileService.GetProfileByUserId(viewerId);
+        await profileService.GetProfileById(viewerId); // validate profile
+        var profile = await profileService.GetProfileById(viewerId);
         var membership = await membershipService.GetByProfileId(profile.ProfileId);
         if (!membership.IsTrail)
         {

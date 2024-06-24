@@ -39,6 +39,4 @@ public class User : BaseEntity
     public IEnumerable<Message.Message>? MessagesSent { get; set; }
     [ExcludeFromCodeCoverage]
     public IEnumerable<Message.Message>? MessagesReceived { get; set; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<ProfileView.ProfileView>? Views { get; set; }
 }

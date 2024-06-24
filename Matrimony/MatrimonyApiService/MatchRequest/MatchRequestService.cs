@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Membership;
 using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.MatchRequest;
@@ -8,15 +10,16 @@ namespace MatrimonyApiService.MatchRequest;
 public class MatchRequestService(
     IBaseRepo<MatchRequest> repo,
     IProfileService profileService,
+    IMembershipService membershipService,
     IMapper mapper,
     ILogger<MatchRequestService> logger) : IMatchRequestService
 {
     /// <inheritdoc/>
-    public async Task<List<MatchRequestDto>> GetAcceptedMatcheRequests(int profileId)
+    public async Task<List<MatchRequestDto>> GetAcceptedMatchRequests(int profileId)
     {
         await profileService.GetProfileById(profileId); // validates profile
         var matches = await repo.GetAll();
-        return matches.Where(match => match.SentProfileId.Equals(profileId) && match.ProfileTwoLike).ToList()
+        return matches.Where(match => match.SentProfileId.Equals(profileId) && match.ReceiverLike).ToList()
             .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
     }
 
@@ -43,7 +46,8 @@ public class MatchRequestService(
         var match = await repo.GetById(matchId);
         if (match.ReceivedProfileId.Equals(profileId))
         {
-            match.ProfileTwoLike = false;
+            match.ReceiverLike = false;
+            match.IsRejected = true;
             await repo.Update(match);
             return;
         }
@@ -59,7 +63,8 @@ public class MatchRequestService(
         var match = await repo.GetById(matchId);
         if (match.ReceivedProfileId.Equals(profileId))
         {
-            match.ProfileTwoLike = true;
+            match.ReceiverLike = true;
+            match.IsRejected = false;
             await repo.Update(match);
             return;
         }
@@ -88,9 +93,21 @@ public class MatchRequestService(
         if (senderId == targetId)
             throw new MatchRequestToSelfException($"{senderId} is trying to give self request");
 
+
         // validations
         await profileService.GetProfileById(senderId);
         await profileService.GetProfileById(targetId);
+        
+        var membership = await  membershipService.GetByProfileId(senderId);
+        if (!membership.IsTrail)
+        {
+            if (membership.Type.Equals(MemberShip.FreeUser.ToString()) && membership.RequestCount > 5)
+                throw new ExhaustedMaximumRequestsException(
+                    "You have exhausted out of your monthly quot of 5 requests, Consider upgrading to high tier membership");
+            if (membership.Type.Equals(MemberShip.BasicUser.ToString()) && membership.RequestCount > 15)
+                throw new ExhaustedMaximumRequestsException(
+                    "You have exhausted out of your monthly quot of 15 requests, Consider upgrading to high tier membership");
+        }
 
         var matches = await GetAll();
         foreach (var matchDto in matches)
@@ -108,6 +125,8 @@ public class MatchRequestService(
 
         var entity = mapper.Map<MatchRequest>(match);
         var savedEntity = await repo.Add(entity);
+        membership.RequestCount++;
+        await membershipService.Update(membership);
         return mapper.Map<MatchRequestDto>(savedEntity);
     }
 

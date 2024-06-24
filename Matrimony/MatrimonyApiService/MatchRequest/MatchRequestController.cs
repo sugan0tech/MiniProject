@@ -32,14 +32,14 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
 
     [HttpGet("accepted/{profileId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAcceptedMatches(int profileId)
+    public async Task<IActionResult> GetAcceptedMfalseatches(int profileId)
     {
-        var matches = await matchRequestService.GetAcceptedMatcheRequests(profileId);
+        var matches = await matchRequestService.GetAcceptedMatchRequests(profileId);
         return Ok(matches);
     }
 
     [HttpGet("/profile/{profileId}")]
-    [ProducesResponseType(typeof(List<MatchRequestDto>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMatchRequests(int profileId)
     {
         var matches = await matchRequestService.GetMatchRequests(profileId);
@@ -47,14 +47,14 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
     }
 
     [HttpGet("sent/{profileId}")]
-    [ProducesResponseType(typeof(List<MatchRequestDto>),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ErrorModel),StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetSentMatchRequests(int profileId)
     {
         try
         {
-        var matches = await matchRequestService.GetSentMatchRequests(profileId);
-        return Ok(matches);
+            var matches = await matchRequestService.GetSentMatchRequests(profileId);
+            return Ok(matches);
         }
         catch (KeyNotFoundException e)
         {

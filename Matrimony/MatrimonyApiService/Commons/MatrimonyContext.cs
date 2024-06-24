@@ -38,11 +38,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(message => message.Receiver)
             .HasForeignKey(message => message.ReceiverId)
             .OnDelete(DeleteBehavior.SetNull);
-        modelBuilder.Entity<User.User>()
-            .HasMany<ProfileView.ProfileView>(user => user.Views)
-            .WithOne(view => view.Viewer)
-            .HasForeignKey(view => view.ViewerId)
-            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>().Navigation<Address.Address>(user => user.Address).AutoInclude();
 
         #endregion
@@ -86,10 +81,15 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .HasMany<ProfileView.ProfileView>(profile => profile.ProfileViews)
             .WithOne(view => view.ViewedAtProfile)
             .HasForeignKey(view => view.ViewedProfileAt)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Profile.Profile>()
             .Navigation(profile => profile.ProfileViews)
             .AutoInclude();
+        modelBuilder.Entity<Profile.Profile>()
+            .HasMany<ProfileView.ProfileView>(profile => profile.Views)
+            .WithOne(view => view.Viewer)
+            .HasForeignKey(view => view.ViewerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         #endregion
 

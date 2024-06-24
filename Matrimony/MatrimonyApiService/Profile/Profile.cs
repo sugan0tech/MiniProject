@@ -91,8 +91,7 @@ public class Profile : BaseEntity
 
     [MaxLength(150)] public string? Bio { get; set; }
 
-    [ExcludeFromCodeCoverage]
-    public byte[]? ProfilePicture { get; set; }
+    [ExcludeFromCodeCoverage] public byte[]? ProfilePicture { get; set; }
 
     [MaxLength(50)]
     [EnumTypeValidation(typeof(Habit))]
@@ -113,8 +112,7 @@ public class Profile : BaseEntity
     [NotMapped]
     public Gender GenderEnum
     {
-        [ExcludeFromCodeCoverage]
-        get => Enum.Parse<Gender>(Gender);
+        [ExcludeFromCodeCoverage] get => Enum.Parse<Gender>(Gender);
         set => Gender = value.ToString();
     }
 
@@ -125,12 +123,10 @@ public class Profile : BaseEntity
     public Membership.Membership? Membership { get; set; }
 
     [ForeignKey("ManagedById")] public int ManagedById { get; set; }
-    [ExcludeFromCodeCoverage]
-    public User.User? ManagedBy { get; set; }
+    [ExcludeFromCodeCoverage] public User.User? ManagedBy { get; set; }
 
     [ForeignKey("PrimaryId")] public int UserId { get; set; }
-    [ExcludeFromCodeCoverage]
-    public User.User? User { get; set; }
+    [ExcludeFromCodeCoverage] public User.User? User { get; set; }
 
     [Required(ErrorMessage = "No mapping found for ManagedByRelation")]
     [EnumTypeValidation(typeof(Relation))]
@@ -140,20 +136,18 @@ public class Profile : BaseEntity
     [NotMapped]
     public Relation RelationEnum
     {
-        [ExcludeFromCodeCoverage]
-        get => Enum.Parse<Relation>(ManagedByRelation);
+        [ExcludeFromCodeCoverage] get => Enum.Parse<Relation>(ManagedByRelation);
         set => ManagedByRelation = value.ToString();
     }
 
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<ProfileView.ProfileView>? ProfileViews { get; set; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<MatchRequest.MatchRequest>? SentMatches { get; set; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<MatchRequest.MatchRequest>? ReceivedMatches { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<ProfileView.ProfileView>? ProfileViews { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<MatchRequest.MatchRequest>? SentMatches { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<MatchRequest.MatchRequest>? ReceivedMatches { get; set; }
 
     [ForeignKey("PreferenceId")] public int? PreferenceId { get; set; }
     public Preference.Preference? Preference { get; set; }
+
+    [ExcludeFromCodeCoverage] public IEnumerable<ProfileView.ProfileView>? Views { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }

@@ -50,7 +50,7 @@ public class MatchRequestServiceTests
                 { MatchId = source.Id, SentProfileId = source.SentProfileId, ProfileTwoLike = source.ProfileTwoLike });
 
         // Act
-        var result = await _matchRequestService.GetAcceptedMatcheRequests(profileId);
+        var result = await _matchRequestService.GetAcceptedMatchRequests(profileId);
 
         // ClassicAssert
         ClassicAssert.AreEqual(1, result.Count);
