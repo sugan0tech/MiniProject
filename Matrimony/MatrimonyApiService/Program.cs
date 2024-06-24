@@ -8,6 +8,7 @@ using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
@@ -120,7 +121,7 @@ public class Program
         {
             options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
         });
-
+        
         builder.Services.AddScoped<IAddressService, AddressService>();
         builder.Services.AddScoped<IProfileViewService, ProfileViewService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
@@ -139,6 +140,7 @@ public class Program
         builder.Services.AddScoped<ICommandHandler<DeleteAddressCommand>, DeleteAddressCommandHandler>();
         builder.Services.AddScoped<IQueryHandler<GetAddressByIdQuery, AddressDto>, GetAddressByIdQueryHandler>();
         builder.Services.AddScoped<IQueryHandler<GetAllAddressesQuery, List<AddressDto>>, GetAllAddressesQueryHandler>();
+        builder.Services.AddScoped<CustomControllerValidator>();
 
         #endregion
 
@@ -170,7 +172,7 @@ public class Program
 
         builder.Services.AddCors(opts =>
         {
-            opts.AddPolicy("AllowAll", opts => { opts.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
+            opts.AddPolicy("AllowAll", corsPolicyBuilder => { corsPolicyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
         });
 
         #endregion

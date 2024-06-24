@@ -13,7 +13,7 @@ namespace MatrimonyApiService.Profile;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ProfileController(IProfileService profileService, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
+public class ProfileController(IProfileService profileService, CustomControllerValidator validator, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
@@ -40,7 +40,7 @@ public class ProfileController(IProfileService profileService, IMediator mediato
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, userId);
+            validator.ValidateUserPrivilege(User.Claims, userId);
             var profile = await profileService.GetProfileByUserId(userId);
             return Ok(profile);
         }
@@ -64,7 +64,7 @@ public class ProfileController(IProfileService profileService, IMediator mediato
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, managerId);
+            validator.ValidateUserPrivilege(User.Claims, managerId);
             var profiles = await profileService.GetProfilesByManager(managerId);
             return Ok(profiles);
         }
@@ -130,7 +130,7 @@ public class ProfileController(IProfileService profileService, IMediator mediato
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
+            validator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
             var profile = await profileService.UpdateProfile(profileDto);
             return Ok(profile);
         }
@@ -146,17 +146,16 @@ public class ProfileController(IProfileService profileService, IMediator mediato
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{profileId}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> DeleteProfileById(int id)
+    public async Task<IActionResult> DeleteProfileById(int profileId)
     {
         try
         {
-            var profile = await profileService.GetProfileById(id);
-            // ControllerValidator.ValidateUserPrivilege(User.Claims, profile.ManagedById);
-            profile = await mediator.Send(new DeleteProfileCommand(id));
+            await validator.ValidateUserPrivilegeForProfile(User.Claims, profileId);
+            var profile = await mediator.Send(new DeleteProfileCommand(profileId));
             return Ok(profile);
         }
         catch (KeyNotFoundException ex)

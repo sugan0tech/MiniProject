@@ -9,7 +9,7 @@ namespace MatrimonyApiService.Report;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ReportController(IBaseService<Report, ReportDto> reportService, ILogger<ReportController> logger)
+public class ReportController(IBaseService<Report, ReportDto> reportService, CustomControllerValidator validator, ILogger<ReportController> logger)
     : ControllerBase
 {
     [HttpGet("{id}")]
@@ -47,7 +47,7 @@ public class ReportController(IBaseService<Report, ReportDto> reportService, ILo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, report.ReportedById);
+            validator.ValidateUserPrivilege(User.Claims, report.ReportedById);
             var addedReport = await reportService.Add(report);
             return Ok(addedReport);
         }

@@ -11,7 +11,7 @@ namespace MatrimonyApiService.Message;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class MessageController(IMessageService messageService, ILogger<MessageController> logger) : ControllerBase
+public class MessageController(IMessageService messageService, CustomControllerValidator validator, ILogger<MessageController> logger) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]
@@ -22,7 +22,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, messageDto.SenderId);
+            validator.ValidateUserPrivilege(User.Claims, messageDto.SenderId);
             var addedMessage = await messageService.AddMessage(messageDto);
             return Ok(addedMessage);
         }
@@ -50,7 +50,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
         try
         {
             var message = await messageService.GetMessageById(id);
-            ControllerValidator.ValidateUserPrivilege(User.Claims, (message.SenderId, message.ReceiverId));
+            validator.ValidateUserPrivilege(User.Claims, (message.SenderId, message.ReceiverId));
             return Ok(message);
         }
         catch (KeyNotFoundException ex)
@@ -100,7 +100,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, userId);
+            validator.ValidateUserPrivilege(User.Claims, userId);
             var messages = await messageService.GetSentMessages(userId);
             return Ok(messages);
         }
@@ -130,7 +130,7 @@ public class MessageController(IMessageService messageService, ILogger<MessageCo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, userId);
+            validator.ValidateUserPrivilege(User.Claims, userId);
             var messages = await messageService.GetReceivedMessages(userId);
             return Ok(messages);
         }

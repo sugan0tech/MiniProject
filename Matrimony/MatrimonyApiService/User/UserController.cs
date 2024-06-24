@@ -12,7 +12,7 @@ namespace MatrimonyApiService.User;
 [ApiController]
 [EnableCors("AllowAll")]
 [Authorize]
-public class UserController(IUserService userService, ILogger<UserController> logger) : ControllerBase
+public class UserController(IUserService userService, CustomControllerValidator validator, ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
@@ -76,7 +76,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, id);
+            validator.ValidateUserPrivilege(User.Claims, id);
             var deletedUser = await userService.DeleteById(id);
             return Ok(deletedUser);
         }

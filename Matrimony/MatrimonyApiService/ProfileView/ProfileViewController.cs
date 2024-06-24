@@ -10,7 +10,7 @@ namespace MatrimonyApiService.ProfileView;
 [ApiController]
 [Route("api/[controller]")]
 // [Authorize]
-public class ProfileViewController(IProfileViewService profileViewService, ILogger<ProfileViewController> logger)
+public class ProfileViewController(IProfileViewService profileViewService, CustomControllerValidator validator, ILogger<ProfileViewController> logger)
     : ControllerBase
 {
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
@@ -21,7 +21,7 @@ public class ProfileViewController(IProfileViewService profileViewService, ILogg
     {
         try
         {
-            ControllerValidator.ValidateUserPrivilege(User.Claims, viewerId);
+            await validator.ValidateUserPrivilegeForProfile(User.Claims, viewerId);
             await profileViewService.AddView(viewerId, profileId);
             return Ok();
         }
