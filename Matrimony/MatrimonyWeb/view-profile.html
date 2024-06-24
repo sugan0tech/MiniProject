@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Matrimony</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="user.html">User Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="profiles.html">Profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="matches.html">Matches Found</a>
+                </li>
+            </ul>
+        </div>
+        <button onclick="logout()" class="btn btn-outline-danger">Logout</button>
+    </nav>
+    <div class="container mt-5">
+        <h2>Profile Details</h2>
+        <div id="profileDetails" class="card">
+            <div class="card-body">
+                <h5 class="card-title">Profile Details</h5>
+                <p id="profileId" class="card-text"><strong>Profile ID:</strong> <span></span></p>
+                <p id="dateOfBirth" class="card-text"><strong>Date of Birth:</strong> <span></span></p>
+                <p id="age" class="card-text"><strong>Age:</strong> <span></span></p>
+                <p id="education" class="card-text"><strong>Education:</strong> <span></span></p>
+                <p id="annualIncome" class="card-text"><strong>Annual Income:</strong> <span></span></p>
+                <p id="occupation" class="card-text"><strong>Occupation:</strong> <span></span></p>
+                <p id="maritalStatus" class="card-text"><strong>Marital Status:</strong> <span></span></p>
+                <p id="motherTongue" class="card-text"><strong>Mother Tongue:</strong> <span></span></p>
+                <p id="religion" class="card-text"><strong>Religion:</strong> <span></span></p>
+                <p id="ethnicity" class="card-text"><strong>Ethnicity:</strong> <span></span></p>
+                <p id="bio" class="card-text"><strong>Bio:</strong> <span></span></p>
+                <p id="habit" class="card-text"><strong>Habit:</strong> <span></span></p>
+                <p id="gender" class="card-text"><strong>Gender:</strong> <span></span></p>
+                <p id="weight" class="card-text"><strong>Weight:</strong> <span></span></p>
+                <p id="height" class="card-text"><strong>Height:</strong> <span></span></p>
+                <p id="managedByRelation" class="card-text"><strong>Managed By Relation:</strong> <span></span></p>
+                <img id="profilePicture" src="" alt="Profile Picture" class="img-thumbnail">
+            </div>
+        </div>
+        <button onclick="editProfile()" class="btn btn-warning mt-3">Edit Profile</button>
+        <button onclick="removeProfile()" class="btn btn-danger mt-3">Remove Profile</button>
+    </div>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
