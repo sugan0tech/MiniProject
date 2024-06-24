@@ -73,3 +73,42 @@ body {
 .message-received {
     background: #ffe0b2;
 }
+/* Custom styles for responsive design */
+body {
+    padding-top: 56px; /* Space for fixed navbar */
+    padding-bottom: 56px; /* Space for fixed footer */
+}
+
+/* Media query for small screens */
+@media (max-width: 576px) {
+    .navbar-nav {
+        text-align: center;
+    }
+}
+
+/* Media query for medium screens */
+@media (min-width: 576px) and (max-width: 768px) {
+    .navbar-nav {
+        justify-content: center;
+    }
+}
+
+/* Media query for large screens */
+@media (min-width: 769px) {
+    .navbar-nav {
+        justify-content: flex-end;
+    }
+}
+
+/* Footer styling */
+footer {
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
