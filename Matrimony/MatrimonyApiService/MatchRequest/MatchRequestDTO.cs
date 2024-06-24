@@ -12,7 +12,6 @@ public record MatchRequestDto
     public bool IsRejected { get; init; } = false;
     public bool ReceiverLike { get; init; } = false;
 
-    [ExcludeFromCodeCoverage]
-    public int Level { get; init; }
+    [ExcludeFromCodeCoverage] public int Level { get; init; }
     public DateTime FoundAt { get; init; }
 }

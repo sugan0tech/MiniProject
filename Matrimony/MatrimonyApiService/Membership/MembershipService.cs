@@ -88,7 +88,7 @@ public class MembershipService(
             dto.EndsAt = DateTime.Today.AddDays(dto.IsTrail ? 7 : 30);
 
             var updatedMembership = mapper.Map<Membership>(dto);
-            
+
             var result = await repo.Update(updatedMembership);
             return mapper.Map<MembershipDto>(result);
         }

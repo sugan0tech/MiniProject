@@ -13,6 +13,7 @@ public class GetAddressByIdQueryHandler(IBaseRepo<Address.Address> repository)
 
         return new AddressDto
         {
+            UserId = address.UserId,
             Street = address.Street,
             City = address.City,
             State = address.State,

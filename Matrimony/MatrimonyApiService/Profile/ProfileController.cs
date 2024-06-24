@@ -13,7 +13,11 @@ namespace MatrimonyApiService.Profile;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ProfileController(IProfileService profileService, CustomControllerValidator validator, IMediator mediator, ILogger<ProfileController> logger) : ControllerBase
+public class ProfileController(
+    IProfileService profileService,
+    CustomControllerValidator validator,
+    IMediator mediator,
+    ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
@@ -96,7 +100,7 @@ public class ProfileController(IProfileService profileService, CustomControllerV
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
         }
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
@@ -169,7 +173,7 @@ public class ProfileController(IProfileService profileService, CustomControllerV
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
         }
     }
-    
+
     [HttpGet("{profileId}/matches")]
     [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]

@@ -36,7 +36,12 @@ public class AuthServiceTests
             LastName = "Doe",
             PhoneNumber = "1234567890",
             IsVerified = true,
-            Password = [186,56,47,235,101,60,176,103,70,230,93,19,32,157,184,7,191,190,51,203,203,4,116,50,193,19,11,65,201,86,163,131,61,108,146,126,65,196,65,72,168,44,39,177,251,195,42,53,207,131,236,52,125,241,207,168,187,89,4,106,87,134,149,224],
+            Password =
+            [
+                186, 56, 47, 235, 101, 60, 176, 103, 70, 230, 93, 19, 32, 157, 184, 7, 191, 190, 51, 203, 203, 4, 116,
+                50, 193, 19, 11, 65, 201, 86, 163, 131, 61, 108, 146, 126, 65, 196, 65, 72, 168, 44, 39, 177, 251, 195,
+                42, 53, 207, 131, 236, 52, 125, 241, 207, 168, 187, 89, 4, 106, 87, 134, 149, 224
+            ],
             HashKey = []
         };
 
@@ -80,6 +85,7 @@ public class AuthServiceTests
 
         Assert.ThrowsAsync<UserNotFoundException>(() => _authService.Login(loginDto));
     }
+
     [Test]
     public void Login_InvalidPassword_ThrowsAuthenticationException()
     {
@@ -146,7 +152,8 @@ public class AuthServiceTests
 
         _userServiceMock.Setup(u => u.Add(It.IsAny<UserDto>())).Throws(new Exception());
 
-        Assert.ThrowsAsync<MatrimonyApiService.Exceptions.AuthenticationException>(() => _authService.Register(registerDto));
+        Assert.ThrowsAsync<MatrimonyApiService.Exceptions.AuthenticationException>(() =>
+            _authService.Register(registerDto));
     }
 
     [Test]
@@ -184,7 +191,12 @@ public class AuthServiceTests
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            Password = [186,56,47,235,101,60,176,103,70,230,93,19,32,157,184,7,191,190,51,203,203,4,116,50,193,19,11,65,201,86,163,131,61,108,146,126,65,196,65,72,168,44,39,177,251,195,42,53,207,131,236,52,125,241,207,168,187,89,4,106,87,134,149,224],
+            Password =
+            [
+                186, 56, 47, 235, 101, 60, 176, 103, 70, 230, 93, 19, 32, 157, 184, 7, 191, 190, 51, 203, 203, 4, 116,
+                50, 193, 19, 11, 65, 201, 86, 163, 131, 61, 108, 146, 126, 65, 196, 65, 72, 168, 44, 39, 177, 251, 195,
+                42, 53, 207, 131, 236, 52, 125, 241, 207, 168, 187, 89, 4, 106, 87, 134, 149, 224
+            ],
             HashKey = []
         };
 
@@ -198,7 +210,7 @@ public class AuthServiceTests
         ClassicAssert.AreEqual("token", result.Token);
         _userServiceMock.Verify(u => u.Update(It.IsAny<UserDto>()), Times.Once);
     }
-    
+
     [Test]
     public void ResetPassword_ValidCreds_ThrowsAuthenticationException()
     {
@@ -216,7 +228,12 @@ public class AuthServiceTests
             FirstName = "John",
             LastName = "Doe",
             PhoneNumber = "1234567890",
-            Password = [186,56,47,235,101,60,176,103,70,230,93,19,32,157,181,7,191,190,51,203,203,4,116,50,193,19,11,65,201,86,163,131,61,108,146,126,65,196,65,72,168,44,39,177,251,195,42,53,207,131,236,52,125,241,207,168,187,89,4,106,87,134,149,224],
+            Password =
+            [
+                186, 56, 47, 235, 101, 60, 176, 103, 70, 230, 93, 19, 32, 157, 181, 7, 191, 190, 51, 203, 203, 4, 116,
+                50, 193, 19, 11, 65, 201, 86, 163, 131, 61, 108, 146, 126, 65, 196, 65, 72, 168, 44, 39, 177, 251, 195,
+                42, 53, 207, 131, 236, 52, 125, 241, 207, 168, 187, 89, 4, 106, 87, 134, 149, 224
+            ],
             HashKey = []
         };
 

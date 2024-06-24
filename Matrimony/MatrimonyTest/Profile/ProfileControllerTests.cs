@@ -25,8 +25,9 @@ public class ProfileControllerTests
         _profileServiceMock = new Mock<IProfileService>();
         _loggerMock = new Mock<ILogger<ProfileController>>();
         _mediatorMock = new Mock<IMediator>();
-        _profileController = new ProfileController(_profileServiceMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        
+        _profileController =
+            new ProfileController(_profileServiceMock.Object, _mediatorMock.Object, _loggerMock.Object);
+
         _claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, "1"),
@@ -46,7 +47,14 @@ public class ProfileControllerTests
     {
         // Arrange
         var managerId = 1;
-        var profiles = new List<ProfilePreviewDto> { new ProfilePreviewDto { ProfileId = 1, Education = "School", Ethnicity = "Indian", MotherTongue = "Tamil", Religion = "Hindu", Occupation = "Doctor"} };
+        var profiles = new List<ProfilePreviewDto>
+        {
+            new ProfilePreviewDto
+            {
+                ProfileId = 1, Education = "School", Ethnicity = "Indian", MotherTongue = "Tamil", Religion = "Hindu",
+                Occupation = "Doctor"
+            }
+        };
         _profileServiceMock.Setup(service => service.GetProfilesByManager(managerId)).ReturnsAsync(profiles);
 
         // Act
@@ -63,7 +71,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var managerId = 1;
-        _profileServiceMock.Setup(service => service.GetProfilesByManager(managerId)).ThrowsAsync(new KeyNotFoundException("Manager not found"));
+        _profileServiceMock.Setup(service => service.GetProfilesByManager(managerId))
+            .ThrowsAsync(new KeyNotFoundException("Manager not found"));
 
         // Act
         var result = await _profileController.GetProfilePreviewForManager(managerId) as NotFoundObjectResult;
@@ -109,7 +118,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileServiceMock.Setup(service => service.GetProfilePreviewById(profileId)).ThrowsAsync(new KeyNotFoundException("Profile preview not found"));
+        _profileServiceMock.Setup(service => service.GetProfilePreviewById(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Profile preview not found"));
 
         // Act
         var result = await _profileController.GetProfilePreviewById(profileId) as NotFoundObjectResult;
@@ -143,7 +153,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
         var result = await _profileController.GetProfileById(profileId) as NotFoundObjectResult;
@@ -175,7 +186,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var userId = 1;
-        _profileServiceMock.Setup(service => service.GetProfileByUserId(userId)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
+        _profileServiceMock.Setup(service => service.GetProfileByUserId(userId))
+            .ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
         var result = await _profileController.GetProfileByUserId(userId) as NotFoundObjectResult;
@@ -203,7 +215,7 @@ public class ProfileControllerTests
     public async Task AddProfile_ReturnsCreated_WhenProfileIsAdded()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1 };
         _profileServiceMock.Setup(service => service.AddProfile(profileDto)).ReturnsAsync(profileDto);
 
         // Act
@@ -219,8 +231,9 @@ public class ProfileControllerTests
     public async Task AddProfile_ReturnsBadRequest_WhenDbUpdateExceptionOccurs()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
-        _profileServiceMock.Setup(service => service.AddProfile(profileDto)).ThrowsAsync(new DbUpdateException("Database error"));
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1 };
+        _profileServiceMock.Setup(service => service.AddProfile(profileDto))
+            .ThrowsAsync(new DbUpdateException("Database error"));
 
         // Act
         var result = await _profileController.AddProfile(profileDto) as BadRequestObjectResult;
@@ -234,7 +247,7 @@ public class ProfileControllerTests
     public async Task AddProfile_ReturnsForbidden_WhenDidforWrongManager()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2};
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2 };
 
         // Act
         var result = await _profileController.AddProfile(profileDto) as ObjectResult;
@@ -248,7 +261,7 @@ public class ProfileControllerTests
     public async Task UpdateProfile_ReturnsOk_WhenProfileIsUpdated()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1 , ManagedById = 1};
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1 };
         _profileServiceMock.Setup(service => service.UpdateProfile(profileDto)).ReturnsAsync(profileDto);
 
         // Act
@@ -264,8 +277,9 @@ public class ProfileControllerTests
     public async Task UpdateProfile_ReturnsNotFound_WhenProfileDoesNotExist()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1};
-        _profileServiceMock.Setup(service => service.UpdateProfile(profileDto)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 1 };
+        _profileServiceMock.Setup(service => service.UpdateProfile(profileDto))
+            .ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
         var result = await _profileController.UpdateProfile(profileDto) as NotFoundObjectResult;
@@ -279,7 +293,7 @@ public class ProfileControllerTests
     public async Task UpdateProfile_ReturnsForBidden_WhenManagerNotExist()
     {
         // Arrange
-        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2};
+        var profileDto = new ProfileDto { ProfileId = 1, ManagedById = 2 };
 
         // Act
         var result = await _profileController.UpdateProfile(profileDto) as ObjectResult;
@@ -295,7 +309,8 @@ public class ProfileControllerTests
         // Arrange
         var profileId = 1;
         var profileDto = new ProfileDto { ProfileId = profileId };
-        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 1});
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId))
+            .ReturnsAsync(new ProfileDto { ManagedById = 1 });
         _profileServiceMock.Setup(service => service.DeleteProfileById(profileId)).ReturnsAsync(profileDto);
 
         // Act
@@ -312,8 +327,10 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 1});
-        _profileServiceMock.Setup(service => service.DeleteProfileById(profileId)).ThrowsAsync(new KeyNotFoundException("Profile not found"));
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId))
+            .ReturnsAsync(new ProfileDto { ManagedById = 1 });
+        _profileServiceMock.Setup(service => service.DeleteProfileById(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Profile not found"));
 
         // Act
         var result = await _profileController.DeleteProfileById(profileId) as NotFoundObjectResult;
@@ -328,7 +345,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileServiceMock.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(new ProfileDto{ManagedById = 2});
+        _profileServiceMock.Setup(service => service.GetProfileById(profileId))
+            .ReturnsAsync(new ProfileDto { ManagedById = 2 });
 
         // Act
         var result = await _profileController.DeleteProfileById(profileId) as ObjectResult;
@@ -360,7 +378,8 @@ public class ProfileControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileServiceMock.Setup(service => service.GetProfileMatches(profileId)).ThrowsAsync(new KeyNotFoundException("No matches found"));
+        _profileServiceMock.Setup(service => service.GetProfileMatches(profileId))
+            .ThrowsAsync(new KeyNotFoundException("No matches found"));
 
         // Act
         var result = await _profileController.GetMatches(profileId) as NotFoundObjectResult;

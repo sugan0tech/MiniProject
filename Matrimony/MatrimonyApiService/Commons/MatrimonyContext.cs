@@ -21,13 +21,21 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
     {
         #region Address
 
-        modelBuilder.Entity<Address.Address>();
+        modelBuilder.Entity<Address.Address>()
+            .HasOne<User.User>(address => address.User)
+            .WithOne(user => user.Address)
+            .HasForeignKey<User.User>(user => user.AddressId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         #endregion
 
         #region User
 
-        modelBuilder.Entity<User.User>().HasOne<Address.Address>(user => user.Address);
+        modelBuilder.Entity<User.User>()
+            .HasOne<Address.Address>(user => user.Address)
+            .WithOne(address => address.User)
+            .HasForeignKey<Address.Address>(address => address.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>()
             .HasMany<Message.Message>(user => user.MessagesSent)
             .WithOne(message => message.Sender)

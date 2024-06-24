@@ -44,7 +44,8 @@ public class PreferenceControllerTests
         // Arrange
         var preferenceDto = new PreferenceDto { PreferenceId = 1 };
         var validationResult = new ValidationResult("Validation error");
-        _preferenceServiceMock.Setup(service => service.Add(preferenceDto)).ThrowsAsync(new ValidationException(validationResult.ToString()));
+        _preferenceServiceMock.Setup(service => service.Add(preferenceDto))
+            .ThrowsAsync(new ValidationException(validationResult.ToString()));
 
         // Act
         var result = await _preferenceController.Add(preferenceDto) as BadRequestObjectResult;
@@ -77,7 +78,8 @@ public class PreferenceControllerTests
     {
         // Arrange
         var preferenceId = 1;
-        _preferenceServiceMock.Setup(service => service.GetById(preferenceId)).ThrowsAsync(new KeyNotFoundException("Preference not found"));
+        _preferenceServiceMock.Setup(service => service.GetById(preferenceId))
+            .ThrowsAsync(new KeyNotFoundException("Preference not found"));
 
         // Act
         var result = await _preferenceController.GetById(preferenceId) as NotFoundObjectResult;
@@ -108,7 +110,8 @@ public class PreferenceControllerTests
     {
         // Arrange
         var preferenceDto = new PreferenceDto { PreferenceId = 1 };
-        _preferenceServiceMock.Setup(service => service.Update(preferenceDto)).ThrowsAsync(new KeyNotFoundException("Preference not found"));
+        _preferenceServiceMock.Setup(service => service.Update(preferenceDto))
+            .ThrowsAsync(new KeyNotFoundException("Preference not found"));
 
         // Act
         var result = await _preferenceController.Update(preferenceDto) as NotFoundObjectResult;
@@ -124,7 +127,8 @@ public class PreferenceControllerTests
         // Arrange
         var preferenceDto = new PreferenceDto { PreferenceId = 1 };
         var validationResult = new ValidationResult("Validation error");
-        _preferenceServiceMock.Setup(service => service.Update(preferenceDto)).ThrowsAsync(new ValidationException(validationResult.ToString()));
+        _preferenceServiceMock.Setup(service => service.Update(preferenceDto))
+            .ThrowsAsync(new ValidationException(validationResult.ToString()));
 
         // Act
         var result = await _preferenceController.Update(preferenceDto) as BadRequestObjectResult;

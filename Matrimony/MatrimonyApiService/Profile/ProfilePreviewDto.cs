@@ -25,6 +25,5 @@ public record ProfilePreviewDto
     [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
 
-    [ExcludeFromCodeCoverage]
-    public byte[]? ProfilePicture { get; init; }
+    [ExcludeFromCodeCoverage] public byte[]? ProfilePicture { get; init; }
 }

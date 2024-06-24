@@ -91,7 +91,8 @@ public class UserControllerTests
     {
         // Arrange
         var user = new UserDto { Email = "test@test.com" };
-        _mockUserService.Setup(service => service.Update(It.IsAny<UserDto>())).Throws(new KeyNotFoundException("User not found"));
+        _mockUserService.Setup(service => service.Update(It.IsAny<UserDto>()))
+            .Throws(new KeyNotFoundException("User not found"));
 
         // Act
         var result = await _controller.Update(user);
@@ -122,7 +123,8 @@ public class UserControllerTests
     public async Task GetByEmail_ShouldReturnNotFoundWhenUserNotFound()
     {
         // Arrange
-        _mockUserService.Setup(service => service.GetByEmail(It.IsAny<string>())).Throws(new UserNotFoundException("User not found"));
+        _mockUserService.Setup(service => service.GetByEmail(It.IsAny<string>()))
+            .Throws(new UserNotFoundException("User not found"));
 
         // Act
         var result = await _controller.GetByEmail("nonexistent@test.com");
@@ -177,7 +179,8 @@ public class UserControllerTests
         {
             HttpContext = new DefaultHttpContext { User = claimsPrincipal }
         };
-        _mockUserService.Setup(service => service.DeleteById(It.IsAny<int>())).Throws(new KeyNotFoundException("User not found"));
+        _mockUserService.Setup(service => service.DeleteById(It.IsAny<int>()))
+            .Throws(new KeyNotFoundException("User not found"));
 
         // Act
         var result = await _controller.DeleteById(999);
@@ -208,7 +211,8 @@ public class UserControllerTests
     public async Task Validate_ShouldReturnNotFoundWhenUserNotFound()
     {
         // Arrange
-        _mockUserService.Setup(service => service.Validate(It.IsAny<int>(), It.IsAny<bool>())).Throws(new KeyNotFoundException("User not found"));
+        _mockUserService.Setup(service => service.Validate(It.IsAny<int>(), It.IsAny<bool>()))
+            .Throws(new KeyNotFoundException("User not found"));
 
         // Act
         var result = await _controller.Validate(999, true);

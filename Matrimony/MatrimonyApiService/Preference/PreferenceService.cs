@@ -28,7 +28,7 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
             throw;
         }
     }
-    
+
     /// <inheritdoc/>
     public async Task<PreferenceDto> GetByProfileId(int profileId)
     {
@@ -60,7 +60,7 @@ public class PreferenceService(IBaseRepo<Preference> preferenceRepo, IMapper map
             throw;
         }
     }
-    
+
     /// <inheritdoc/>
     public async Task<PreferenceDto> Delete(int id)
     {

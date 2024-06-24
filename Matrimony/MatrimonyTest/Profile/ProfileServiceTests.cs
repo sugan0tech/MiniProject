@@ -25,7 +25,7 @@ public class ProfileServiceTests
         _mapperMock = new Mock<IMapper>();
         _loggerMock = new Mock<ILogger<ProfileService>>();
         _profileService = new ProfileService(_repoMock.Object, _preferenceServiceMock.Object,
-             _mapperMock.Object, _loggerMock.Object);
+            _mapperMock.Object, _loggerMock.Object);
 
         var profile = new MatrimonyApiService.Profile.Profile
         {
@@ -127,7 +127,7 @@ public class ProfileServiceTests
         ClassicAssert.NotNull(result);
         ClassicAssert.AreEqual(profileId, result.ProfileId);
     }
-    
+
     [Test]
     public async Task GetProfilesByManager_ShouldReturnProfiles_WhenProfilesExist()
     {
@@ -151,7 +151,7 @@ public class ProfileServiceTests
             ManagedByRelation = Relation.Self.ToString()
         };
         var profiles = new List<MatrimonyApiService.Profile.Profile> { profile };
-        var profilePreviewDto = new ProfilePreviewDto { ProfileId = 1 , MaritalStatus = "Single"};
+        var profilePreviewDto = new ProfilePreviewDto { ProfileId = 1, MaritalStatus = "Single" };
 
         _repoMock.Setup(r => r.GetAll()).ReturnsAsync(profiles);
         _mapperMock.Setup(m => m.Map<ProfilePreviewDto>(profile)).Returns(profilePreviewDto);

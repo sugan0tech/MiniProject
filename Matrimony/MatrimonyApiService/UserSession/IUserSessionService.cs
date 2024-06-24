@@ -8,7 +8,7 @@ public interface IUserSessionService
     /// <param name="sessionId"></param>
     /// <returns></returns>
     Task<List<UserSessionDto>> GetById(int sessionId);
-    
+
     /// <summary>
     /// Gets session of user by userId
     /// </summary>
@@ -47,14 +47,14 @@ public interface IUserSessionService
     /// <param name="token"></param>
     /// <returns></returns>
     Task<bool> IsValid(string token);
-    
+
     /// <summary>
     ///  Invalidate given session
     /// </summary>
     /// <param name="token"></param>
     /// <returns></returns>
     Task<UserSessionDto> Invalidate(string token);
-    
+
     /// <summary>
     ///  Invalidates all the loged in session of a user.
     /// </summary>

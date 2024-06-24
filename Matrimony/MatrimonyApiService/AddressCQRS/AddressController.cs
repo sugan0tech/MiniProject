@@ -3,20 +3,24 @@ using MatrimonyApiService.Address;
 using MatrimonyApiService.AddressCQRS.Command;
 using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
+using MatrimonyApiService.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.AddressCQRS;
 
 [ApiController]
-[Route("api/t/[controller]")]
-// [Authorize]
-public class AddressCQController(
-    ILogger<AddressCQController> logger,
+[Route("api/[controller]")]
+[Authorize]
+public class AddressController(
+    ILogger<AddressController> logger,
     ICommandHandler<CreateAddressCommand> createAddressHandler,
     ICommandHandler<UpdateAddressCommand> updateAddressHandler,
     ICommandHandler<DeleteAddressCommand> deleteAddressHandler,
     IQueryHandler<GetAddressByIdQuery, AddressDto> getAddressByIdHandler,
-    IQueryHandler<GetAllAddressesQuery, List<AddressDto>> getAllAddressesHandler)
+    IQueryHandler<GetAllAddressesQuery, List<AddressDto>> getAllAddressesHandler,
+    CustomControllerValidator validator)
     : ControllerBase
 {
     [HttpGet("{id}")]
@@ -39,7 +43,7 @@ public class AddressCQController(
 
     [HttpGet]
     [ProducesResponseType(typeof(List<AddressDto>), StatusCodes.Status200OK)]
-    // [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAllAddresses()
     {
         var addresses = await getAllAddressesHandler.Handle(new GetAllAddressesQuery());
@@ -48,18 +52,28 @@ public class AddressCQController(
 
     [HttpPost]
     [ProducesResponseType(typeof(AddressDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddAddress([FromBody] AddressDto addressDto)
     {
-        logger.LogInformation(addressDto.ToString());
-        await createAddressHandler.Handle(new CreateAddressCommand
+        try
         {
-            Street = addressDto.Street,
-            City = addressDto.City,
-            State = addressDto.State,
-            Country = addressDto.Country
-        });
-        return StatusCode(201);
+            validator.ValidateUserPrivilege(User.Claims, addressDto.UserId);
+            logger.LogInformation(addressDto.ToString());
+            await createAddressHandler.Handle(new CreateAddressCommand
+            {
+                UserId = addressDto.UserId,
+                Street = addressDto.Street,
+                City = addressDto.City,
+                State = addressDto.State,
+                Country = addressDto.Country
+            });
+            return StatusCode(201);
+        }
+        catch (AuthenticationException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
     }
 
     [HttpPut]

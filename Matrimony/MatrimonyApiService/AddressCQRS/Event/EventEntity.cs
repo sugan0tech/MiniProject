@@ -4,8 +4,7 @@ namespace MatrimonyApiService.AddressCQRS.Event;
 
 public class EventEntity
 {
-    [Key]
-    public int EventId { get; set; }
+    [Key] public int EventId { get; set; }
     public string EventType { get; set; }
     public string EventData { get; set; }
     public DateTime CreatedAt { get; set; }

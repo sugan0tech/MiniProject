@@ -24,7 +24,7 @@ public class ReportControllerTests
         _mockReportService = new Mock<IBaseService<MatrimonyApiService.Report.Report, ReportDto>>();
         _mockLogger = new Mock<ILogger<ReportController>>();
         _reportController = new ReportController(_mockReportService.Object, _mockLogger.Object);
-        
+
         _claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, "1"),
@@ -110,7 +110,7 @@ public class ReportControllerTests
         ClassicAssert.AreEqual(reportDto, okResult.Value);
     }
 
-       [Test]
+    [Test]
     public async Task Add_ShouldReturnBadRequest_WhenArgumentNullExceptionOccurs()
     {
         // Arrange
@@ -151,7 +151,7 @@ public class ReportControllerTests
         ClassicAssert.AreEqual(StatusCodes.Status403Forbidden, errorModel.Status);
         ClassicAssert.AreEqual(exception.Message, errorModel.Message);
     }
-    
+
     [Test]
     public async Task DeleteById_ShouldReturnOk_WhenReportIsDeleted()
     {
@@ -173,7 +173,8 @@ public class ReportControllerTests
     public async Task DeleteById_ShouldReturnNotFound_WhenReportDoesNotExist()
     {
         // Arrange
-        _mockReportService.Setup(service => service.DeleteById(It.IsAny<int>())).ThrowsAsync(new KeyNotFoundException());
+        _mockReportService.Setup(service => service.DeleteById(It.IsAny<int>()))
+            .ThrowsAsync(new KeyNotFoundException());
 
         // Act
         var result = await _reportController.DeleteById(99);

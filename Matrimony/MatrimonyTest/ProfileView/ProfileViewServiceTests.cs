@@ -103,7 +103,10 @@ public class ProfileViewServiceTests
         };
 
         var membership = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.FreeUser.ToString(), Description = "Test Description", IsTrail = false };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.FreeUser.ToString(), Description = "Test Description",
+            IsTrail = false
+        };
 
         _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto { });
         _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
@@ -151,7 +154,10 @@ public class ProfileViewServiceTests
         };
 
         var membership = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 50 };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description",
+            IsTrail = false, ViewsCount = 50
+        };
 
         _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto());
         _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
@@ -160,7 +166,8 @@ public class ProfileViewServiceTests
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ReturnsAsync(profile);
 
         // Act&Assert
-        Assert.ThrowsAsync<ExhaustedMaximumProfileViewsException>(async () => await _profileViewService.AddView(viewerId, profileId));
+        Assert.ThrowsAsync<ExhaustedMaximumProfileViewsException>(async () =>
+            await _profileViewService.AddView(viewerId, profileId));
     }
 
     [Test]
@@ -199,7 +206,10 @@ public class ProfileViewServiceTests
         };
 
         var membership = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 49 };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description",
+            IsTrail = false, ViewsCount = 49
+        };
 
         _mockProfileService.Setup(service => service.GetProfileByUserId(viewerId)).ReturnsAsync(new ProfileDto());
         _membershipServiceMock.Setup(service => service.GetByProfileId(It.IsAny<int>())).ReturnsAsync(membership);
@@ -227,7 +237,8 @@ public class ProfileViewServiceTests
         _mockProfileService.Setup(service => service.GetProfileById(profileId)).ThrowsAsync(new KeyNotFoundException());
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.AddView(viewerId, profileId));
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            await _profileViewService.AddView(viewerId, profileId));
         ClassicAssert.AreEqual("The given key was not present in the dictionary.", ex.Message);
     }
 
@@ -343,9 +354,12 @@ public class ProfileViewServiceTests
             ViewedProfileAt = view.ViewedProfileAt,
             ViewedAt = view.ViewedAt
         });
-        
+
         var membership = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 49 };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description",
+            IsTrail = false, ViewsCount = 49
+        };
 
         _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
 
@@ -374,7 +388,7 @@ public class ProfileViewServiceTests
         }
     }
 
-    
+
     [Test]
     public async Task GetViewsByProfileId_BasicUser_ReturnsOnlyFive()
     {
@@ -397,9 +411,12 @@ public class ProfileViewServiceTests
             ViewedProfileAt = view.ViewedProfileAt,
             ViewedAt = view.ViewedAt
         });
-        
+
         var membership = new MembershipDto
-            { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description", IsTrail = false, ViewsCount = 45 };
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description",
+            IsTrail = false, ViewsCount = 45
+        };
 
         _membershipServiceMock.Setup(service => service.GetByProfileId(1)).ReturnsAsync(membership);
 
@@ -420,9 +437,8 @@ public class ProfileViewServiceTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(5, result.Count);
     }
-    
-    
-    
+
+
     [Test]
     public void GetViewsBy_InvalidProfileId_ThrowsKeyNotFoundException()
     {
@@ -439,6 +455,7 @@ public class ProfileViewServiceTests
         // Act & Assert
         Assert.ThrowsAsync<KeyNotFoundException>(async () => await _profileViewService.GetViewsByProfileId(profileId));
     }
+
     [Test]
     public async Task DeleteViewById_ValidId_DeletesProfileView()
     {

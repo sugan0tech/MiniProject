@@ -105,14 +105,15 @@ public class MembershipServiceTests
         // ClassicAssert
         ClassicAssert.AreEqual(membershipDto, result);
     }
-    
-    
+
+
     [Test]
     public async Task GetByUserId_InValidUserId_ThrowsKeyNotFoundException()
     {
         // Arrange
         var userId = 1;
-        _mockProflieService.Setup(service => service.GetProfileByUserId(userId)).ThrowsAsync(new KeyNotFoundException());
+        _mockProflieService.Setup(service => service.GetProfileByUserId(userId))
+            .ThrowsAsync(new KeyNotFoundException());
 
         // Act & Assert
         Assert.ThrowsAsync<KeyNotFoundException>(async () => await _membershipService.GetByUserId(userId));

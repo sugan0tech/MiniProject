@@ -25,15 +25,18 @@ public class MessageServiceTests
         _mockMapper = new Mock<IMapper>();
         _mockMembershipService = new Mock<IMembershipService>();
         _mockLogger = new Mock<ILogger<MessageService>>();
-        _messageService = new MessageService(_mockRepo.Object, _mockMembershipService.Object, _mockMapper.Object, _mockLogger.Object);
+        _messageService = new MessageService(_mockRepo.Object, _mockMembershipService.Object, _mockMapper.Object,
+            _mockLogger.Object);
     }
 
     [Test]
     public async Task AddMessage_ValidMessageDto_ReturnsAddedMessageDto()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
-        var message = new MatrimonyApiService.Message.Message { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var message = new MatrimonyApiService.Message.Message
+            { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
         _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Message.Message>(messageDto)).Returns(message);
         _mockRepo.Setup(repo => repo.Add(message)).ReturnsAsync(message);
@@ -50,7 +53,8 @@ public class MessageServiceTests
     public void AddMessage_ThrowsException_ReturnsException()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
         _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Message.Message>(messageDto))
             .Throws(new Exception("Error adding message"));
@@ -65,8 +69,10 @@ public class MessageServiceTests
     {
         // Arrange
         var messageId = 1;
-        var message = new MatrimonyApiService.Message.Message { Id = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
-        var messageDto = new MessageDto { MessageId = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var message = new MatrimonyApiService.Message.Message
+            { Id = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
         _mockRepo.Setup(repo => repo.GetById(messageId)).ReturnsAsync(message);
         _mockMapper.Setup(mapper => mapper.Map<MessageDto>(message)).Returns(messageDto);
@@ -93,8 +99,10 @@ public class MessageServiceTests
     public async Task UpdateMessage_ValidMessageDto_ReturnsUpdatedMessageDto()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
-        var message = new MatrimonyApiService.Message.Message { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var message = new MatrimonyApiService.Message.Message
+            { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
         _mockRepo.Setup(repo => repo.GetById(messageDto.MessageId)).ReturnsAsync(message);
         _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Message.Message>(messageDto)).Returns(message);
@@ -112,10 +120,13 @@ public class MessageServiceTests
     public void UpdateMessage_InvalidMessageDto_ThrowsKeyNotFoundException()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
-        var message = new MatrimonyApiService.Message.Message { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Message.Message>(It.IsAny<MessageDto>())).Returns(message);
+        var message = new MatrimonyApiService.Message.Message
+            { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Message.Message>(It.IsAny<MessageDto>()))
+            .Returns(message);
         _mockRepo.Setup(repo => repo.Update(message)).Throws(new KeyNotFoundException("Message not found"));
 
         // Act & ClassicAssert
@@ -127,8 +138,10 @@ public class MessageServiceTests
     {
         // Arrange
         var messageId = 1;
-        var message = new MatrimonyApiService.Message.Message { Id = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
-        var messageDto = new MessageDto { MessageId = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var message = new MatrimonyApiService.Message.Message
+            { Id = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
+        var messageDto = new MessageDto
+            { MessageId = messageId, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false };
 
         _mockRepo.Setup(repo => repo.DeleteById(messageId)).ReturnsAsync(message);
         _mockMapper.Setup(mapper => mapper.Map<MessageDto>(message)).Returns(messageDto);
@@ -157,8 +170,10 @@ public class MessageServiceTests
         // Arrange
         var messages = new List<MatrimonyApiService.Message.Message>
         {
-            new MatrimonyApiService.Message.Message { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false },
-            new MatrimonyApiService.Message.Message { Id = 2, SenderId = 2, ReceiverId = 1, SentAt = DateTime.UtcNow, Seen = true }
+            new MatrimonyApiService.Message.Message
+                { Id = 1, SenderId = 1, ReceiverId = 2, SentAt = DateTime.UtcNow, Seen = false },
+            new MatrimonyApiService.Message.Message
+                { Id = 2, SenderId = 2, ReceiverId = 1, SentAt = DateTime.UtcNow, Seen = true }
         };
         var messageDtos = new List<MessageDto>
         {
@@ -183,8 +198,10 @@ public class MessageServiceTests
         var userId = 1;
         var messages = new List<MatrimonyApiService.Message.Message>
         {
-            new MatrimonyApiService.Message.Message { Id = 1, SenderId = userId, ReceiverId = 2, SentAt = DateTime.Now, Seen = false },
-            new MatrimonyApiService.Message.Message { Id = 2, SenderId = userId, ReceiverId = 3, SentAt = DateTime.Now, Seen = true }
+            new MatrimonyApiService.Message.Message
+                { Id = 1, SenderId = userId, ReceiverId = 2, SentAt = DateTime.Now, Seen = false },
+            new MatrimonyApiService.Message.Message
+                { Id = 2, SenderId = userId, ReceiverId = 3, SentAt = DateTime.Now, Seen = true }
         };
         var messageDtos = new List<MessageDto>
         {
@@ -192,7 +209,10 @@ public class MessageServiceTests
             new MessageDto { MessageId = 2, SenderId = userId, ReceiverId = 3, SentAt = DateTime.Now, Seen = true }
         };
 
-        var membershipDto = new MembershipDto { MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" };
+        var membershipDto = new MembershipDto
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description"
+        };
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(messages);
         _mockMembershipService.Setup(service => service.GetByUserId(userId)).ReturnsAsync(membershipDto);
@@ -211,7 +231,10 @@ public class MessageServiceTests
     {
         // Arrange
         var userId = 1;
-        var membershipDto = new MembershipDto { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description" };
+        var membershipDto = new MembershipDto
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description"
+        };
 
         _mockMembershipService.Setup(service => service.GetByUserId(userId)).ReturnsAsync(membershipDto);
 
@@ -238,8 +261,10 @@ public class MessageServiceTests
         var userId = 1;
         var messages = new List<MatrimonyApiService.Message.Message>
         {
-            new MatrimonyApiService.Message.Message { Id = 1, SenderId = 2, ReceiverId = userId, SentAt = DateTime.Now, Seen = false },
-            new MatrimonyApiService.Message.Message { Id = 2, SenderId = 3, ReceiverId = userId, SentAt = DateTime.Now, Seen = true }
+            new MatrimonyApiService.Message.Message
+                { Id = 1, SenderId = 2, ReceiverId = userId, SentAt = DateTime.Now, Seen = false },
+            new MatrimonyApiService.Message.Message
+                { Id = 2, SenderId = 3, ReceiverId = userId, SentAt = DateTime.Now, Seen = true }
         };
         var messageDtos = new List<MessageDto>
         {
@@ -247,7 +272,10 @@ public class MessageServiceTests
             new MessageDto { MessageId = 2, SenderId = 3, ReceiverId = userId, SentAt = DateTime.Now, Seen = true }
         };
 
-        var membershipDto = new MembershipDto { MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description" };
+        var membershipDto = new MembershipDto
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.PremiumUser.ToString(), Description = "Test Description"
+        };
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(messages);
         _mockMembershipService.Setup(service => service.GetByUserId(userId)).ReturnsAsync(membershipDto);
@@ -266,12 +294,16 @@ public class MessageServiceTests
     {
         // Arrange
         var userId = 1;
-        var membershipDto = new MembershipDto { MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description" };
+        var membershipDto = new MembershipDto
+        {
+            MembershipId = 1, ProfileId = 1, Type = MemberShip.BasicUser.ToString(), Description = "Test Description"
+        };
 
         _mockMembershipService.Setup(service => service.GetByUserId(userId)).ReturnsAsync(membershipDto);
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<NonPremiumUserException>(async () => await _messageService.GetReceivedMessages(userId));
+        var ex = Assert.ThrowsAsync<NonPremiumUserException>(async () =>
+            await _messageService.GetReceivedMessages(userId));
         ClassicAssert.AreEqual("You should be a Premium user for accessing chats", ex.Message);
     }
 
@@ -283,6 +315,7 @@ public class MessageServiceTests
         _mockMembershipService.Setup(service => service.GetByUserId(userId)).ThrowsAsync(new KeyNotFoundException());
 
         // Act & ClassicAssert
-        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await _messageService.GetReceivedMessages(userId));
+        var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            await _messageService.GetReceivedMessages(userId));
     }
 }

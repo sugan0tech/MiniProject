@@ -12,7 +12,10 @@ namespace MatrimonyApiService.User;
 [ApiController]
 [EnableCors("AllowAll")]
 [Authorize]
-public class UserController(IUserService userService, CustomControllerValidator validator, ILogger<UserController> logger) : ControllerBase
+public class UserController(
+    IUserService userService,
+    CustomControllerValidator validator,
+    ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]

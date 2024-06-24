@@ -13,7 +13,7 @@ public class Preference : BaseEntity
     [MaxLength(25)]
     [EnumTypeValidation(typeof(Gender))]
     public required string Gender { get; set; }
-    
+
     [NotMapped]
     public Gender GenderEnum
     {
@@ -71,8 +71,7 @@ public class Preference : BaseEntity
     public int MaxAge { get; set; }
 
     [ForeignKey("PreferenceForProfileId")] public int PreferenceForId { get; set; }
-    [ExcludeFromCodeCoverage]
-    public Profile.Profile? PreferenceFor { get; set; }
+    [ExcludeFromCodeCoverage] public Profile.Profile? PreferenceFor { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }

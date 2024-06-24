@@ -27,7 +27,7 @@ public class MembershipControllerTests
     {
         // Arrange
         var profileId = 1;
-        var membershipDto = new MembershipDto { MembershipId = profileId , Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = profileId, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.GetByProfileId(profileId)).ReturnsAsync(membershipDto);
 
         // Act
@@ -44,7 +44,8 @@ public class MembershipControllerTests
     {
         // Arrange
         var profileId = 1;
-        _membershipServiceMock.Setup(service => service.GetByProfileId(profileId)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        _membershipServiceMock.Setup(service => service.GetByProfileId(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.GetByProfileId(profileId) as NotFoundObjectResult;
@@ -59,7 +60,7 @@ public class MembershipControllerTests
     {
         // Arrange
         var userId = 1;
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.GetByUserId(userId)).ReturnsAsync(membershipDto);
 
         // Act
@@ -76,7 +77,8 @@ public class MembershipControllerTests
     {
         // Arrange
         var userId = 1;
-        _membershipServiceMock.Setup(service => service.GetByUserId(userId)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        _membershipServiceMock.Setup(service => service.GetByUserId(userId))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.GetByUserId(userId) as NotFoundObjectResult;
@@ -91,7 +93,7 @@ public class MembershipControllerTests
     {
         // Arrange
         var membershipId = 1;
-        var membershipDto = new MembershipDto { MembershipId = membershipId, Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = membershipId, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.DeleteById(membershipId)).ReturnsAsync(membershipDto);
 
         // Act
@@ -108,7 +110,8 @@ public class MembershipControllerTests
     {
         // Arrange
         var membershipId = 1;
-        _membershipServiceMock.Setup(service => service.DeleteById(membershipId)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        _membershipServiceMock.Setup(service => service.DeleteById(membershipId))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.DeleteById(membershipId) as NotFoundObjectResult;
@@ -122,7 +125,7 @@ public class MembershipControllerTests
     public async Task Add_ReturnsOk_WhenMembershipIsAdded()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.Add(membershipDto)).ReturnsAsync(membershipDto);
 
         // Act
@@ -138,8 +141,9 @@ public class MembershipControllerTests
     public async Task Add_ReturnsBadRequest_WhenMembershipAlreadyExists()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
-        _membershipServiceMock.Setup(service => service.Add(membershipDto)).ThrowsAsync(new AlreadyExistingEntityException("Membership already exists"));
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
+        _membershipServiceMock.Setup(service => service.Add(membershipDto))
+            .ThrowsAsync(new AlreadyExistingEntityException("Membership already exists"));
 
         // Act
         var result = await _membershipController.Add(membershipDto) as BadRequestObjectResult;
@@ -153,7 +157,7 @@ public class MembershipControllerTests
     public async Task Update_ReturnsOk_WhenMembershipIsUpdated()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.Update(membershipDto)).ReturnsAsync(membershipDto);
 
         // Act
@@ -169,8 +173,9 @@ public class MembershipControllerTests
     public async Task Update_ReturnsNotFound_WhenMembershipDoesNotExist()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
-        _membershipServiceMock.Setup(service => service.Update(membershipDto)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
+        _membershipServiceMock.Setup(service => service.Update(membershipDto))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.Update(membershipDto) as NotFoundObjectResult;
@@ -200,7 +205,8 @@ public class MembershipControllerTests
     {
         // Arrange
         var membershipId = 1;
-        _membershipServiceMock.Setup(service => service.Validate(membershipId)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        _membershipServiceMock.Setup(service => service.Validate(membershipId))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.Validate(membershipId) as NotFoundObjectResult;
@@ -214,7 +220,7 @@ public class MembershipControllerTests
     public async Task ValidateByDto_ReturnsOk_WhenMembershipIsValidated()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
         _membershipServiceMock.Setup(service => service.Validate(membershipDto)).Returns(Task.CompletedTask);
 
         // Act
@@ -229,8 +235,9 @@ public class MembershipControllerTests
     public async Task ValidateByDto_ReturnsNotFound_WhenMembershipDoesNotExist()
     {
         // Arrange
-        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium"};
-        _membershipServiceMock.Setup(service => service.Validate(membershipDto)).ThrowsAsync(new KeyNotFoundException("Membership not found"));
+        var membershipDto = new MembershipDto { MembershipId = 1, Type = "Premium" };
+        _membershipServiceMock.Setup(service => service.Validate(membershipDto))
+            .ThrowsAsync(new KeyNotFoundException("Membership not found"));
 
         // Act
         var result = await _membershipController.Validate(membershipDto) as NotFoundObjectResult;

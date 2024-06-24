@@ -101,11 +101,12 @@ public class UserServiceTests
             {
             }
         };
-        var users = new List<MatrimonyApiService.User.User> {user1, user2};
+        var users = new List<MatrimonyApiService.User.User> { user1, user2 };
         var userDtos = new List<UserDto> { new UserDto { UserId = 1 }, new UserDto { UserId = 2 } };
 
         _userRepositoryMock.Setup(repo => repo.GetAll()).ReturnsAsync(users);
-        _mapperMock.Setup(mapper => mapper.Map<UserDto>(It.IsAny<MatrimonyApiService.User.User>())).Returns((MatrimonyApiService.User.User src) => new UserDto { UserId = src.Id });
+        _mapperMock.Setup(mapper => mapper.Map<UserDto>(It.IsAny<MatrimonyApiService.User.User>()))
+            .Returns((MatrimonyApiService.User.User src) => new UserDto { UserId = src.Id });
 
         // Act
         var result = await _userService.GetAll();
@@ -201,7 +202,7 @@ public class UserServiceTests
         // ClassicAssert
         ClassicAssert.AreEqual(userDto, result);
     }
-    
+
     [Test]
     public async Task ValidateUser_WithStats_ShouldUpdate()
     {
@@ -263,7 +264,7 @@ public class UserServiceTests
         // Act & Assert
         Assert.ThrowsAsync<KeyNotFoundException>(() => _userService.Validate(1, true));
     }
-    
+
     [Test]
     public void Update_ShouldThrowKeyNotFoundException_WhenUserDoesNotExist()
     {

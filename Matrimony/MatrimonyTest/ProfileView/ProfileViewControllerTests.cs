@@ -22,7 +22,7 @@ public class ProfileViewControllerTests
         _profileViewServiceMock = new Mock<IProfileViewService>();
         _loggerMock = new Mock<ILogger<ProfileViewController>>();
         _profileViewController = new ProfileViewController(_profileViewServiceMock.Object, _loggerMock.Object);
-        
+
         _claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, "1"),
@@ -58,7 +58,8 @@ public class ProfileViewControllerTests
         // Arrange
         var viewerId = 1;
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new KeyNotFoundException("Not found"));
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId))
+            .ThrowsAsync(new KeyNotFoundException("Not found"));
 
         // Act
         var result = await _profileViewController.AddView(viewerId, profileId) as NotFoundObjectResult;
@@ -74,7 +75,8 @@ public class ProfileViewControllerTests
         // Arrange
         var viewerId = 1;
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new NonPremiumUserException("msg"));
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId))
+            .ThrowsAsync(new NonPremiumUserException("msg"));
 
         // Act
         var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
@@ -90,7 +92,8 @@ public class ProfileViewControllerTests
         // Arrange
         var viewerId = 1;
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new ExhaustedMaximumProfileViewsException("msg"));
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId))
+            .ThrowsAsync(new ExhaustedMaximumProfileViewsException("msg"));
 
         // Act
         var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
@@ -106,7 +109,8 @@ public class ProfileViewControllerTests
         // Arrange
         var viewerId = 1;
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId)).ThrowsAsync(new AuthenticationException("msg"));
+        _profileViewServiceMock.Setup(service => service.AddView(viewerId, profileId))
+            .ThrowsAsync(new AuthenticationException("msg"));
 
         // Act
         var result = await _profileViewController.AddView(viewerId, profileId) as ObjectResult;
@@ -152,7 +156,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var viewId = 1;
-        _profileViewServiceMock.Setup(service => service.GetViewById(viewId)).ThrowsAsync(new KeyNotFoundException("Not found"));
+        _profileViewServiceMock.Setup(service => service.GetViewById(viewId))
+            .ThrowsAsync(new KeyNotFoundException("Not found"));
 
         // Act
         var result = await _profileViewController.GetViewById(viewId) as NotFoundObjectResult;
@@ -167,7 +172,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var profileId = 1;
-        var profileViews = new List<ProfileViewDto> { new ProfileViewDto { ProfileViewId = 1, ViewedProfileAt = profileId } };
+        var profileViews = new List<ProfileViewDto>
+            { new ProfileViewDto { ProfileViewId = 1, ViewedProfileAt = profileId } };
         _profileViewServiceMock.Setup(service => service.GetViewsByProfileId(profileId)).ReturnsAsync(profileViews);
 
         // Act
@@ -184,7 +190,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.GetViewsByProfileId(profileId)).ThrowsAsync(new KeyNotFoundException("Not found"));
+        _profileViewServiceMock.Setup(service => service.GetViewsByProfileId(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Not found"));
 
         // Act
         var result = await _profileViewController.GetViewsByProfileId(profileId) as NotFoundObjectResult;
@@ -199,7 +206,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var profileId = 1;
-        _profileViewServiceMock.Setup(service => service.GetViewsByProfileId(profileId)).ThrowsAsync(new NonPremiumUserException("Forbidden"));
+        _profileViewServiceMock.Setup(service => service.GetViewsByProfileId(profileId))
+            .ThrowsAsync(new NonPremiumUserException("Forbidden"));
 
         // Act
         var result = await _profileViewController.GetViewsByProfileId(profileId) as ObjectResult;
@@ -228,7 +236,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var viewId = 1;
-        _profileViewServiceMock.Setup(service => service.DeleteViewById(viewId)).ThrowsAsync(new KeyNotFoundException("Not found"));
+        _profileViewServiceMock.Setup(service => service.DeleteViewById(viewId))
+            .ThrowsAsync(new KeyNotFoundException("Not found"));
 
         // Act
         var result = await _profileViewController.DeleteViewById(viewId) as NotFoundObjectResult;
@@ -257,7 +266,8 @@ public class ProfileViewControllerTests
     {
         // Arrange
         var date = DateTime.Now;
-        _profileViewServiceMock.Setup(service => service.DeleteOldViews(date)).ThrowsAsync(new InvalidDateTimeException("Invalid date"));
+        _profileViewServiceMock.Setup(service => service.DeleteOldViews(date))
+            .ThrowsAsync(new InvalidDateTimeException("Invalid date"));
 
         // Act
         var result = await _profileViewController.DeleteOldViews(date) as BadRequestObjectResult;

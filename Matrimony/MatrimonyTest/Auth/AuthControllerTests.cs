@@ -46,7 +46,8 @@ public class AuthControllerTests
     {
         // Arrange
         var loginDto = new LoginDTO { Email = "test@example.com", Password = "password123" };
-        _authServiceMock.Setup(service => service.Login(loginDto)).ThrowsAsync(new UserNotVerifiedException("User not verified"));
+        _authServiceMock.Setup(service => service.Login(loginDto))
+            .ThrowsAsync(new UserNotVerifiedException("User not verified"));
 
         // Act
         var result = await _authController.Login(loginDto) as UnauthorizedObjectResult;
@@ -56,13 +57,14 @@ public class AuthControllerTests
         ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
     }
 
-    
+
     [Test]
     public async Task Login_ReturnsUnauthorized_CredentialsAreWrong()
     {
         // Arrange
         var loginDto = new LoginDTO { Email = "test@example.com", Password = "password123" };
-        _authServiceMock.Setup(service => service.Login(loginDto)).ThrowsAsync(new AuthenticationException("User not verified"));
+        _authServiceMock.Setup(service => service.Login(loginDto))
+            .ThrowsAsync(new AuthenticationException("User not verified"));
 
         // Act
         var result = await _authController.Login(loginDto) as UnauthorizedObjectResult;
@@ -71,13 +73,14 @@ public class AuthControllerTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status401Unauthorized, result.StatusCode);
     }
-    
+
     [Test]
     public async Task Login_ReturnsNotFound_WhenUserNotFound()
     {
         // Arrange
         var loginDto = new LoginDTO { Email = "test@example.com", Password = "password123" };
-        _authServiceMock.Setup(service => service.Login(loginDto)).ThrowsAsync(new UserNotFoundException("User not found"));
+        _authServiceMock.Setup(service => service.Login(loginDto))
+            .ThrowsAsync(new UserNotFoundException("User not found"));
 
         // Act
         var result = await _authController.Login(loginDto) as NotFoundObjectResult;
@@ -123,7 +126,8 @@ public class AuthControllerTests
             AddressId = 1,
             Password = "password123"
         };
-        _authServiceMock.Setup(service => service.Register(registerDto)).ThrowsAsync(new UserNotVerifiedException("User not verified"));
+        _authServiceMock.Setup(service => service.Register(registerDto))
+            .ThrowsAsync(new UserNotVerifiedException("User not verified"));
 
         // Act
         var result = await _authController.Register(registerDto) as UnauthorizedObjectResult;
@@ -146,7 +150,8 @@ public class AuthControllerTests
             AddressId = 1,
             Password = "password123"
         };
-        _authServiceMock.Setup(service => service.Register(registerDto)).ThrowsAsync(new AuthenticationException("User not verified"));
+        _authServiceMock.Setup(service => service.Register(registerDto))
+            .ThrowsAsync(new AuthenticationException("User not verified"));
 
         // Act
         var result = await _authController.Register(registerDto) as UnauthorizedObjectResult;
@@ -189,7 +194,7 @@ public class AuthControllerTests
             Password = "oldPassword123",
             NewPassword = "newPassword123"
         };
-        var returnDto = new AuthReturnDto { Token =  "did"};
+        var returnDto = new AuthReturnDto { Token = "did" };
         _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto)).ReturnsAsync(returnDto);
 
         // Act
@@ -211,7 +216,8 @@ public class AuthControllerTests
             Password = "oldPassword123",
             NewPassword = "newPassword123"
         };
-        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto)).ThrowsAsync(new UserNotVerifiedException("User not verified"));
+        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto))
+            .ThrowsAsync(new UserNotVerifiedException("User not verified"));
 
         // Act
         var result = await _authController.ResetPassword(resetPasswordDto) as UnauthorizedObjectResult;
@@ -231,7 +237,8 @@ public class AuthControllerTests
             Password = "oldPassword123",
             NewPassword = "newPassword123"
         };
-        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto)).ThrowsAsync(new UserNotFoundException("User not found"));
+        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto))
+            .ThrowsAsync(new UserNotFoundException("User not found"));
 
         // Act
         var result = await _authController.ResetPassword(resetPasswordDto) as NotFoundObjectResult;
@@ -251,7 +258,8 @@ public class AuthControllerTests
             Password = "oldPassword123",
             NewPassword = "newPassword123"
         };
-        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto)).ThrowsAsync(new AuthenticationException("Wrong password or email"));
+        _authServiceMock.Setup(service => service.ResetPassword(resetPasswordDto))
+            .ThrowsAsync(new AuthenticationException("Wrong password or email"));
 
         // Act
         var result = await _authController.ResetPassword(resetPasswordDto) as UnauthorizedObjectResult;

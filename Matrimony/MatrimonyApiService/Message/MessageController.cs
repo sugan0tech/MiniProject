@@ -11,7 +11,10 @@ namespace MatrimonyApiService.Message;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class MessageController(IMessageService messageService, CustomControllerValidator validator, ILogger<MessageController> logger) : ControllerBase
+public class MessageController(
+    IMessageService messageService,
+    CustomControllerValidator validator,
+    ILogger<MessageController> logger) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(MessageDto), StatusCodes.Status200OK)]

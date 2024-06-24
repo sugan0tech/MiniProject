@@ -54,6 +54,7 @@ public class UserService(
                 user.Password = pswd;
                 user.HashKey = hashkey;
             }
+
             var usr = await repo.Update(user);
             return mapper.Map<UserDto>(usr);
         }

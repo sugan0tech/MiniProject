@@ -36,7 +36,7 @@ public interface IMatchRequestService
     /// <param name="matchId"></param>
     /// <param name="profileId"></param>
     Task Approve(int matchId, int profileId);
-    
+
     /// <summary>
     /// Get's match by Id to be  used in other services
     /// </summary>
@@ -50,7 +50,7 @@ public interface IMatchRequestService
     /// <param name="dto">Update matchDto</param>
     /// <returns>update dto</returns>
     Task<MatchRequestDto> MatchRequestToProfile(int senderId, int targetId);
-    
+
     /// <summary>
     /// Deletes match by id, mostly of if one of the parties dislikes
     /// </summary>

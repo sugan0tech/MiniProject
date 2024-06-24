@@ -43,7 +43,7 @@ public class MessageControllerTests
     public async Task AddMessage_ReturnsOk_WhenMessageIsAdded()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1};
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 1 };
         _messageServiceMock.Setup(service => service.AddMessage(messageDto)).ReturnsAsync(messageDto);
 
         // Act
@@ -59,7 +59,7 @@ public class MessageControllerTests
     public async Task AddMessage_ReturnsBadRequest_WhenDbUpdateExceptionOccurs()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 1};
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 1, ReceiverId = 1 };
         var dbUpdateException =
             new DbUpdateException("Database update error", new Exception("Inner exception message"));
         _messageServiceMock.Setup(service => service.AddMessage(messageDto)).ThrowsAsync(dbUpdateException);
@@ -76,7 +76,7 @@ public class MessageControllerTests
     public async Task AddMessage_ReturnsForBidden_WhenAuthenticationExceptionOccurs()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3};
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3 };
 
         // Act
         var result = await _messageController.AddMessage(messageDto) as ObjectResult;
@@ -91,7 +91,7 @@ public class MessageControllerTests
     {
         // Arrange
         var messageId = 1;
-        var messageDto = new MessageDto { MessageId = messageId , SenderId = 1};
+        var messageDto = new MessageDto { MessageId = messageId, SenderId = 1 };
         _messageServiceMock.Setup(service => service.GetMessageById(messageId)).ReturnsAsync(messageDto);
 
         // Act
@@ -123,7 +123,7 @@ public class MessageControllerTests
     public async Task GetMessageById_ReturnsForBidden_WhenSenderOrReceiverNotAuthorized()
     {
         // Arrange
-        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3};
+        var messageDto = new MessageDto { MessageId = 1, SenderId = 2, ReceiverId = 3 };
 
         // Act
         _messageServiceMock.Setup(service => service.GetMessageById(1)).ReturnsAsync(messageDto);

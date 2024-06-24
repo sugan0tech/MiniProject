@@ -46,7 +46,8 @@ public class MatchRequestControllerTests
     {
         // Arrange
         var matchId = 1;
-        _matchRequestServiceMock.Setup(service => service.GetById(matchId)).ThrowsAsync(new KeyNotFoundException("Match not found"));
+        _matchRequestServiceMock.Setup(service => service.GetById(matchId))
+            .ThrowsAsync(new KeyNotFoundException("Match not found"));
 
         // Act
         var result = await _matchRequestController.Get(matchId) as NotFoundObjectResult;
@@ -112,7 +113,8 @@ public class MatchRequestControllerTests
     {
         // Arrange
         var profileId = 1;
-        _matchRequestServiceMock.Setup(service => service.GetSentMatchRequests(profileId)).ThrowsAsync(new KeyNotFoundException("Matches not found"));
+        _matchRequestServiceMock.Setup(service => service.GetSentMatchRequests(profileId))
+            .ThrowsAsync(new KeyNotFoundException("Matches not found"));
 
         // Act
         var result = await _matchRequestController.GetSentMatchRequests(profileId) as NotFoundObjectResult;
@@ -144,7 +146,8 @@ public class MatchRequestControllerTests
         // Arrange
         var matchId = 1;
         var profileId = 1;
-        _matchRequestServiceMock.Setup(service => service.Reject(matchId, profileId)).ThrowsAsync(new InvalidMatchForProfile("Invalid match"));
+        _matchRequestServiceMock.Setup(service => service.Reject(matchId, profileId))
+            .ThrowsAsync(new InvalidMatchForProfile("Invalid match"));
 
         // Act
         var result = await _matchRequestController.Reject(matchId, profileId) as BadRequestObjectResult;
@@ -176,7 +179,8 @@ public class MatchRequestControllerTests
         // Arrange
         var matchId = 1;
         var profileId = 1;
-        _matchRequestServiceMock.Setup(service => service.Approve(matchId, profileId)).ThrowsAsync(new InvalidMatchForProfile("Invalid match"));
+        _matchRequestServiceMock.Setup(service => service.Approve(matchId, profileId))
+            .ThrowsAsync(new InvalidMatchForProfile("Invalid match"));
 
         // Act
         var result = await _matchRequestController.Approve(matchId, profileId) as BadRequestObjectResult;
@@ -193,7 +197,8 @@ public class MatchRequestControllerTests
         var senderId = 1;
         var targetId = 2;
         var matchDto = new MatchRequestDto { MatchId = 1 };
-        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ReturnsAsync(matchDto);
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId))
+            .ReturnsAsync(matchDto);
 
         // Act
         var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as OkObjectResult;
@@ -211,7 +216,8 @@ public class MatchRequestControllerTests
         var senderId = 1;
         var targetId = 2;
         var errorMessage = "Database error";
-        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new DbUpdateException(errorMessage));
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId))
+            .ThrowsAsync(new DbUpdateException(errorMessage));
 
         // Act
         var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as BadRequestObjectResult;
@@ -228,7 +234,8 @@ public class MatchRequestControllerTests
         // Arrange
         var senderId = 1;
         var targetId = 2;
-        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new KeyNotFoundException("Match not found"));
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId))
+            .ThrowsAsync(new KeyNotFoundException("Match not found"));
 
         // Act
         var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as NotFoundObjectResult;
@@ -244,7 +251,8 @@ public class MatchRequestControllerTests
         // Arrange
         var senderId = 1;
         var targetId = 2;
-        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new DuplicateRequestException("msg"));
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId))
+            .ThrowsAsync(new DuplicateRequestException("msg"));
 
         // Act
         var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as BadRequestObjectResult;
@@ -253,14 +261,15 @@ public class MatchRequestControllerTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
     }
-    
+
     [Test]
     public async Task MatchRequestToProfile_ReturnsNotFound_MatchRequestToSelfException()
     {
         // Arrange
         var senderId = 1;
         var targetId = 2;
-        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId)).ThrowsAsync(new MatchRequestToSelfException("msg"));
+        _matchRequestServiceMock.Setup(service => service.MatchRequestToProfile(senderId, targetId))
+            .ThrowsAsync(new MatchRequestToSelfException("msg"));
 
         // Act
         var result = await _matchRequestController.MatchRequestToProfile(senderId, targetId) as BadRequestObjectResult;
@@ -269,6 +278,7 @@ public class MatchRequestControllerTests
         ClassicAssert.IsNotNull(result);
         ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, result.StatusCode);
     }
+
     [Test]
     public async Task DeleteById_ReturnsOk_WhenMatchIsDeleted()
     {
@@ -291,7 +301,8 @@ public class MatchRequestControllerTests
     {
         // Arrange
         var matchId = 1;
-        _matchRequestServiceMock.Setup(service => service.DeleteById(matchId)).ThrowsAsync(new KeyNotFoundException("Match not found"));
+        _matchRequestServiceMock.Setup(service => service.DeleteById(matchId))
+            .ThrowsAsync(new KeyNotFoundException("Match not found"));
 
         // Act
         var result = await _matchRequestController.DeleteById(matchId) as NotFoundObjectResult;

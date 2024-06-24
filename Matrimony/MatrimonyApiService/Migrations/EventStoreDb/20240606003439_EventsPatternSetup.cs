@@ -21,10 +21,7 @@ namespace MatrimonyApiService.Migrations.EventStoreDb
                     EventData = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Events", x => x.EventId);
-                });
+                constraints: table => { table.PrimaryKey("PK_Events", x => x.EventId); });
         }
 
         /// <inheritdoc />

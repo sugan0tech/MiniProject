@@ -9,7 +9,10 @@ namespace MatrimonyApiService.Report;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ReportController(IBaseService<Report, ReportDto> reportService, CustomControllerValidator validator, ILogger<ReportController> logger)
+public class ReportController(
+    IBaseService<Report, ReportDto> reportService,
+    CustomControllerValidator validator,
+    ILogger<ReportController> logger)
     : ControllerBase
 {
     [HttpGet("{id}")]

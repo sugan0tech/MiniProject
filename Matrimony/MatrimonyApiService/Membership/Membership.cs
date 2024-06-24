@@ -19,8 +19,7 @@ public class Membership : BaseEntity
     }
 
     [ForeignKey("ProfileId")] public int ProfileId { get; set; }
-    [ExcludeFromCodeCoverage]
-    public Profile.Profile? Profile { get; set; }
+    [ExcludeFromCodeCoverage] public Profile.Profile? Profile { get; set; }
 
     [MaxLength(100)] public string? Description { get; set; }
     public DateTime EndsAt { get; set; }

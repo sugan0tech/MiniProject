@@ -34,12 +34,9 @@ public record ProfileDto
     [EnumTypeValidation(typeof(Ethnicity))]
     public string Ethnicity { get; init; }
 
-    [ExcludeFromCodeCoverage]
-    public string? Bio { get; init; }
-    [ExcludeFromCodeCoverage]
-    public byte[]? ProfilePicture { get; init; }
-    [EnumTypeValidation(typeof(Habit))]
-    public string Habit { get; init; }
+    [ExcludeFromCodeCoverage] public string? Bio { get; init; }
+    [ExcludeFromCodeCoverage] public byte[]? ProfilePicture { get; init; }
+    [EnumTypeValidation(typeof(Habit))] public string Habit { get; init; }
 
     [EnumTypeValidation(typeof(Gender))] public string Gender { get; init; }
 
@@ -49,12 +46,9 @@ public record ProfileDto
     public int ManagedById { get; init; }
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<ProfileViewDto>? ProfileViews { get; init; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
-    [ExcludeFromCodeCoverage]
-    public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
+    [ExcludeFromCodeCoverage] public IEnumerable<ProfileViewDto>? ProfileViews { get; init; }
+    [ExcludeFromCodeCoverage] public IEnumerable<MatchRequestDto>? SentMatches { get; init; }
+    [ExcludeFromCodeCoverage] public IEnumerable<MatchRequestDto>? ReceivedMatches { get; init; }
     public int? PreferenceId { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }

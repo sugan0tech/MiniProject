@@ -55,7 +55,7 @@ public class MatchRequestService(
         logger.LogError($"The match {matchId} is not meant for {profileId}");
         throw new InvalidMatchForProfile($"The match {matchId} is not meant for {profileId}");
     }
-    
+
     /// <inheritdoc/>
     /// <exception cref="InvalidMatchForProfile">If the incoming matchId not for current profile</exception>
     public async Task Approve(int matchId, int profileId)
@@ -97,8 +97,8 @@ public class MatchRequestService(
         // validations
         await profileService.GetProfileById(senderId);
         await profileService.GetProfileById(targetId);
-        
-        var membership = await  membershipService.GetByProfileId(senderId);
+
+        var membership = await membershipService.GetByProfileId(senderId);
         if (!membership.IsTrail)
         {
             if (membership.Type.Equals(MemberShip.FreeUser.ToString()) && membership.RequestCount > 5)

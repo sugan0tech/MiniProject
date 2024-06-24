@@ -9,12 +9,10 @@ public class MatchRequest : BaseEntity
 {
     [ForeignKey("SentProfileId")] public int SentProfileId { get; set; }
 
-    [ExcludeFromCodeCoverage]
-    public Profile.Profile? SentProfile { get; set; }
+    [ExcludeFromCodeCoverage] public Profile.Profile? SentProfile { get; set; }
 
     [ForeignKey("ReceivedProfileId")] public int ReceivedProfileId { get; set; }
-    [ExcludeFromCodeCoverage]
-    public Profile.Profile? ReceivedProfile { get; set; }
+    [ExcludeFromCodeCoverage] public Profile.Profile? ReceivedProfile { get; set; }
     public bool IsRejected { get; set; }
     public bool ReceiverLike { get; set; }
     [Range(1, 7)] public int Level { get; set; }

@@ -12,11 +12,9 @@ public record UserDto
     public string PhoneNumber { get; init; }
     public int AddressId { get; init; }
     public bool IsVerified { get; init; }
-    
-    [JsonIgnore]
-    public byte[] Password { get; set; }
-    [JsonIgnore]
-    public byte[] HashKey { get; set; }
+
+    [JsonIgnore] public byte[] Password { get; set; }
+    [JsonIgnore] public byte[] HashKey { get; set; }
     public int LoginAttempts { get; init; }
     public string Role { get; init; }
 }

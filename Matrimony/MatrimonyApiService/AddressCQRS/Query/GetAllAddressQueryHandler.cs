@@ -11,6 +11,7 @@ public class GetAllAddressesQueryHandler(IBaseRepo<Address.Address> repository)
         var addresses = await repository.GetAll();
         return addresses.Select(a => new AddressDto
         {
+            UserId = a.UserId,
             Street = a.Street,
             City = a.City,
             State = a.State,

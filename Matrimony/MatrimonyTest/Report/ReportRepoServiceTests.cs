@@ -27,11 +27,13 @@ public class ReportServiceTests
     public async Task GetById_ShouldReturnReportDto_WhenReportExists()
     {
         // Arrange
-        var report = new MatrimonyApiService.Report.Report { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
+        var report = new MatrimonyApiService.Report.Report
+            { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
         var reportDto = new ReportDto { ProfileId = 1, ReportedById = 1, ReportedAt = report.ReportedAt };
 
         _mockRepo.Setup(repo => repo.GetById(It.IsAny<int>())).ReturnsAsync(report);
-        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>())).Returns(reportDto);
+        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>()))
+            .Returns(reportDto);
 
         // Act
         var result = await _reportService.GetById(1);
@@ -60,7 +62,8 @@ public class ReportServiceTests
         // Arrange
         var reports = new List<MatrimonyApiService.Report.Report>
         {
-            new MatrimonyApiService.Report.Report { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now },
+            new MatrimonyApiService.Report.Report
+                { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now },
             new MatrimonyApiService.Report.Report { Id = 2, ProfileId = 2, ReportedById = 2, ReportedAt = DateTime.Now }
         };
         var reportDtos = new List<ReportDto>
@@ -71,7 +74,8 @@ public class ReportServiceTests
 
         _mockRepo.Setup(repo => repo.GetAll()).ReturnsAsync(reports);
         _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>()))
-            .Returns((MatrimonyApiService.Report.Report src) => new ReportDto { ProfileId = src.ProfileId, ReportedById = src.ReportedById, ReportedAt = src.ReportedAt });
+            .Returns((MatrimonyApiService.Report.Report src) => new ReportDto
+                { ProfileId = src.ProfileId, ReportedById = src.ReportedById, ReportedAt = src.ReportedAt });
 
         // Act
         var result = await _reportService.GetAll();
@@ -85,12 +89,15 @@ public class ReportServiceTests
     public async Task Add_ShouldAddReport()
     {
         // Arrange
-        var report = new MatrimonyApiService.Report.Report { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
+        var report = new MatrimonyApiService.Report.Report
+            { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
         var reportDto = new ReportDto { ProfileId = 1, ReportedById = 1, ReportedAt = report.ReportedAt };
 
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>())).Returns(report);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>()))
+            .Returns(report);
         _mockRepo.Setup(repo => repo.Add(It.IsAny<MatrimonyApiService.Report.Report>())).ReturnsAsync(report);
-        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>())).Returns(reportDto);
+        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>()))
+            .Returns(reportDto);
 
         // Act
         var result = await _reportService.Add(reportDto);
@@ -106,12 +113,15 @@ public class ReportServiceTests
     public async Task Update_ShouldUpdateReport()
     {
         // Arrange
-        var report = new MatrimonyApiService.Report.Report { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
+        var report = new MatrimonyApiService.Report.Report
+            { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
         var reportDto = new ReportDto { ProfileId = 1, ReportedById = 1, ReportedAt = report.ReportedAt };
 
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>())).Returns(report);
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>()))
+            .Returns(report);
         _mockRepo.Setup(repo => repo.Update(It.IsAny<MatrimonyApiService.Report.Report>())).ReturnsAsync(report);
-        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>())).Returns(reportDto);
+        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>()))
+            .Returns(reportDto);
 
         // Act
         var result = await _reportService.Update(reportDto);
@@ -128,12 +138,14 @@ public class ReportServiceTests
     {
         // Arrange
         var reportDto = new ReportDto { ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
-        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>())).Returns(new MatrimonyApiService.Report.Report
-        {
-            ProfileId = 1,
-            ReportedById = 2
-        });
-        _mockRepo.Setup(repo => repo.Update(It.IsAny<MatrimonyApiService.Report.Report>())).ThrowsAsync(new KeyNotFoundException());
+        _mockMapper.Setup(mapper => mapper.Map<MatrimonyApiService.Report.Report>(It.IsAny<ReportDto>())).Returns(
+            new MatrimonyApiService.Report.Report
+            {
+                ProfileId = 1,
+                ReportedById = 2
+            });
+        _mockRepo.Setup(repo => repo.Update(It.IsAny<MatrimonyApiService.Report.Report>()))
+            .ThrowsAsync(new KeyNotFoundException());
 
         // Act & ClassicAssert
         Assert.ThrowsAsync<KeyNotFoundException>(async () => await _reportService.Update(reportDto));
@@ -144,11 +156,13 @@ public class ReportServiceTests
     public async Task DeleteById_ShouldRemoveReport()
     {
         // Arrange
-        var report = new MatrimonyApiService.Report.Report { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
+        var report = new MatrimonyApiService.Report.Report
+            { Id = 1, ProfileId = 1, ReportedById = 1, ReportedAt = DateTime.Now };
         var reportDto = new ReportDto { ProfileId = 1, ReportedById = 1, ReportedAt = report.ReportedAt };
 
         _mockRepo.Setup(repo => repo.DeleteById(It.IsAny<int>())).ReturnsAsync(report);
-        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>())).Returns(reportDto);
+        _mockMapper.Setup(mapper => mapper.Map<ReportDto>(It.IsAny<MatrimonyApiService.Report.Report>()))
+            .Returns(reportDto);
 
         // Act
         var result = await _reportService.DeleteById(1);

@@ -4,6 +4,7 @@ using MatrimonyApiService.Preference.Commands;
 using MediatR;
 
 namespace MatrimonyApiService.Profile.Commands;
+
 public class DeleteProfileCommandHandler(IProfileService profileService, IMediator mediator, MatrimonyContext context)
     : IRequestHandler<DeleteProfileCommand, ProfileDto>
 {
@@ -15,7 +16,7 @@ public class DeleteProfileCommandHandler(IProfileService profileService, IMediat
         {
             var profile = await profileService.DeleteProfileById(request.profileId);
 
-            await mediator.Send(new DeleteMembershipCommand((int) profile.MembershipId), cancellationToken);
+            await mediator.Send(new DeleteMembershipCommand((int)profile.MembershipId), cancellationToken);
             await mediator.Send(new DeletePreferenceCommand((int)profile.PreferenceId), cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
@@ -28,5 +29,4 @@ public class DeleteProfileCommandHandler(IProfileService profileService, IMediat
             throw new Exception("Transaction failed, rolling back.", ex);
         }
     }
-
 }

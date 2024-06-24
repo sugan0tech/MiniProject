@@ -10,6 +10,7 @@ public class CreateAddressCommandHandler(IBaseRepo<Address.Address> repository, 
     {
         var address = new Address.Address
         {
+            UserId = command.UserId,
             Street = command.Street,
             City = command.City,
             State = command.State,

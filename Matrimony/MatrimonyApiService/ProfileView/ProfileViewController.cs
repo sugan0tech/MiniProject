@@ -10,7 +10,10 @@ namespace MatrimonyApiService.ProfileView;
 [ApiController]
 [Route("api/[controller]")]
 // [Authorize]
-public class ProfileViewController(IProfileViewService profileViewService, CustomControllerValidator validator, ILogger<ProfileViewController> logger)
+public class ProfileViewController(
+    IProfileViewService profileViewService,
+    CustomControllerValidator validator,
+    ILogger<ProfileViewController> logger)
     : ControllerBase
 {
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
@@ -76,7 +79,7 @@ public class ProfileViewController(IProfileViewService profileViewService, Custo
     }
 
     [HttpGet("profile/{profileId}")]
-    [ProducesResponseType(typeof(List<ProfileViewDto>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProfileViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetViewsByProfileId(int profileId)
@@ -99,7 +102,7 @@ public class ProfileViewController(IProfileViewService profileViewService, Custo
     }
 
     [HttpDelete("{viewId}")]
-    [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteViewById(int viewId)
@@ -117,7 +120,7 @@ public class ProfileViewController(IProfileViewService profileViewService, Custo
     }
 
     [HttpDelete("before/{date}")]
-    [ProducesResponseType(typeof(OkResult),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeleteOldViews(DateTime date)
