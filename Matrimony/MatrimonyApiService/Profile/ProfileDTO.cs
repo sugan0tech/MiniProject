@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace MatrimonyApiService.Profile;
 
@@ -40,6 +41,8 @@ public record ProfileDto
     public int Weight { get; init; }
     public int Height { get; init; }
     public int? MembershipId { get; set; }
+    
+    public Membership.Membership? Membership { get; set; }
     public int ManagedById { get; init; }
     public int UserId { get; init; }
     public string ManagedByRelation { get; init; }

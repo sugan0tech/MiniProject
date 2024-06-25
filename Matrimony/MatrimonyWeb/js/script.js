@@ -14,39 +14,6 @@ function checkAuthForPage() {
         window.location.href = 'login.html';
     }
 }
-
-// Function to load profile details
-function loadProfileDetails(profileId) {
-    const profile = JSON.parse(localStorage.getItem('profiles')).find(p => p.profileId === profileId);
-    if (profile) {
-        const profileDetails = `
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Profile ID: ${profile.profileId}</h5>
-                    <p class="card-text">Date of Birth: ${profile.dateOfBirth}</p>
-                    <p class="card-text">Age: ${profile.age}</p>
-                    <p class="card-text">Education: ${profile.education}</p>
-                    <p class="card-text">Annual Income: ${profile.annualIncome}</p>
-                    <p class="card-text">Occupation: ${profile.occupation}</p>
-                    <p class="card-text">Marital Status: ${profile.maritalStatus}</p>
-                    <p class="card-text">Mother Tongue: ${profile.motherTongue}</p>
-                    <p class="card-text">Religion: ${profile.religion}</p>
-                    <p class="card-text">Ethnicity: ${profile.ethnicity}</p>
-                    <p class="card-text">Bio: ${profile.bio}</p>
-                    <img src="${profile.profilePicture}" alt="Profile Picture" class="img-thumbnail">
-                    <p class="card-text">Habit: ${profile.habit}</p>
-                    <p class="card-text">Gender: ${profile.gender}</p>
-                    <p class="card-text">Weight: ${profile.weight}</p>
-                    <p class="card-text">Height: ${profile.height}</p>
-                    <p class="card-text">Managed By Relation: ${profile.managedByRelation}</p>
-                </div>
-            </div>`;
-        document.getElementById('profileDetails').innerHTML = profileDetails;
-    } else {
-        alert('Profile not found');
-    }
-}
-
 // Function to edit profile
 function editProfile() {
     const profileId = localStorage.getItem('currentProfileId');
@@ -65,7 +32,7 @@ function removeProfile() {
 
 // Function to view profile
 function viewProfile(profileId) {
-    localStorage.setItem('currentProfileId', profileId);
+    localStorage.setItem('currentProfile', JSON.stringify(profileId));
     window.location.href = 'view-profile.html';
 }
 
@@ -73,15 +40,6 @@ function viewProfile(profileId) {
 function viewMembership() {
     window.location.href = 'membership.html';
 }
-// Function to initialize view profile page
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.href.includes('view-profile.html')) {
-        const profileId = localStorage.getItem('currentProfileId');
-        if (profileId) {
-            loadProfileDetails(parseInt(profileId));
-        }
-    }
-});
 
 
 function loadContent(file) {

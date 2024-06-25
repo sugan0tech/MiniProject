@@ -44,90 +44,152 @@
     </div>
 </nav>
 <div class="container mt-5">
-    <h2>Edit Profile</h2>
-    <form id="editProfileForm" class="card">
+    <div class="card">
         <div class="card-body">
-            <div class="form-group">
-                <label for="editProfileId">Profile ID:</label>
-                <input type="text" id="editProfileId" class="form-control" readonly>
-            </div>
-            <div class="form-group">
-                <label for="editDateOfBirth">Date of Birth:</label>
-                <input type="date" id="editDateOfBirth" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editAge">Age:</label>
-                <input type="number" id="editAge" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editEducation">Education:</label>
-                <input type="text" id="editEducation" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editAnnualIncome">Annual Income:</label>
-                <input type="number" id="editAnnualIncome" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editOccupation">Occupation:</label>
-                <input type="text" id="editOccupation" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editMaritalStatus">Marital Status:</label>
-                <select id="editMaritalStatus" class="form-control">
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Divorced">Divorced</option>
-                    <option value="Widowed">Widowed</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="editMotherTongue">Mother Tongue:</label>
-                <input type="text" id="editMotherTongue" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editReligion">Religion:</label>
-                <input type="text" id="editReligion" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editEthnicity">Ethnicity:</label>
-                <input type="text" id="editEthnicity" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editBio">Bio:</label>
-                <textarea id="editBio" class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="editHabit">Habit:</label>
-                <input type="text" id="editHabit" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editGender">Gender:</label>
-                <select id="editGender" class="form-control">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="editWeight">Weight:</label>
-                <input type="number" id="editWeight" class="form-control" step="0.1">
-            </div>
-            <div class="form-group">
-                <label for="editHeight">Height:</label>
-                <input type="number" id="editHeight" class="form-control" step="0.1">
-            </div>
-            <div class="form-group">
-                <label for="editManagedByRelation">Managed By Relation:</label>
-                <input type="text" id="editManagedByRelation" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editProfilePicture">Profile Picture:</label>
-                <input type="file" id="editProfilePicture" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-            <button type="button" onclick="cancelEdit()" class="btn btn-secondary mt-3">Cancel</button>
+            <h5 class="card-title">Edit Profile Details</h5>
+            <form id="profileForm">
+                <div class="mb-3">
+                    <label for="profileId" class="form-label">Profile ID</label>
+                    <input type="text" class="form-control" id="profileId" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="dateOfBirth">
+                </div>
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" class="form-control" id="age">
+                </div>
+                <div class="mb-3">
+                    <label for="education" class="form-label">Education</label>
+                    <select class="form-select" id="education">
+                        <option value="NoEducation">No Education</option>
+                        <option value="Board">Board</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="MBBS">MBBS</option>
+                        <option value="MS">MS</option>
+                        <option value="MD">MD</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="annualIncome" class="form-label">Annual Income</label>
+                    <input type="number" class="form-control" id="annualIncome">
+                </div>
+                <div class="mb-3">
+                    <label for="occupation" class="form-label">Occupation</label>
+                    <select class="form-select" id="occupation">
+                        <option value="Unemployed">Unemployed</option>
+                        <option value="Student">Student</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Business">Business</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="maritalStatus" class="form-label">Marital Status</label>
+                    <select class="form-select" id="maritalStatus">
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="motherTongue" class="form-label">Mother Tongue</label>
+                    <select class="form-select" id="motherTongue">
+                        <option value="Tamil">Tamil</option>
+                        <option value="Malayalam">Malayalam</option>
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Mandarin">Mandarin</option>
+                        <option value="French">French</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="religion" class="form-label">Religion</label>
+                    <select class="form-select" id="religion">
+                        <option value="Agnostic">Agnostic</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Muslim">Muslim</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Buddhist">Buddhist</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="ethnicity" class="form-label">Ethnicity</label>
+                    <select class="form-select" id="ethnicity">
+                        <option value="Asian">Asian</option>
+                        <option value="Black">Black</option>
+                        <option value="Indian">Indian</option>
+                        <option value="Caucasian">Caucasian</option>
+                        <option value="Hispanic">Hispanic</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="bio" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="habit" class="form-label">Habit</label>
+                    <select class="form-select" id="habit">
+                        <option value="None">None</option>
+                        <option value="Smoking">Smoking</option>
+                        <option value="Drinking">Drinking</option>
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="NonVegetarian">Non-Vegetarian</option>
+                        <option value="Vegan">Vegan</option>
+                        <option value="FitnessEnthusiast">Fitness Enthusiast</option>
+                        <option value="EarlyBird">Early Bird</option>
+                        <option value="NightOwl">Night Owl</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Traveling">Traveling</option>
+                        <option value="Cooking">Cooking</option>
+                        <option value="MusicLover">Music Lover</option>
+                        <option value="PetsLover">Pets Lover</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" id="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" class="form-control" id="weight">
+                </div>
+                <div class="mb-3">
+                    <label for="height" class="form-label">Height (cm)</label>
+                    <input type="number" class="form-control" id="height">
+                </div>
+                <div class="mb-3">
+                    <label for="managedByRelation" class="form-label">Managed By Relation</label>
+                    <select class="form-select" id="managedByRelation">
+                        <option value="Self">Self</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Sibling">Sibling</option>
+                        <option value="Friend">Friend</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+<!--                <div class="mb-3">-->
+<!--                    <label for="profilePicture" class="form-label">Profile Picture URL</label>-->
+<!--                    <input type="text" class="form-control" id="profilePicture">-->
+<!--                </div>-->
+                <button type="button" class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
@@ -142,5 +204,8 @@
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/profile.js"></script>
+<script>
+    loadForEditProfile();
+</script>
 </body>
 </html>

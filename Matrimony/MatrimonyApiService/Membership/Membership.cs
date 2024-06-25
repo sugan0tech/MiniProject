@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 
@@ -19,7 +20,7 @@ public class Membership : BaseEntity
     }
 
     [ForeignKey("ProfileId")] public int ProfileId { get; set; }
-    [ExcludeFromCodeCoverage] public Profile.Profile? Profile { get; set; }
+    [ExcludeFromCodeCoverage] [JsonIgnore] public Profile.Profile? Profile { get; set; }
 
     [MaxLength(100)] public string? Description { get; set; }
     public DateTime EndsAt { get; set; }

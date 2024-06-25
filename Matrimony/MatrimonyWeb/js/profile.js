@@ -1,5 +1,3 @@
-import { postRequest, putRequest, delRequest } from './httpUtils.js';
-import { showAlert } from './common.js';
 function profileSelectionChanged() {
     const selectedProfileId = document.getElementById('userProfile').value;
     console.log("Selected profile ID:", selectedProfileId);
@@ -134,6 +132,71 @@ async function getBase64(file) {
     });
 }
 
+function loadProfile() {
+    const profileId = localStorage.getItem("currentProfileId");
+    const profileData = JSON.parse(localStorage.getItem(`profile${profileId}`));
+    console.log(profileId)
+    console.log(profileData)
+    let content = `
+          <div class="card-body">
+                <h5 class="card-title">Profile Details</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p id="profileId" class="card-text"><strong>Profile ID:</strong> ${profileData.profileId}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="dateOfBirth" class="card-text"><strong>Date of Birth:</strong> ${profileData.dateOfBirth}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="age" class="card-text"><strong>Age:</strong> ${profileData.age}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="education" class="card-text"><strong>Education:</strong> ${profileData.education}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="annualIncome" class="card-text"><strong>Annual Income:</strong> ${profileData.annualIncome}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="occupation" class="card-text"><strong>Occupation:</strong> ${profileData.occupation}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="maritalStatus" class="card-text"><strong>Marital Status:</strong> ${profileData.maritalStatus}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="motherTongue" class="card-text"><strong>Mother Tongue:</strong> ${profileData.motherTongue}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="religion" class="card-text"><strong>Religion:</strong> ${profileData.religion}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="ethnicity" class="card-text"><strong>Ethnicity:</strong> ${profileData.ethnicity}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="bio" class="card-text"><strong>Bio:</strong> ${profileData.bio}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="habit" class="card-text"><strong>Habit:</strong> ${profileData.habit}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="gender" class="card-text"><strong>Gender:</strong> ${profileData.gender}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="weight" class="card-text"><strong>Weight:</strong> ${profileData.weight} kg</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="height" class="card-text"><strong>Height:</strong> ${profileData.height} cm</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p id="managedByRelation" class="card-text"><strong>Managed By Relation:</strong> ${profileData.managedByRelation}</p>
+                    </div>
+                    <div class="col-12">
+                         <img id="profilePicture" src="${profileData.profilePicture}" alt="Profile Picture" class="img-thumbnail">
+                    </div>
+                </div>
+            </div>`;
+    document.getElementById("profileDetails").innerHTML = content;
+}
+
 // Function to update a profile
 async function updateProfile(profileId, profileData) {
     try {
@@ -168,3 +231,54 @@ async function handleUnauthorizedError() {
 
 // Event listener for form submission
 document.getElementById('createProfileForm').addEventListener('submit', createProfile);
+
+
+function loadForEditProfile() {
+    const profileId = localStorage.getItem("currentProfileId");
+    const profileData = JSON.parse(localStorage.getItem(`profile${profileId}`));
+
+    console.log(profileId);
+    console.log(profileData);
+
+    document.getElementById('profileId').value = profileData.profileId;
+    document.getElementById('dateOfBirth').value = profileData.dateOfBirth.split('T')[0];
+    document.getElementById('age').value = profileData.age;
+    document.getElementById('education').value = profileData.education;
+    document.getElementById('annualIncome').value = profileData.annualIncome;
+    document.getElementById('occupation').value = profileData.occupation;
+    document.getElementById('maritalStatus').value = profileData.maritalStatus;
+    document.getElementById('motherTongue').value = profileData.motherTongue;
+    document.getElementById('religion').value = profileData.religion;
+    document.getElementById('ethnicity').value = profileData.ethnicity;
+    document.getElementById('bio').value = profileData.bio;
+    document.getElementById('habit').value = profileData.habit;
+    document.getElementById('gender').value = profileData.gender;
+    document.getElementById('weight').value = profileData.weight;
+    document.getElementById('height').value = profileData.height;
+    document.getElementById('managedByRelation').value = profileData.managedByRelation;
+    document.getElementById('profilePicture').value = profileData.profilePicture;
+}
+function saveChanges() {
+    const profileId = localStorage.getItem("currentProfileId");
+    const updatedProfile = {
+        profileId: document.getElementById('profileId').value,
+        dateOfBirth: document.getElementById('dateOfBirth').value,
+        age: parseInt(document.getElementById('age').value),
+        education: document.getElementById('education').value,
+        annualIncome: parseInt(document.getElementById('annualIncome').value),
+        occupation: document.getElementById('occupation').value,
+        maritalStatus: document.getElementById('maritalStatus').value,
+        motherTongue: document.getElementById('motherTongue').value,
+        religion: document.getElementById('religion').value,
+        ethnicity: document.getElementById('ethnicity').value,
+        bio: document.getElementById('bio').value,
+        habit: document.getElementById('habit').value,
+        gender: document.getElementById('gender').value,
+        weight: parseFloat(document.getElementById('weight').value),
+        height: parseFloat(document.getElementById('height').value),
+        managedByRelation: document.getElementById('managedByRelation').value,
+        // profilePicture: document.getElementById('profilePicture').value
+    };
+
+    let response = makeAuthRequest("profile", "POST", updatedProfile);
+}

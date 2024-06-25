@@ -80,6 +80,9 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(membership => membership.Profile)
             .HasForeignKey<Membership.Membership>(membership => membership.ProfileId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Profile.Profile>()
+            .Navigation(profile => profile.Membership)
+            .AutoInclude();
 
         #endregion
 

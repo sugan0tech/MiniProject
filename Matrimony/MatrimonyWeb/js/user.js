@@ -36,6 +36,7 @@ async function loadProfiles() {
         const profilesList = document.getElementById('profilesList');
         profilesList.innerHTML = '';
         profiles.forEach(profile => {
+            localStorage.setItem(`profile${profile.profileId}`, JSON.stringify(profile));
             const profileHTML = `
                 <div class="card mb-3" data-profile-id="${profile.profileId}">
                     <div class="card-body">
