@@ -68,9 +68,13 @@ function removeProfile() {
 function viewProfile(profileId) {
     localStorage.setItem('currentProfileId', profileId);
     loadContent('view-profile.html');
-    // window.location.href = 'view-profile.html';
 }
 
+
+function viewMembership() {
+    // window.location.href = 'membership.html';
+    loadContent('membership.html')
+}
 // Function to initialize view profile page
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.href.includes('view-profile.html')) {
