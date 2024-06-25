@@ -8,16 +8,25 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div id="alert-container"></div>
     <div class="container mt-5">
         <h2>Register</h2>
-        <form>
+        <form id="register-form">
             <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" required>
+                <label for="fname">First Name:</label>
+                <input type="text" class="form-control" id="fname" required>
+            </div>
+            <div class="form-group">
+                <label for="lname">Last Name:</label>
+                <input type="text" class="form-control" id="lname" required>
             </div>
             <div class="form-group">
                 <label for="email">Email address:</label>
                 <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone :</label>
+                <input type="number" class="form-control" id="phone" required>
             </div>
             <div class="form-group">
                 <label for="pwd">Password:</label>
@@ -25,11 +34,13 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <p>Registered and Verified? <a href="login.html">Login here</a></p>
     </div>
     <div class="fixed-bottom">
         <footer class="bg-dark text-white text-center py-3">
             <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
         </footer>
     </div>
+    <script src="js/auth.js"></script>
 </body>
 </html>
