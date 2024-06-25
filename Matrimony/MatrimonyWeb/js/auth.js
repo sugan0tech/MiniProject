@@ -1,6 +1,6 @@
-const baseUrl = 'http://localhost:5094/api/'
+const baseUrl = 'http://localhost:5094/api/';
 async function postAuthRequest(endpoint, data, headers) {
-    const url = 'http://localhost:5094/api/Auth/' + endpoint;
+    const url = `${baseUrl}Auth/` + endpoint;
     try {
         const response = await fetch(url, {
             method: 'POST',

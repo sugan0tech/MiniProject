@@ -50,8 +50,7 @@ function loadProfileDetails(profileId) {
 // Function to edit profile
 function editProfile() {
     const profileId = localStorage.getItem('currentProfileId');
-    loadContent('edit-profile.html');
-    // window.location.href = `edit-profile.html?profileId=${profileId}`;
+    window.location.href = `edit-profile.html?profileId=${profileId}`;
 }
 
 // Function to remove profile
@@ -61,19 +60,18 @@ function removeProfile() {
     profiles = profiles.filter(p => p.profileId !== profileId);
     localStorage.setItem('profiles', JSON.stringify(profiles));
     alert('Profile removed successfully!');
-    window.location.href = 'profiles.html';
+    window.location.href = 'user.html';
 }
 
 // Function to view profile
 function viewProfile(profileId) {
     localStorage.setItem('currentProfileId', profileId);
-    loadContent('view-profile.html');
+    window.location.href = 'view-profile.html';
 }
 
 
 function viewMembership() {
-    // window.location.href = 'membership.html';
-    loadContent('membership.html')
+    window.location.href = 'membership.html';
 }
 // Function to initialize view profile page
 document.addEventListener('DOMContentLoaded', function() {

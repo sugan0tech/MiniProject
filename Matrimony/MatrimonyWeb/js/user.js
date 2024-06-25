@@ -1,9 +1,3 @@
-const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-};
-
 // Function to load user account info
 async function loadAccountInfo() {
     try {
@@ -48,7 +42,7 @@ async function loadProfiles() {
                         <h5 class="card-title">Profile ${profile.profileId}</h5>
                         <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
                         <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
-                        <p class="card-text"><strong>Membership:</strong> ${profile.membershipId ? 'Premium' : 'Free'}</p>
+                        <p class="card-text"><strong>Membership:</strong> ${profile.membership.type}</p>
                         <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
                         <button class="btn btn-warning" onclick="editProfile(${profile.profileId})">Edit Profile</button>
                         <button class="btn btn-danger" onclick="removeProfile(${profile.profileId})">Remove Profile</button>
