@@ -46,34 +46,40 @@
 <div class="container mt-5">
     <h2>Create Profile</h2>
     <form id="createProfileForm">
-        <div class="form-group">
-            <label for="dateOfBirth">Date of Birth:</label>
+        <div class="mb-3">
+            <label for="dateOfBirth" class="form-label">Date of Birth:</label>
             <input type="date" class="form-control" id="dateOfBirth" required>
         </div>
-        <div class="form-group">
-            <label for="education">Education:</label>
+        <div class="mb-3">
+            <label for="education" class="form-label">Education:</label>
             <select class="form-control" id="education" required>
-                <option value="HighSchool">High School</option>
-                <option value="Bachelors">Bachelors</option>
-                <option value="Masters">Masters</option>
-                <option value="Doctorate">Doctorate</option>
+                <option value="NoEducation">No Education</option>
+                <option value="Board">Board</option>
+                <option value="UG">UG</option>
+                <option value="PG">PG</option>
+                <option value="MBBS">MBBS</option>
+                <option value="MS">MS</option>
+                <option value="MD">MD</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="annualIncome">Annual Income:</label>
+        <div class="mb-3">
+            <label for="annualIncome" class="form-label">Annual Income:</label>
             <input type="number" class="form-control" id="annualIncome" required>
         </div>
-        <div class="form-group">
-            <label for="occupation">Occupation:</label>
+        <div class="mb-3">
+            <label for="occupation" class="form-label">Occupation:</label>
             <select class="form-control" id="occupation" required>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Student">Student</option>
                 <option value="Engineer">Engineer</option>
                 <option value="Doctor">Doctor</option>
                 <option value="Teacher">Teacher</option>
+                <option value="Business">Business</option>
                 <option value="Other">Other</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="maritalStatus">Marital Status:</label>
+        <div class="mb-3">
+            <label for="maritalStatus" class="form-label">Marital Status:</label>
             <select class="form-control" id="maritalStatus" required>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
@@ -81,70 +87,102 @@
                 <option value="Widowed">Widowed</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="motherTongue">Mother Tongue:</label>
+        <div class="mb-3">
+            <label for="motherTongue" class="form-label">Mother Tongue:</label>
             <select class="form-control" id="motherTongue" required>
+                <option value="Tamil">Tamil</option>
+                <option value="Malayalam">Malayalam</option>
                 <option value="English">English</option>
                 <option value="Spanish">Spanish</option>
                 <option value="Hindi">Hindi</option>
                 <option value="Mandarin">Mandarin</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="religion">Religion:</label>
-            <select class="form-control" id="religion" required>
-                <option value="Christianity">Christianity</option>
-                <option value="Islam">Islam</option>
-                <option value="Hinduism">Hinduism</option>
-                <option value="Buddhism">Buddhism</option>
+                <option value="French">French</option>
                 <option value="Other">Other</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="ethnicity">Ethnicity:</label>
+        <div class="mb-3">
+            <label for="religion" class="form-label">Religion:</label>
+            <select class="form-control" id="religion" required>
+                <option value="Agnostic">Agnostic</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Muslim">Muslim</option>
+                <option value="Christian">Christian</option>
+                <option value="Sikh">Sikh</option>
+                <option value="Buddhist">Buddhist</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="ethnicity" class="form-label">Ethnicity:</label>
             <select class="form-control" id="ethnicity" required>
                 <option value="Asian">Asian</option>
-                <option value="African">African</option>
+                <option value="Black">Black</option>
+                <option value="Indian">Indian</option>
                 <option value="Caucasian">Caucasian</option>
-                <option value="Latino">Latino</option>
+                <option value="Hispanic">Hispanic</option>
                 <option value="Other">Other</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="bio">Bio:</label>
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio:</label>
             <textarea class="form-control" id="bio" rows="3"></textarea>
         </div>
-        <div class="form-group">
-            <label for="profilePicture">Profile Picture:</label>
-            <input type="file" class="form-control" id="profilePicture">
-        </div>
-        <div class="form-group">
-            <label for="habit">Habit:</label>
+<!--        <div class="mb-3">-->
+<!--            <label for="profilePicture" class="form-label">Profile Picture:</label>-->
+<!--            <input type="file" class="form-control" id="profilePicture">-->
+<!--        </div>-->
+        <div class="mb-3">
+            <label for="habit" class="form-label">Habit:</label>
             <select class="form-control" id="habit" required>
+                <option value="None">None</option>
                 <option value="Smoking">Smoking</option>
                 <option value="Drinking">Drinking</option>
-                <option value="None">None</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="NonVegetarian">Non-Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="FitnessEnthusiast">Fitness Enthusiast</option>
+                <option value="EarlyBird">Early Bird</option>
+                <option value="NightOwl">Night Owl</option>
+                <option value="Reading">Reading</option>
+                <option value="Traveling">Traveling</option>
+                <option value="Cooking">Cooking</option>
+                <option value="MusicLover">Music Lover</option>
+                <option value="PetsLover">Pets Lover</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="gender">Gender:</label>
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender:</label>
             <select class="form-control" id="gender" required>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="weight">Weight (kg):</label>
+        <div class="mb-3">
+            <label for="weight" class="form-label">Weight (kg):</label>
             <input type="number" class="form-control" id="weight" required>
         </div>
-        <div class="form-group">
-            <label for="height">Height (cm):</label>
+        <div class="mb-3">
+            <label for="height" class="form-label">Height (cm):</label>
             <input type="number" class="form-control" id="height" required>
         </div>
-        <div class="form-group">
-            <label for="managedByRelation">Managed By Relation:</label>
-            <input type="text" class="form-control" id="managedByRelation" required>
+        <div class="mb-3">
+            <label for="managedByRelation" class="form-label">Managed By Relation:</label>
+            <select class="form-control" id="managedByRelation" required>
+                <option value="Self">Self</option>
+                <option value="Parent">Parent</option>
+                <option value="Sibling">Sibling</option>
+                <option value="Friend">Friend</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="managedById" class="form-label">ManagedById :</label>
+            <input type="number" class="form-control" id="managedById" required>
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">userId:</label>
+            <input type="number" class="form-control" id="userId" required>
         </div>
         <button type="submit" class="btn btn-primary">Create Profile</button>
     </form>
@@ -161,5 +199,6 @@
 <script src="js/bootstrap.bundle.js"></script>
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
 </body>
 </html>

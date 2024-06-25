@@ -110,11 +110,13 @@ async function createProfile(event) {
         gender: document.getElementById('gender').value,
         weight: parseInt(document.getElementById('weight').value),
         height: parseInt(document.getElementById('height').value),
-        managedByRelation: document.getElementById('managedByRelation').value
+        managedByRelation: document.getElementById('managedByRelation').value,
+        managedById: document.getElementById('managedById').value,
+        userId: document.getElementById('userId').value,
     };
 
     try {
-        await postRequest('Profile', profileData, headers);
+        await makeAuthRequest('Profile', 'POST', profileData);
         showAlert("Profile created successfully.", 'success');
     } catch (error) {
         showAlert("Failed to create profile. Please try again.", 'danger');
