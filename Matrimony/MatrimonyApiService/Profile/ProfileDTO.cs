@@ -4,6 +4,7 @@ using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.ProfileView;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using MatrimonyApiService.User;
 
 namespace MatrimonyApiService.Profile;
 
@@ -45,6 +46,7 @@ public record ProfileDto
     public Membership.Membership? Membership { get; set; }
     public int ManagedById { get; init; }
     public int UserId { get; init; }
+    public UserDto? User { get; set; }
     public string ManagedByRelation { get; init; }
     [ExcludeFromCodeCoverage] public IEnumerable<ProfileViewDto>? ProfileViews { get; init; }
     [ExcludeFromCodeCoverage] public IEnumerable<MatchRequestDto>? SentMatches { get; init; }

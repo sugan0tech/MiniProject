@@ -41,6 +41,7 @@ async function loadProfiles() {
                 <div class="card mb-3" data-profile-id="${profile.profileId}">
                     <div class="card-body">
                         <h5 class="card-title">Profile ${profile.profileId}</h5>
+                        <p class="card-text">Name: ${profile.user.firstName + " " + profile.user.lastName}, IsVerified: ${profile.user.isVerified}</p>
                         <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
                         <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
                         <p class="card-text"><strong>Membership:</strong> ${profile.membership.type}</p>

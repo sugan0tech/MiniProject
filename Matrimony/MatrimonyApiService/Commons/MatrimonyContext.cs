@@ -70,6 +70,9 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne()
             .HasForeignKey<Profile.Profile>(profile => profile.UserId)
             .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Profile.Profile>()
+            .Navigation(profile => profile.User)
+            .AutoInclude();
 
         #endregion
 
