@@ -2,6 +2,7 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace MatrimonyApiService.MatchRequest;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 [Authorize]
 public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger)
     : ControllerBase

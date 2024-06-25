@@ -32,7 +32,7 @@ public interface IUserSessionService
     /// Deletes all expired sessions.
     /// </summary>
     /// <returns></returns>
-    Task Flush(int id);
+    Task Flush();
 
     /// <summary>
     ///  To create new user session, to be used in Auth service

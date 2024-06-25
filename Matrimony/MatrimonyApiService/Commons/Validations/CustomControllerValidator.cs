@@ -78,4 +78,25 @@ public class CustomControllerValidator(IProfileService profileService)
 
         throw new AuthenticationException($"You {email} dont have permission for this action");
     }
+
+    /// <summary>
+    ///  Validate User.
+    /// </summary>
+    /// <param name="claims"></param>
+    /// <exception cref="AuthenticationException"></exception>
+    public int ValidateAndGetUserId(IEnumerable<Claim> claims)
+    {
+        var enumerable = claims as Claim[] ?? claims.ToArray();
+        var usrId = enumerable.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = enumerable.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        if (role is "RefreshToken")
+            throw new AuthenticationException($"Using Refresh Token type is prohibited");
+        if (usrId != null)
+        {
+            var userId = int.Parse(usrId);
+            return userId;
+        }
+
+        throw new AuthenticationException($"Something fishy with the token, unable to verify at this moment");
+    }
 }

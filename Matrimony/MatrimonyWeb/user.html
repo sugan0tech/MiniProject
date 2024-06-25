@@ -1,70 +1,31 @@
 <div class="container mt-5">
     <h2>Account Info</h2>
+    <div id="alert-container"></div> <!-- Alert container -->
     <form id="accountInfoForm">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" value="John Doe" required>
+            <input type="text" class="form-control" id="name" required>
         </div>
         <div class="form-group">
             <label for="email">Email address:</label>
-            <input type="email" class="form-control" id="email" value="john@example.com" required>
+            <input type="email" class="form-control" id="email" required>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
 
-<div class="container mt-5">
+<div class="container mt-5" onload="loadProfiles()">
     <h2>Your Profiles</h2>
     <a href="#" class="btn btn-success mb-3" onclick="loadContent('create-profile.html')">Create New Profile</a>
     <div id="profilesList">
-        <!-- Example Profiles -->
-        <div class="card mb-3" data-profile-id="1">
-            <div class="card-body">
-                <h5 class="card-title">Profile 1</h5>
-                <p class="card-text">Age: 29, Location: New York</p>
-                <p class="card-text">Education: Bachelors, Occupation: Engineer</p>
-                <p class="card-text"><strong>Membership:</strong> <span id="membershipStatus1">Free</span></p>
-                <button class="btn btn-info" onclick="viewProfile(1)">View Profile</button>
-                <button class="btn btn-warning" onclick="editProfile(1)">Edit Profile</button>
-                <button class="btn btn-danger" onclick="removeProfile(1)">Remove Profile</button>
-                <button class="btn btn-primary" onclick="viewMembership(1)">View Membership</button>
-            </div>
-        </div>
-        <div class="card mb-3" data-profile-id="2">
-            <div class="card-body">
-                <h5 class="card-title">Profile 2</h5>
-                <p class="card-text">Age: 32, Location: California</p>
-                <p class="card-text">Education: Masters, Occupation: Doctor</p>
-                <p class="card-text"><strong>Membership:</strong> <span id="membershipStatus2">Basic</span></p>
-                <button class="btn btn-info" onclick="viewProfile(2)">View Profile</button>
-                <button class="btn btn-warning" onclick="editProfile(2)">Edit Profile</button>
-                <button class="btn btn-danger" onclick="removeProfile(2)">Remove Profile</button>
-                <button class="btn btn-primary" onclick="viewMembership(2)">View Membership</button>
-            </div>
-        </div>
+        <p>Hi</p>
     </div>
 </div>
 
 <div class="container mt-5">
     <h2>Logged in Devices</h2>
     <div id="loggedDevicesList">
-        <!-- Example Devices -->
-        <div class="card mb-3" data-device-id="1">
-            <div class="card-body">
-                <h5 class="card-title">Device 1</h5>
-                <p class="card-text">Type: Desktop</p>
-                <p class="card-text">Location: New York, USA</p>
-                <button class="btn btn-danger" onclick="removeDevice(1)">Remove Device</button>
-            </div>
-        </div>
-        <div class="card mb-3" data-device-id="2">
-            <div class="card-body">
-                <h5 class="card-title">Device 2</h5>
-                <p class="card-text">Type: Mobile</p>
-                <p class="card-text">Location: California, USA</p>
-                <button class="btn btn-danger" onclick="removeDevice(2)">Remove Device</button>
-            </div>
-        </div>
+        <p>Hii</p>
     </div>
 </div>
 
@@ -86,5 +47,7 @@
         <button type="submit" class="btn btn-primary">Reset Password</button>
     </form>
 </div>
-<script src="js/script.js"></script>
+
 <script src="js/auth.js"></script>
+<script src="js/user.js"></script>
+<script src="js/script.js"></script>

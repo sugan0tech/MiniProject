@@ -45,7 +45,7 @@ public class UserSessionService(IBaseRepo<UserSession> repo, ILogger<UserSession
     }
 
     /// <intheritdoc/>
-    public async Task Flush(int id)
+    public async Task Flush()
     {
         logger.LogInformation("Deleting all expired sessions");
         var sessions = await repo.GetAll();

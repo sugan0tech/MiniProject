@@ -2,12 +2,14 @@
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Report;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 [Authorize]
 public class ReportController(
     IBaseService<Report, ReportDto> reportService,

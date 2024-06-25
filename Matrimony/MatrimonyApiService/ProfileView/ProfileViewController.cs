@@ -3,13 +3,15 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.ProfileView;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
+[Authorize]
+[EnableCors("AllowAll")]
 public class ProfileViewController(
     IProfileViewService profileViewService,
     CustomControllerValidator validator,

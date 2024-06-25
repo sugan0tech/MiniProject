@@ -5,12 +5,14 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.AddressCQRS;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 [Authorize]
 public class AddressController(
     ILogger<AddressController> logger,

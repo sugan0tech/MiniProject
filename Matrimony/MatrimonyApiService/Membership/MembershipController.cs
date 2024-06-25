@@ -1,13 +1,15 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Membership;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
+[EnableCors("AllowAll")]
+[Authorize]
 public class MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger)
     : ControllerBase
 {

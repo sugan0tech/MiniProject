@@ -18,6 +18,22 @@ public class UserController(
     ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById()
+    {
+        try
+        {
+        var user = await userService.GetById(validator.ValidateAndGetUserId(User.Claims));
+        return Ok(user);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, e.Message));
+        }
+    }
+    
+    [HttpGet("all")]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()

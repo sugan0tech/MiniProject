@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonyApiService.Preference;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 [Authorize]
 public class PreferenceController(IPreferenceService preferenceService, ILogger<PreferenceController> logger)
     : ControllerBase

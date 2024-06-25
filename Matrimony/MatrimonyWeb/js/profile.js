@@ -1,3 +1,5 @@
+import { postRequest, putRequest, delRequest } from './httpUtils.js';
+import { showAlert } from './common.js';
 function profileSelectionChanged() {
     const selectedProfileId = document.getElementById('userProfile').value;
     console.log("Selected profile ID:", selectedProfileId);
@@ -84,3 +86,85 @@ function reportProfile(profileId) {
 function sendMatchRequest(profileId) {
     console.log("Send match request to profile ID:", profileId);
 }
+
+const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+};
+
+// Function to handle profile creation
+async function createProfile(event) {
+    event.preventDefault();
+
+    const profileData = {
+        dateOfBirth: document.getElementById('dateOfBirth').value,
+        education: document.getElementById('education').value,
+        annualIncome: parseInt(document.getElementById('annualIncome').value),
+        occupation: document.getElementById('occupation').value,
+        maritalStatus: document.getElementById('maritalStatus').value,
+        motherTongue: document.getElementById('motherTongue').value,
+        religion: document.getElementById('religion').value,
+        ethnicity: document.getElementById('ethnicity').value,
+        bio: document.getElementById('bio').value,
+        // profilePicture: await getBase64(document.getElementById('profilePicture').files[0]),
+        habit: document.getElementById('habit').value,
+        gender: document.getElementById('gender').value,
+        weight: parseInt(document.getElementById('weight').value),
+        height: parseInt(document.getElementById('height').value),
+        managedByRelation: document.getElementById('managedByRelation').value
+    };
+
+    try {
+        await postRequest('Profile', profileData, headers);
+        showAlert("Profile created successfully.", 'success');
+    } catch (error) {
+        showAlert("Failed to create profile. Please try again.", 'danger');
+        if (error.message === '401') await handleUnauthorizedError();
+    }
+}
+
+// Convert file to base64
+async function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+// Function to update a profile
+async function updateProfile(profileId, profileData) {
+    try {
+        await putRequest(`Profile/${profileId}`, profileData, headers);
+        showAlert("Profile updated successfully.", 'success');
+    } catch (error) {
+        showAlert("Failed to update profile. Please try again.", 'danger');
+        if (error.message === '401') await handleUnauthorizedError();
+    }
+}
+
+// Function to delete a profile by ID
+async function deleteProfile(profileId) {
+    try {
+        await delRequest(`Profile/${profileId}`, {}, headers);
+        showAlert("Profile deleted successfully.", 'success');
+    } catch (error) {
+        showAlert("Failed to delete profile. Please try again.", 'danger');
+        if (error.message === '401') await handleUnauthorizedError();
+    }
+}
+
+// Handle unauthorized error
+async function handleUnauthorizedError() {
+    const refreshSuccess = await refreshAccessToken();
+    if (!refreshSuccess) {
+        logout();
+    } else {
+        initialize(); // Reinitialize the app with new token
+    }
+}
+
+// Event listener for form submission
+document.getElementById('createProfileForm').addEventListener('submit', createProfile);

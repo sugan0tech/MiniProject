@@ -1,10 +1,7 @@
 ﻿using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.MatchRequest;
-using MatrimonyApiService.Membership;
-using MatrimonyApiService.Preference;
 using MatrimonyApiService.ProfileView;
-using MatrimonyApiService.User;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MatrimonyApiService.Profile;

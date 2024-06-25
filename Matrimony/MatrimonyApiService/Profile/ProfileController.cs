@@ -5,6 +5,7 @@ using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Profile.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace MatrimonyApiService.Profile;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors("AllowAll")]
 [Authorize]
 public class ProfileController(
     IProfileService profileService,
@@ -36,15 +38,15 @@ public class ProfileController(
         }
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("user")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetProfileByUserId(int userId)
+    public async Task<IActionResult> GetProfileByUserId()
     {
         try
         {
-            validator.ValidateUserPrivilege(User.Claims, userId);
+            var userId = validator.ValidateAndGetUserId(User.Claims);
             var profile = await profileService.GetProfileByUserId(userId);
             return Ok(profile);
         }
@@ -60,15 +62,15 @@ public class ProfileController(
         }
     }
 
-    [HttpGet("manager/{managerId}")]
+    [HttpGet("manager")]
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetProfilePreviewForManager(int managerId)
+    public async Task<IActionResult> GetProfilePreviewForManager()
     {
         try
         {
-            validator.ValidateUserPrivilege(User.Claims, managerId);
+            var managerId = validator.ValidateAndGetUserId(User.Claims);
             var profiles = await profileService.GetProfilesByManager(managerId);
             return Ok(profiles);
         }

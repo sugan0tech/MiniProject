@@ -1,3 +1,4 @@
+const baseUrl = 'http://localhost:5094/api/'
 async function postAuthRequest(endpoint, data, headers) {
     const url = 'http://localhost:5094/api/Auth/' + endpoint;
     try {
@@ -47,7 +48,7 @@ async function login(email, password) {
     }
 }
 
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault(); // Prevent the form from submitting the default way
 
     const emailInput = document.getElementById('email');
@@ -56,7 +57,7 @@ function handleLogin(event) {
     const email = emailInput.value;
     const password = passwordInput.value;
 
-    login(email, password);
+    await login(email, password);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -131,6 +132,76 @@ async function logout() {
     } catch (error) {
         console.error("Logout failed:", error);
         alert("Logout failed. Please try again.");
+    }
+}
+async function makeAuthRequest(endpoint, method = 'GET', data = null) {
+    let url = baseUrl + endpoint;
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'text/plain',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    };
+
+    let response;
+    try {
+        response = await fetch(url, {
+            method: method,
+            headers: headers,
+            body: data ? JSON.stringify(data) : null
+        });
+
+        if (response.status === 401) {
+            const refreshSuccess = await refreshAccessToken();
+            if (!refreshSuccess) {
+                await logout()
+                showAlert("you have logged out", 'danger')
+                return null;
+            }
+
+            // Retry the original request with a new token
+            headers['Authorization'] = `Bearer ${localStorage.getItem('accessToken')}`;
+            response = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: data ? JSON.stringify(data) : null
+            });
+        }
+
+        if (!response.ok) {
+            showAlert(`some error occured: ${response.message}`, 'danger')
+            return;
+        }
+        const contentType = response.headers.get('Content-Type');
+        return contentType && contentType.includes('application/json') ? await response.json() : null;
+    } catch (error) {
+        console.error('Request failed:', error);
+        if (response && response.status === 401) await logout(); // Log out if refreshing token failed
+        throw error;
+    }
+}
+
+// Function to refresh access token
+async function refreshAccessToken() {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return false;
+
+    try {
+        const response = await fetch('http://localhost:5094/api/Auth/access-token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'text/plain',
+                'Authorization': `Bearer ${refreshToken}`
+            }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        localStorage.setItem('accessToken', data.accessToken);
+        return true;
+    } catch (error) {
+        console.error('Token refresh failed:', error);
+        return false;
     }
 }
 
