@@ -15,9 +15,9 @@ function checkAuthForPage() {
     }
 }
 // Function to edit profile
-function editProfile() {
-    const profileId = localStorage.getItem('currentProfileId');
-    window.location.href = `edit-profile.html?profileId=${profileId}`;
+function editProfile(profileId) {
+    localStorage.setItem('currentProfile', JSON.stringify(profileId));
+    window.location.href = `edit-profile.html`;
 }
 
 // Function to remove profile

@@ -236,13 +236,15 @@ document.getElementById('createProfileForm').addEventListener('submit', createPr
 
 
 function loadForEditProfile() {
-    const profileId = localStorage.getItem("currentProfileId");
+    const profileId = localStorage.getItem("currentProfile");
     const profileData = JSON.parse(localStorage.getItem(`profile${profileId}`));
 
     console.log(profileId);
     console.log(profileData);
 
     document.getElementById('profileId').value = profileData.profileId;
+    document.getElementById('managedById').value = profileData.managedById;
+    document.getElementById('userId').value = profileData.userId;
     document.getElementById('dateOfBirth').value = profileData.dateOfBirth.split('T')[0];
     document.getElementById('age').value = profileData.age;
     document.getElementById('education').value = profileData.education;
@@ -263,7 +265,9 @@ function loadForEditProfile() {
 function saveChanges() {
     const profileId = localStorage.getItem("currentProfileId");
     const updatedProfile = {
-        profileId: document.getElementById('profileId').value,
+        profileId: parseInt(document.getElementById('profileId').value),
+        managedById: parseInt(document.getElementById('managedById').value),
+        userId: parseInt(document.getElementById('userId').value),
         dateOfBirth: document.getElementById('dateOfBirth').value,
         age: parseInt(document.getElementById('age').value),
         education: document.getElementById('education').value,

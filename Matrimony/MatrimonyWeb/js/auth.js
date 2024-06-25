@@ -153,7 +153,7 @@ async function makeAuthRequest(endpoint, method = 'GET', data = null) {
         if (response.status === 401) {
             const refreshSuccess = await refreshAccessToken();
             if (!refreshSuccess) {
-                await logout()
+                // await logout()
                 showAlert("you have logged out", 'danger')
                 return null;
             }
@@ -187,7 +187,7 @@ async function refreshAccessToken() {
 
     try {
         const response = await fetch('http://localhost:5094/api/Auth/access-token', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'text/plain',
