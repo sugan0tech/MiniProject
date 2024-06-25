@@ -10,7 +10,7 @@ public record UserDto
     public string FirstName { get; init; }
     public string LastName { get; init; }
     public string PhoneNumber { get; init; }
-    public int AddressId { get; init; }
+    public int AddressId { get; set; }
     public bool IsVerified { get; init; }
 
     [JsonIgnore] public byte[] Password { get; set; }

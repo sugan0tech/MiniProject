@@ -59,7 +59,7 @@ public class TokenService : ITokenService
     /// <intheritdoc/>
     public AuthReturnDto GenerateTokens(UserDto user)
     {
-        var accessToken = GenerateToken(user, DateTime.Now.AddMinutes(1)); // Short-lived access token
+        var accessToken = GenerateToken(user, DateTime.Now.AddMinutes(300)); // Short-lived access token
         var refreshToken = GenerateRefreshToken(user); // Long-lived refresh token
         return new AuthReturnDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }

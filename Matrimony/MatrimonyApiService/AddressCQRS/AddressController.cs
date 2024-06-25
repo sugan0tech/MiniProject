@@ -69,6 +69,10 @@ public class AddressController(
             });
             return StatusCode(201);
         }
+        catch (AlreadyExistingEntityException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
         catch (AuthenticationException e)
         {
             return BadRequest(new ErrorModel(400, e.Message));
