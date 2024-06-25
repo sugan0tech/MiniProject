@@ -81,8 +81,10 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<RegisterDTO, User.User>();
 
         // User sessions
-        CreateMap<UserSessionDto, UserSession.UserSession>();
-        CreateMap<UserSession.UserSession, UserSessionDto>();
+        CreateMap<UserSessionDto, UserSession.UserSession>()
+            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.SessionId));
+        CreateMap<UserSession.UserSession, UserSessionDto>()
+            .ForMember(dto => dto.SessionId, act => act.MapFrom(src => src.Id));
 
         // Report mappings
         CreateMap<Report.Report, ReportDto>();

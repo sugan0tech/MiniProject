@@ -60,23 +60,22 @@ async function loadProfiles() {
     }
 }
 
-// Function to load logged-in devices
 async function loadLoggedDevices() {
     try {
         const devices = await makeAuthRequest('UserSession/user');
         const devicesList = document.getElementById('loggedDevicesList');
         devicesList.innerHTML = '';
-        devices.forEach(device => {
+        devices.filter(device => device.isValid).forEach(device => {
             const deviceHTML = `
-                <div class="card mb-3" data-device-id="${device.deviceId}">
-                    <div class="card-body">
-                        <h5 class="card-title">Device ${device.deviceId}</h5>
-                        <p class="card-text">Type: ${device.deviceType}</p>
-                        <p class="card-text">Location: ${device.location}</p>
-                        <button class="btn btn-danger" onclick="removeDevice(${device.deviceId})">Remove Device</button>
-                    </div>
-                </div>
-            `;
+                        <div class="card mb-3" data-device-id="${device.sessionId}">
+                            <div class="card-body">
+                                <p class="card-text"><strong>Device:</strong> ${device.userAgent}</p>
+                                <p class="card-text"><strong>Type:</strong> ${device.deviceType}</p>
+                                <p class="card-text"><strong>Loged At:</strong> ${new Date(device.createdAt).toLocaleString()}</p>
+                                <button class="btn btn-danger" onclick="removeDevice(${device.sessionId})">Remove Device</button>
+                            </div>
+                        </div>
+                    `;
             devicesList.insertAdjacentHTML('beforeend', deviceHTML);
         });
     } catch (error) {

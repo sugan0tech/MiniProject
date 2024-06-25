@@ -47,6 +47,8 @@ public class TokenService : ITokenService
     {
         var claims = new List<Claim>
         {
+            new(ClaimTypes.Name, user.UserId.ToString()),
+            new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, "RefreshToken")
         };
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

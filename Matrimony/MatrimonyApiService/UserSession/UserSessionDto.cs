@@ -5,6 +5,7 @@ namespace MatrimonyApiService.UserSession;
 
 public record UserSessionDto
 {
+    public int SessionId { get; set; }
     public int UserId { get; set; }
     [MaxLength(255)] [Required] [JsonIgnore] public string RefreshToken { get; init; }
     public DateTime CreatedAt { get; set; }
