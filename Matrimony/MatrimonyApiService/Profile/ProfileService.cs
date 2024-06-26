@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Preference;
 
 namespace MatrimonyApiService.Profile;
@@ -33,11 +34,11 @@ public class ProfileService(
         return mapper.Map<ProfileDto>(fetchedProfile);
     }
 
-    public async Task<List<ProfilePreviewDto>> GetProfilesByManager(int managerId)
+    public async Task<List<ProfileDto>> GetProfilesByManager(int managerId)
     {
         var profiles = await repo.GetAll();
-        return profiles.FindAll(profs => profs.ManagedById.Equals(managerId))
-            .ConvertAll(profile => mapper.Map<ProfilePreviewDto>(profile)).ToList();
+        return profiles.FindAll(profs => profs.ManagedById.Equals(managerId) || profs.UserId.Equals(managerId))
+            .ConvertAll(profile => mapper.Map<ProfileDto>(profile)).ToList();
     }
 
     /// <intheritdoc/>
@@ -101,6 +102,10 @@ public class ProfileService(
             var profile = await repo.GetById(profileId);
             var preference = await preferenceService.GetByProfileId(profile.Id);
             var profiles = await repo.GetAll();
+            if (profiles.Count == 0 || preference == null)
+            {
+                throw new EntityNotFoundException("No Profiles found bruh!!");
+            }
             var matchedProfiles = profiles.Where(p =>
                 preference.Gender == p.Gender &&
                 (preference.MotherTongue == "ALL" || p.MotherTongue == preference.MotherTongue) &&

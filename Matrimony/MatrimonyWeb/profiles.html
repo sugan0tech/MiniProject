@@ -28,13 +28,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="user.html" >Account</a>
+                    <a class="nav-link" href="user.html">Account</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="profiles.html" >Profiles</a>
+                    <a class="nav-link" href="profiles.html">Profiles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="matches.html" >Matches</a>
+                    <a class="nav-link" href="matches.html">Matches</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-danger" href="#" onclick="logout()">Logout</a>
@@ -48,8 +48,7 @@
     <div class="form-group">
         <label for="userProfile">Select your profile:</label>
         <select class="form-control" id="userProfile" onchange="profileSelectionChanged()">
-            <option value="1">Profile 1: John Doe, Engineer, New York</option>
-            <option value="2">Profile 2: Jane Smith, Doctor, California</option>
+            <!-- Options will be dynamically generated in profile.js -->
         </select>
     </div>
 </div>
@@ -75,59 +74,89 @@
         <!-- Filter Options -->
         <div class="col-md-3">
             <h4>Filter Options</h4>
-            <div class="form-group">
-                <label for="genderFilter">Gender:</label>
-                <select id="genderFilter" class="form-control" onchange="filterProfiles()">
-                    <option value="">Any</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
+            <!-- Filter inputs will be dynamically updated in profile.js -->
+            <div id="filterOptions">
+                <div class="form-group">
+                    <label for="genderFilter">Gender:</label>
+                    <select id="genderFilter" class="form-control">
+                        <option value="ALL">Any</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="motherTongueFilter">Mother Tongue:</label>
+                    <select id="motherTongueFilter" class="form-control">
+                        <option value="ALL">Any</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Malayalam">Malayalam</option>
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Mandarin">Mandarin</option>
+                        <option value="French">French</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="religionFilter">Religion:</label>
+                    <select id="religionFilter" class="form-control">
+                        <option value="ALL">Any</option>
+                        <option value="Agnostic">Agnostic</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Muslim">Muslim</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Buddhist">Buddhist</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="educationFilter">Education:</label>
+                    <select id="educationFilter" class="form-control">
+                        <option value="ALL">Any</option>
+                        <option value="NoEducation">No Education</option>
+                        <option value="Board">Board</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                        <option value="MBBS">MBBS</option>
+                        <option value="MS">MS</option>
+                        <option value="MD">MD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="occupationFilter">Occupation:</label>
+                    <select id="occupationFilter" class="form-control">
+                        <option value="ALL">Any</option>
+                        <option value="Unemployed">Unemployed</option>
+                        <option value="Student">Student</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Business">Business</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="minAge">Minimum Age:</label>
+                    <input type="number" id="minAge" class="form-control" min="18" max="60">
+                </div>
+                <div class="form-group">
+                    <label for="maxAge">Maximum Age:</label>
+                    <input type="number" id="maxAge" class="form-control" min="18" max="60">
+                </div>
+                <div class="form-group">
+                    <label for="minHeight">Minimum Height (cm):</label>
+                    <input type="number" id="minHeight" class="form-control" min="140" max="210">
+                </div>
+                <div class="form-group">
+                    <label for="maxHeight">Maximum Height (cm):</label>
+                    <input type="number" id="maxHeight" class="form-control" min="140" max="210">
+                </div>
+                <button class="btn btn-primary" onclick="applyFilter()">Apply Filter</button>
             </div>
-            <div class="form-group">
-                <label for="motherTongueFilter">Mother Tongue:</label>
-                <select id="motherTongueFilter" class="form-control" onchange="filterProfiles()">
-                    <option value="">Any</option>
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <!-- Add other mother tongues here -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="religionFilter">Religion:</label>
-                <select id="religionFilter" class="form-control" onchange="filterProfiles()">
-                    <option value="">Any</option>
-                    <option value="Christian">Christian</option>
-                    <option value="Muslim">Muslim</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="educationFilter">Education:</label>
-                <select id="educationFilter" class="form-control" onchange="filterProfiles()">
-                    <option value="">Any</option>
-                    <option value="Bachelors">Bachelors</option>
-                    <option value="Masters">Masters</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="occupationFilter">Occupation:</label>
-                <select id="occupationFilter" class="form-control" onchange="filterProfiles()">
-                    <option value="">Any</option>
-                    <option value="Engineer">Engineer</option>
-                    <option value="Doctor">Doctor</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="ageRangeFilter">Age Range:</label>
-                <input type="range" id="ageRangeFilter" class="form-control-range" min="18" max="60"
-                       oninput="updateAgeRangeDisplay()" onchange="filterProfiles()">
-                <div id="ageRangeDisplay">18 - 60</div>
-            </div>
-            <div class="form-group">
-                <label for="heightRangeFilter">Height Range (cm):</label>
-                <input type="range" id="heightRangeFilter" class="form-control-range" min="140" max="210"
-                       oninput="updateHeightRangeDisplay()" onchange="filterProfiles()">
-                <div id="heightRangeDisplay">140 - 210</div>
-            </div>
+
         </div>
 
         <!-- Profiles List -->
@@ -135,31 +164,9 @@
             <h2>Profiles</h2>
             <a href="#" class="btn btn-success mb-3" onclick="loadContent('create-profile.html')">Create New Profile</a>
             <div id="profilesList">
-                <div class="card mb-3" data-profile-id="1" data-name="John Doe" data-gender="Male"
-                     data-mother-tongue="English" data-religion="Christian" data-education="Bachelors"
-                     data-occupation="Engineer" data-age="29" data-height="175">
-                    <div class="card-body">
-                        <h5 class="card-title">Profile 1: John Doe</h5>
-                        <p class="card-text">Age: 29, Location: New York</p>
-                        <p class="card-text">Education: Bachelors, Occupation: Engineer</p>
-                        <button class="btn btn-info" onclick="viewProfile(1)">View Profile</button>
-                        <button class="btn btn-danger" onclick="reportProfile(1)">Report Profile</button>
-                        <button class="btn btn-primary" onclick="sendMatchRequest(1)">Send Match Request</button>
-                    </div>
-                </div>
-                <div class="card mb-3" data-profile-id="2" data-name="Jane Smith" data-gender="Female"
-                     data-mother-tongue="Spanish" data-religion="Muslim" data-education="Masters"
-                     data-occupation="Doctor" data-age="32" data-height="165">
-                    <div class="card-body">
-                        <h5 class="card-title">Profile 2: Jane Smith</h5>
-                        <p class="card-text">Age: 32, Location: California</p>
-                        <p class="card-text">Education: Masters, Occupation: Doctor</p>
-                        <button class="btn btn-info" onclick="viewProfile(2)">View Profile</button>
-                        <button class="btn btn-danger" onclick="reportProfile(2)">Remove Profile</button>
-                        <button class="btn btn-primary" onclick="sendMatchRequest(2)">Send Match Request</button>
-                    </div>
-                </div>
+                <!-- fetches matches will go here -->
             </div>
+            <div id="pagination" class="pagination mt-3" style="padding-bottom: 100px"></div>
         </div>
     </div>
 </div>
@@ -174,5 +181,8 @@
 <script src="js/script.js"></script>
 <script src="js/profile.js"></script>
 <script src="js/auth.js"></script>
+<script>
+    loadSelectProfiles()
+</script>
 </body>
 </html>

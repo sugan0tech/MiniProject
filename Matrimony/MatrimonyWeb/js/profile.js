@@ -1,7 +1,7 @@
-function profileSelectionChanged() {
-    const selectedProfileId = document.getElementById('userProfile').value;
-    console.log("Selected profile ID:", selectedProfileId);
-}
+// function profileSelectionChanged() {
+//     const selectedProfileId = document.getElementById('userProfile').value;
+//     console.log("Selected profile ID:", selectedProfileId);
+// }
 
 function searchProfiles() {
     const query = document.getElementById('searchInput').value.toLowerCase();
@@ -63,15 +63,16 @@ function filterProfiles() {
     });
 }
 
-function updateAgeRangeDisplay() {
-    const ageRangeFilter = document.getElementById('ageRangeFilter').value;
-    document.getElementById('ageRangeDisplay').textContent = `${ageRangeFilter}`;
-}
-
-function updateHeightRangeDisplay() {
-    const heightRangeFilter = document.getElementById('heightRangeFilter').value;
-    document.getElementById('heightRangeDisplay').textContent = `${heightRangeFilter}`;
-}
+//
+// function updateAgeRangeDisplay() {
+//     const ageRangeFilter = document.getElementById('ageRangeFilter').value;
+//     document.getElementById('ageRangeDisplay').textContent = `${ageRangeFilter}`;
+// }
+//
+// function updateHeightRangeDisplay() {
+//     const heightRangeFilter = document.getElementById('heightRangeFilter').value;
+//     document.getElementById('heightRangeDisplay').textContent = `${heightRangeFilter}`;
+// }
 
 function viewProfile(profileId) {
     console.log("View profile with ID:", profileId);
@@ -111,8 +112,8 @@ async function createProfile(event) {
         weight: parseInt(document.getElementById('weight').value),
         height: parseInt(document.getElementById('height').value),
         managedByRelation: document.getElementById('managedByRelation').value,
-        managedById: document.getElementById('managedById').value,
-        userId: document.getElementById('userId').value,
+        managedById: parseInt(document.getElementById('managedById').value),
+        userId: parseInt(document.getElementById('userId').value)
     };
 
     try {
@@ -135,7 +136,7 @@ async function getBase64(file) {
 }
 
 function loadProfile() {
-    const profileId = localStorage.getItem("currentProfileId");
+    const profileId = localStorage.getItem("currentProfile");
     const profileData = JSON.parse(localStorage.getItem(`profile${profileId}`));
     console.log(profileId)
     console.log(profileData)
@@ -191,9 +192,11 @@ function loadProfile() {
                     <div class="col-md-6 mb-3">
                         <p id="managedByRelation" class="card-text"><strong>Managed By Relation:</strong> ${profileData.managedByRelation}</p>
                     </div>
+                    <!--
                     <div class="col-12">
                          <img id="profilePicture" src="${profileData.profilePicture}" alt="Profile Picture" class="img-thumbnail">
                     </div>
+                    -->
                 </div>
             </div>`;
     document.getElementById("profileDetails").innerHTML = content;
@@ -262,6 +265,7 @@ function loadForEditProfile() {
     document.getElementById('managedByRelation').value = profileData.managedByRelation;
     document.getElementById('profilePicture').value = profileData.profilePicture;
 }
+
 function saveChanges() {
     const profileId = localStorage.getItem("currentProfileId");
     const updatedProfile = {
@@ -286,5 +290,226 @@ function saveChanges() {
         // profilePicture: document.getElementById('profilePicture').value
     };
 
-    let response = makeAuthRequest("profile", "POST", updatedProfile);
+    let response = makeAuthRequest("profile", "PUT", updatedProfile);
+}
+
+function loadSelectProfiles() {
+    const keys = Object.keys(localStorage)
+    let range = keys.length;
+    let profiles = []
+    while (range--) {
+        if (keys[range].includes("profile") && !keys[range].includes("currentProfile"))
+            profiles.push(JSON.parse(localStorage.getItem(keys[range])))
+    }
+
+    const profileSelect = document.getElementById('userProfile');
+    profiles.forEach(profile => {
+        console.log(profile)
+        const option = document.createElement('option');
+        option.value = profile.profileId;
+        option.selected = findAndSetDefaults(profile);
+        option.textContent = `id: ${profile.profileId} Name: ${profile.user.firstName} ${profile.user.lastName} `;
+        profileSelect.appendChild(option);
+    });
+}
+
+function findAndSetDefaults(profile) {
+    if (localStorage.getItem("currentProfile") == profile.profileId) {
+        fetchPreferences(profile.preferenceId);
+        console.log("hereee")
+        return true;
+    }
+    return false;
+}
+
+function profileSelectionChanged() {
+    const selectedProfileId = document.getElementById('userProfile').value;
+    localStorage.setItem('currentProfile', selectedProfileId);
+    var profile = JSON.parse(localStorage.getItem('profile' + selectedProfileId))
+    fetchPreferences(profile.preferenceId);
+}
+
+function fetchPreferences(profileId) {
+    makeAuthRequest(`Preference/${profileId}`)
+        .then(response => response)
+        .then(data => updateFilters(data))
+        .catch(error => console.error('Error fetching preferences:', error));
+}
+
+function updateFilters(preferences) {
+    document.getElementById('genderFilter').value = preferences.gender || "";
+    document.getElementById('motherTongueFilter').value = preferences.motherTongue || "";
+    document.getElementById('religionFilter').value = preferences.religion || "";
+    document.getElementById('educationFilter').value = preferences.education || "";
+    document.getElementById('occupationFilter').value = preferences.occupation || "";
+    document.getElementById('minAge').value = preferences.minAge || 18;
+    document.getElementById('maxAge').value = preferences.maxAge || 60;
+    document.getElementById('minHeight').value = preferences.minHeight || 140;
+    document.getElementById('maxHeight').value = preferences.maxHeight || 210;
+}
+
+function applyFilter() {
+    const profileId = JSON.parse(localStorage.getItem('currentProfile'));
+    var profile = JSON.parse(localStorage.getItem('profile' + profileId))
+    const preferences = {
+        preferenceId: profile.preferenceId,
+        gender: document.getElementById('genderFilter').value,
+        motherTongue: document.getElementById('motherTongueFilter').value,
+        religion: document.getElementById('religionFilter').value,
+        education: document.getElementById('educationFilter').value,
+        occupation: document.getElementById('occupationFilter').value,
+        minHeight: parseInt(document.getElementById('minHeight').value),
+        maxHeight: parseInt(document.getElementById('maxHeight').value),
+        minAge: parseInt(document.getElementById('minAge').value),
+        maxAge: parseInt(document.getElementById('maxAge').value),
+        preferenceForId: profileId
+    };
+
+    makeAuthRequest("Preference", 'PUT', preferences)
+        .then(data => {
+            console.log('Preferences saved successfully:', data);
+            alert('Preferences have been applied and saved.');
+        })
+        .catch(error => console.error('Error saving preferences:', error));
+
+    fetchFilteredProfiles(profileId).then();
+}
+
+async function fetchFilteredProfiles(profileId) {
+    const profiles = await makeAuthRequest("Profile/" + profileId + "/matches")
+    console.log("profile previews")
+    console.log(profiles)
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+    displayProfiles(profiles);
+}
+
+function displayProfiles(profiles) {
+    const profilesList = document.getElementById('profilesList');
+    // profilesList.innerHTML = ''; // Clear existing profiles
+
+    profiles.forEach(profile => {
+        const profileCard = `
+            <div class="card mb-3" data-profile-id="${profile.profileId}">
+                <div class="card-body">
+                    <h5 class="card-title">Profile ${profile.profileId}: ${profile.profilePicture ? `<img src="${profile.profilePicture}" alt="Profile Picture" />` : 'No Picture'}</h5>
+                    <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
+                    <p class="card-text">Religion: ${profile.religion}, Ethnicity: ${profile.ethnicity}</p>
+                    <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
+                    <button class="btn btn-danger" onclick="reportProfile(${profile.profileId})">Report Profile</button>
+                    <button class="btn btn-primary" onclick="sendMatchRequest(${profile.profileId})">Chat</button>
+                </div>
+            </div>
+        `;
+        profilesList.innerHTML += profileCard;
+    });
+
+
+    // Apply pagination
+    setupPagination(profiles.length);
+}
+
+function setupPagination(totalProfiles) {
+    const profilesPerPage = 5;
+    const totalPages = Math.ceil(totalProfiles / profilesPerPage);
+    const paginationContainer = document.getElementById('pagination');
+
+    paginationContainer.innerHTML = ''; // Clear existing pagination
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.innerText = i;
+        pageLink.onclick = (e) => {
+            e.preventDefault();
+            displayPage(i);
+        };
+        paginationContainer.appendChild(pageLink);
+    }
+
+    displayPage(1); // Display the first page initially
+}
+
+function displayPage(pageNumber) {
+    const profilesPerPage = 5;
+    const profiles = Array.from(document.querySelectorAll('#profilesList .card'));
+    const start = (pageNumber - 1) * profilesPerPage;
+    const end = start + profilesPerPage;
+
+    profiles.forEach((profile, index) => {
+        if (index >= start && index < end) {
+            profile.style.display = 'block';
+        } else {
+            profile.style.display = 'none';
+        }
+    });
+}
+
+function searchProfiles() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const profiles = document.querySelectorAll('#profilesList .card');
+
+    profiles.forEach(profile => {
+        const profileName = profile.querySelector('.card-title').innerText.toLowerCase();
+        if (profileName.includes(searchInput)) {
+            profile.style.display = 'block';
+        } else {
+            profile.style.display = 'none';
+        }
+    });
+}
+
+function sortProfiles() {
+    const sortValue = document.getElementById('sortSelect').value;
+    const profiles = Array.from(document.querySelectorAll('#profilesList .card'));
+
+    profiles.sort((a, b) => {
+        const aName = a.querySelector('.card-title').innerText;
+        const bName = b.querySelector('.card-title').innerText;
+
+        if (sortValue === 'nameAsc') {
+            return aName.localeCompare(bName);
+        } else if (sortValue === 'nameDesc') {
+            return bName.localeCompare(aName);
+        }
+    });
+
+    const profilesList = document.getElementById('profilesList');
+    profilesList.innerHTML = ''; // Clear existing profiles
+    profiles.forEach(profile => profilesList.appendChild(profile));
 }

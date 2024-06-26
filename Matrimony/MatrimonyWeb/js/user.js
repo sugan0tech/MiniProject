@@ -32,7 +32,16 @@ async function updateAccountInfo(event) {
 // Function to load user profiles
 async function loadProfiles() {
     try {
-        const profiles = await makeAuthRequest('Profile');
+        const profiles = await makeAuthRequest('Profile/manager');
+        console.log("stuff")
+        // flushes existing profiles dummy ones
+        const keys = Object.keys(localStorage)
+        let range = keys.length;
+        while ( range-- ){
+            if (keys[range].includes("profile") && !keys[range].includes("currentProfile"))
+                localStorage.removeItem(keys[range])
+        }
+
         const profilesList = document.getElementById('profilesList');
         profilesList.innerHTML = '';
         profiles.forEach(profile => {
@@ -44,7 +53,7 @@ async function loadProfiles() {
                         <p class="card-text">Name: ${profile.user.firstName + " " + profile.user.lastName}, IsVerified: ${profile.user.isVerified}</p>
                         <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
                         <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
-                        <p class="card-text"><strong>Membership:</strong> ${profile.membership.type}</p>
+                        <p class="card-text"><strong>Membership:</strong> ${profile.membership? profile.membership.type : "FreeUser"}</p>
                         <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
                         <button class="btn btn-warning" onclick="editProfile(${profile.profileId})">Edit Profile</button>
                         <button class="btn btn-danger" onclick="removeProfile(${profile.profileId})">Remove Profile</button>

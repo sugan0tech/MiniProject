@@ -15,18 +15,17 @@ function checkAuthForPage() {
     }
 }
 // Function to edit profile
-function editProfile(profileId) {
-    localStorage.setItem('currentProfile', JSON.stringify(profileId));
+function editProfile() {
     window.location.href = `edit-profile.html`;
 }
 
 // Function to remove profile
-function removeProfile() {
-    const profileId = localStorage.getItem('currentProfileId');
+async function removeProfile() {
+    const profileId = localStorage.getItem('currentProfile');
     let profiles = JSON.parse(localStorage.getItem('profiles'));
-    profiles = profiles.filter(p => p.profileId !== profileId);
-    localStorage.setItem('profiles', JSON.stringify(profiles));
-    alert('Profile removed successfully!');
+    await makeAuthRequest("Profile/" + profileId , "DELETE")
+    localStorage.removeItem('currentProfile');
+    localStorage.removeItem('profile' + profileId);
     window.location.href = 'user.html';
 }
 

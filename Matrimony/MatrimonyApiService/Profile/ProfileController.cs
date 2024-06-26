@@ -66,7 +66,7 @@ public class ProfileController(
     [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetProfilePreviewForManager()
+    public async Task<IActionResult> GetProfilesForManager()
     {
         try
         {
@@ -111,6 +111,7 @@ public class ProfileController(
     {
         try
         {
+            validator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
             var command = new CreateProfileCommand(profileDto);
             var value = await mediator.Send(command);
             return StatusCode(201, value);
@@ -136,7 +137,7 @@ public class ProfileController(
     {
         try
         {
-            validator.ValidateUserPrivilege(User.Claims, profileDto.ManagedById);
+            validator.ValidateUserPrivilege(User.Claims, (profileDto.ManagedById, profileDto.UserId));
             var profile = await profileService.UpdateProfile(profileDto);
             return Ok(profile);
         }
@@ -187,6 +188,11 @@ public class ProfileController(
             return Ok(matches);
         }
         catch (KeyNotFoundException ex)
+        {
+            logger.LogError(ex.Message);
+            return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));
+        }
+        catch (EntityNotFoundException ex)
         {
             logger.LogError(ex.Message);
             return NotFound(new ErrorModel(StatusCodes.Status404NotFound, ex.Message));

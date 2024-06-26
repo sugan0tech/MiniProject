@@ -39,7 +39,7 @@ public class TokenService : ITokenService
     /// <intheritdoc/>
     public string GenerateAccessToken(UserDto user)
     {
-        return GenerateToken(user, DateTime.Now.AddMinutes(30)); // Short-lived access token
+        return GenerateToken(user, DateTime.Now.AddMinutes(1)); // Short-lived access token
     }
 
     /// <intheritdoc/>

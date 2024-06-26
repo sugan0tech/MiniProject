@@ -126,6 +126,7 @@ async function logout() {
         await postAuthRequest(logoutEndpoint,{}, headers);
 
         clearAuthTokens();
+        localStorage.clear();
 
         console.log("Logged out successfully");
         window.location.href = 'login.html';
