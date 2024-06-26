@@ -2,6 +2,7 @@
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,15 @@ namespace MatrimonyApiService.ProfileView;
 [EnableCors("AllowAll")]
 public class ProfileViewController(
     IProfileViewService profileViewService,
+    IProfileService profileService,
     CustomControllerValidator validator,
     ILogger<ProfileViewController> logger)
     : ControllerBase
 {
     [HttpPost("add/viewer/{viewerId}/profile/{profileId}")]
-    [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> AddView(int viewerId, int profileId)
     {
@@ -28,7 +31,8 @@ public class ProfileViewController(
         {
             await validator.ValidateUserPrivilegeForProfile(User.Claims, viewerId);
             await profileViewService.AddView(viewerId, profileId);
-            return Ok();
+            var profile = await profileService.GetProfileById(profileId);
+            return Ok(profile);
         }
         catch (KeyNotFoundException ex)
         {
@@ -49,6 +53,11 @@ public class ProfileViewController(
         {
             logger.LogError(ex.Message);
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
+        catch (InvalidProfileViewException ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(400, new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
         }
     }
 

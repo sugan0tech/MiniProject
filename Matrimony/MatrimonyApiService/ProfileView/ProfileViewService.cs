@@ -22,6 +22,8 @@ public class ProfileViewService(
     /// <inheritdoc/>
     public async Task AddView(int viewerId, int profileId)
     {
+        if (viewerId.Equals(profileId))
+            throw new InvalidProfileViewException("You are looking into your own managed profile bruh!!");
         await profileService.GetProfileById(profileId); // validate profile
         await profileService.GetProfileById(viewerId); // validate profile
         var profile = await profileService.GetProfileById(viewerId);

@@ -97,9 +97,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .HasForeignKey(view => view.ViewedProfileAt)
             .OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Profile.Profile>()
-            .Navigation(profile => profile.ProfileViews)
-            .AutoInclude();
-        modelBuilder.Entity<Profile.Profile>()
             .HasMany<ProfileView.ProfileView>(profile => profile.Views)
             .WithOne(view => view.Viewer)
             .HasForeignKey(view => view.ViewerId)

@@ -1,6 +1,7 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,8 @@ public class ReportController(
     {
         try
         {
-            validator.ValidateUserPrivilege(User.Claims, report.ReportedById);
+            var userId = validator.ValidateAndGetUserId(User.Claims);
+            report.ReportedById = userId;
             var addedReport = await reportService.Add(report);
             return Ok(addedReport);
         }

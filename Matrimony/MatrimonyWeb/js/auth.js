@@ -169,7 +169,8 @@ async function makeAuthRequest(endpoint, method = 'GET', data = null) {
         }
 
         if (!response.ok) {
-            showAlert(`some error occured: ${response.message}`, 'danger')
+            console.log(response.json().then(value => showAlert(value.message, 'danger')))
+            console.log(response.status)
             return;
         }
         const contentType = response.headers.get('Content-Type');

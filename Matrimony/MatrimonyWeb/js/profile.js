@@ -1,13 +1,97 @@
-function viewProfile(profileId) {
-    console.log("View profile with ID:", profileId);
+async function viewProfile(profileId) {
+    const currentProfileId = JSON.parse(localStorage.getItem('currentProfile'));
+    const endpoint = `ProfileView/add/viewer/${currentProfileId}/profile/${profileId}`;
+
+    try {
+        const profileDetails = await makeAuthRequest(endpoint, 'POST');
+
+        if (profileDetails) {
+            displayProfileModal(profileDetails);
+        } else {
+            console.log("Profile not found.");
+        }
+    } catch (error) {
+        console.error('Error viewing profile:', error);
+    }
 }
 
-function reportProfile(profileId) {
-    console.log("Remove profile with ID:", profileId);
+function displayProfileModal(profileDetails) {
+    const modalHtml = `
+        <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="profileModalLabel">Profile Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Profile ID:</strong> ${profileDetails.profileId}</p>
+                        <p><strong>Name :</strong> ${profileDetails.user.firstName} ${profileDetails.user.lastName}</p>
+                        <p><strong>Date of Birth:</strong> ${new Date(profileDetails.dateOfBirth).toLocaleDateString()}</p>
+                        <p><strong>Age:</strong> ${profileDetails.age}</p>
+                        <p><strong>Education:</strong> ${profileDetails.education}</p>
+                        <p><strong>Annual Income:</strong> $${profileDetails.annualIncome}</p>
+                        <p><strong>Occupation:</strong> ${profileDetails.occupation}</p>
+                        <p><strong>Marital Status:</strong> ${profileDetails.maritalStatus}</p>
+                        <p><strong>Mother Tongue:</strong> ${profileDetails.motherTongue}</p>
+                        <p><strong>Religion:</strong> ${profileDetails.religion}</p>
+                        <p><strong>Ethnicity:</strong> ${profileDetails.ethnicity}</p>
+                        ${profileDetails.bio ? `<p><strong>Bio:</strong> ${profileDetails.bio}</p>` : ''}
+                        ${profileDetails.profilePicture ? `<img src="data:image/png;base64,${profileDetails.profilePicture}" alt="Profile Picture" class="img-thumbnail"/>` : ''}
+                        <p><strong>Habit:</strong> ${profileDetails.habit}</p>
+                        <p><strong>Gender:</strong> ${profileDetails.gender}</p>
+                        <p><strong>Weight:</strong> ${profileDetails.weight} kg</p>
+                        <p><strong>Height:</strong> ${profileDetails.height} cm</p>
+                        ${profileDetails.membership ? `<p><strong>Membership:</strong> ${profileDetails.membership.type}</p>` : ''}
+                        <p><strong>Managed By Relation:</strong> ${profileDetails.managedByRelation}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+
+    const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+    modal.show();
 }
 
-function sendMatchRequest(profileId) {
-    console.log("Send match request to profile ID:", profileId);
+async function reportProfile(profileId) {
+    const currentProfileId = JSON.parse(localStorage.getItem('currentProfile'));
+    const endpoint = 'Report';
+    const headers = {
+        'Authorization': 'Bearer YOUR_API_KEY' // Replace with actual API key
+    };
+    const data = {
+        profileId: profileId
+    };
+
+    try {
+        await makeAuthRequest(endpoint, "POST", data);
+        showAlert("Profile has been reported", 'warning')
+        console.log('Profile has been reported.');
+    } catch (error) {
+        console.error('Error reporting profile:', error);
+    }
+}
+
+async function sendMatchRequest(profileId) {
+    const currentProfileId = localStorage.getItem('currentProfile');
+    const endpoint = `MatchRequest/${currentProfileId}/${profileId}`;
+
+    try {
+        await makeAuthRequest(endpoint, 'POST');
+        console.log("match request send")
+    } catch (error) {
+        console.error('Error sending match request:', error);
+        alert('Failed to send match request.');
+    }
 }
 
 const headers = {
@@ -292,7 +376,6 @@ function applyFilter() {
     makeAuthRequest("Preference", 'PUT', preferences)
         .then(data => {
             console.log('Preferences saved successfully:', data);
-            alert('Preferences have been applied and saved.');
         })
         .catch(error => console.error('Error saving preferences:', error));
 
@@ -301,8 +384,6 @@ function applyFilter() {
 
 async function fetchFilteredProfiles(profileId) {
     const profiles = await makeAuthRequest("Profile/" + profileId + "/matches")
-    console.log("profile previews")
-    console.log(profiles)
     displayProfiles(profiles);
 }
 function generateDummyProfiles(numProfiles) {
@@ -334,7 +415,7 @@ function generateDummyProfiles(numProfiles) {
 }
 
 function displayProfiles(profiles) {
-    profiles = generateDummyProfiles(20);
+    // profiles = generateDummyProfiles(20);
     const profilesList = document.getElementById('profilesList');
     profilesList.innerHTML = ''; // Clear existing profiles
 
@@ -348,7 +429,8 @@ function displayProfiles(profiles) {
                     <p class="card-text">Religion: ${profile.religion}, Ethnicity: ${profile.ethnicity}</p>
                     <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
                     <button class="btn btn-danger" onclick="reportProfile(${profile.profileId})">Report Profile</button>
-                    <button class="btn btn-primary" onclick="sendMatchRequest(${profile.profileId})">Chat</button>
+                    <button class="btn btn-primary" onclick="sendMatchRequest(${profile.profileId})">MatchRequest</button>
+                    <button class="btn btn-primary" onclick="openChat(${profile.profileId})">Chat</button>
                 </div>
             </div>
         `;
