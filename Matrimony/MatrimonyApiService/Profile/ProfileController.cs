@@ -201,7 +201,7 @@ public class ProfileController(
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
-    // [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> GetAll()
     {
         var profiles = await profileService.GetAll();

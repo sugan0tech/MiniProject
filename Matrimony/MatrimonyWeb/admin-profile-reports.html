@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrimony Site Admin - Profile Reports</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="admin-dashboard.html">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="admin-user-activation.html">User Activation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin-profile-reports.html">Profile Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin-membership-handler.html">Membership Handler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin-user-sessions.html">User Sessions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-danger" href="#" onclick="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div id="alert-container"></div>
+
+<!-- Main Content -->
+<div class="container mt-5" style="padding-bottom: 100px" id="content">
+    <h1>Profile Reports</h1>
+    <ul id="report-list">Admin profile reports content goes here...</ul>
+</div>
+
+<!-- Footer -->
+<footer class="fixed-bottom bg-dark text-white text-center py-3">
+    <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
+</footer>
+
+<!-- Scripts -->
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/script.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin-profile-reports.js"></script>
+<script>
+    loadProfileReports()
+</script>
+</body>
+</html>
