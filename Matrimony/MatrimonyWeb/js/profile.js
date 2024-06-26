@@ -410,13 +410,14 @@ function searchProfiles() {
     });
 }
 
+// sorting based on name
 function sortProfiles() {
     const sortValue = document.getElementById('sortSelect').value;
     const profiles = Array.from(document.querySelectorAll('#profilesList .card'));
 
     profiles.sort((a, b) => {
-        const aName = a.querySelector('.card-title').innerText;
-        const bName = b.querySelector('.card-title').innerText;
+        const aName = a.querySelector('.card-name').innerText.split(' ')[1];
+        const bName = b.querySelector('.card-name').innerText.split(' ')[1];
 
         if (sortValue === 'nameAsc') {
             return aName.localeCompare(bName);
