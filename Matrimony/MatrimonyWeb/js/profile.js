@@ -1,79 +1,3 @@
-// function profileSelectionChanged() {
-//     const selectedProfileId = document.getElementById('userProfile').value;
-//     console.log("Selected profile ID:", selectedProfileId);
-// }
-
-function searchProfiles() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const profiles = document.querySelectorAll('#profilesList .card');
-    profiles.forEach(profile => {
-        const name = profile.getAttribute('data-name').toLowerCase();
-        profile.style.display = name.includes(query) ? '' : 'none';
-    });
-}
-
-function sortProfiles() {
-    const sortBy = document.getElementById('sortSelect').value;
-    const profiles = Array.from(document.querySelectorAll('#profilesList .card'));
-
-    profiles.sort((a, b) => {
-        const nameA = a.getAttribute('data-name').toLowerCase();
-        const nameB = b.getAttribute('data-name').toLowerCase();
-        if (sortBy === 'nameAsc') {
-            return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
-        } else {
-            return nameA > nameB ? -1 : (nameA < nameB ? 1 : 0);
-        }
-    });
-
-    const profilesList = document.getElementById('profilesList');
-    profilesList.innerHTML = '';
-    profiles.forEach(profile => profilesList.appendChild(profile));
-}
-
-function filterProfiles() {
-    const genderFilter = document.getElementById('genderFilter').value;
-    const motherTongueFilter = document.getElementById('motherTongueFilter').value;
-    const religionFilter = document.getElementById('religionFilter').value;
-    const educationFilter = document.getElementById('educationFilter').value;
-    const occupationFilter = document.getElementById('occupationFilter').value;
-    const ageRangeFilter = document.getElementById('ageRangeFilter').value;
-    const heightRangeFilter = document.getElementById('heightRangeFilter').value;
-
-    const profiles = document.querySelectorAll('#profilesList .card');
-    profiles.forEach(profile => {
-        const gender = profile.getAttribute('data-gender');
-        const motherTongue = profile.getAttribute('data-mother-tongue');
-        const religion = profile.getAttribute('data-religion');
-        const education = profile.getAttribute('data-education');
-        const occupation = profile.getAttribute('data-occupation');
-        const age = parseInt(profile.getAttribute('data-age'));
-        const height = parseInt(profile.getAttribute('data-height'));
-
-        let display = true;
-        if (genderFilter && gender !== genderFilter) display = false;
-        if (motherTongueFilter && motherTongue !== motherTongueFilter) display = false;
-        if (religionFilter && religion !== religionFilter) display = false;
-        if (educationFilter && education !== educationFilter) display = false;
-        if (occupationFilter && occupation !== occupationFilter) display = false;
-        if (ageRangeFilter && (age < parseInt(ageRangeFilter.split(',')[0]) || age > parseInt(ageRangeFilter.split(',')[1]))) display = false;
-        if (heightRangeFilter && (height < parseInt(heightRangeFilter.split(',')[0]) || height > parseInt(heightRangeFilter.split(',')[1]))) display = false;
-
-        profile.style.display = display ? '' : 'none';
-    });
-}
-
-//
-// function updateAgeRangeDisplay() {
-//     const ageRangeFilter = document.getElementById('ageRangeFilter').value;
-//     document.getElementById('ageRangeDisplay').textContent = `${ageRangeFilter}`;
-// }
-//
-// function updateHeightRangeDisplay() {
-//     const heightRangeFilter = document.getElementById('heightRangeFilter').value;
-//     document.getElementById('heightRangeDisplay').textContent = `${heightRangeFilter}`;
-// }
-
 function viewProfile(profileId) {
     console.log("View profile with ID:", profileId);
 }
@@ -380,54 +304,46 @@ async function fetchFilteredProfiles(profileId) {
     console.log("profile previews")
     console.log(profiles)
     displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
-    displayProfiles(profiles);
+}
+function generateDummyProfiles(numProfiles) {
+    const profiles = [];
+    const educations = ["UG", "PG", "MBBS", "MS", "MD"];
+    const occupations = ["Engineer", "Doctor", "Teacher", "Business"];
+    const religions = ["Hindu", "Muslim", "Christian", "Sikh"];
+    const ethnicities = ["Indian", "Asian", "Caucasian", "Hispanic"];
+    const motherTongues = ["Tamil", "Malayalam", "English", "Spanish"];
+    const firstName = ["didivi", "sugan", "magic", "test"];
+
+    for (let i = 1; i <= numProfiles; i++) {
+        profiles.push({
+            profileId: i,
+            education: educations[Math.floor(Math.random() * educations.length)],
+            occupation: occupations[Math.floor(Math.random() * occupations.length)],
+            maritalStatus: "Single",
+            motherTongue: motherTongues[Math.floor(Math.random() * motherTongues.length)],
+            religion: religions[Math.floor(Math.random() * religions.length)],
+            ethnicity: ethnicities[Math.floor(Math.random() * ethnicities.length)],
+            profilePicture: "",// or add some default image URL,
+            user: {
+                firstName: firstName[Math.floor(Math.random()*firstName.length)],
+                lastName: "testLname"
+            }
+        });
+    }
+    return profiles;
 }
 
 function displayProfiles(profiles) {
+    profiles = generateDummyProfiles(20);
     const profilesList = document.getElementById('profilesList');
-    // profilesList.innerHTML = ''; // Clear existing profiles
+    profilesList.innerHTML = ''; // Clear existing profiles
 
     profiles.forEach(profile => {
         const profileCard = `
             <div class="card mb-3" data-profile-id="${profile.profileId}">
                 <div class="card-body">
                     <h5 class="card-title">Profile ${profile.profileId}: ${profile.profilePicture ? `<img src="${profile.profilePicture}" alt="Profile Picture" />` : 'No Picture'}</h5>
+                    <p class="card-name">Name: ${profile.user.firstName} ${profile.user.lastName}</p>
                     <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
                     <p class="card-text">Religion: ${profile.religion}, Ethnicity: ${profile.ethnicity}</p>
                     <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
@@ -440,7 +356,6 @@ function displayProfiles(profiles) {
     });
 
 
-    // Apply pagination
     setupPagination(profiles.length);
 }
 
@@ -453,8 +368,9 @@ function setupPagination(totalProfiles) {
 
     for (let i = 1; i <= totalPages; i++) {
         const pageLink = document.createElement('a');
-        pageLink.href = '#';
-        pageLink.innerText = i;
+        pageLink.className = "page-item"
+        pageLink.innerHTML = `
+            <a class="page-link" href="#">${i}</a>`;
         pageLink.onclick = (e) => {
             e.preventDefault();
             displayPage(i);
@@ -485,7 +401,7 @@ function searchProfiles() {
     const profiles = document.querySelectorAll('#profilesList .card');
 
     profiles.forEach(profile => {
-        const profileName = profile.querySelector('.card-title').innerText.toLowerCase();
+        const profileName = profile.querySelector('.card-name').innerText.toLowerCase();
         if (profileName.includes(searchInput)) {
             profile.style.display = 'block';
         } else {

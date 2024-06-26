@@ -83,6 +83,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
         var entity = await GetById(id);
         context.Set<TBaseEntity>().Remove(entity);
         await context.SaveChangesAsync();
+        context.Entry(entity).State = EntityState.Detached;
 
         return entity;
     }

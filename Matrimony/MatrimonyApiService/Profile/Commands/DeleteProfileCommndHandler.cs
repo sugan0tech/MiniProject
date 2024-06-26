@@ -15,6 +15,7 @@ public class DeleteProfileCommandHandler(IProfileService profileService, IMediat
         try
         {
             var profile = await profileService.DeleteProfileById(request.profileId);
+            profile.Membership = null;
 
             await mediator.Send(new DeleteMembershipCommand((int)profile.MembershipId), cancellationToken);
             await mediator.Send(new DeletePreferenceCommand((int)profile.PreferenceId), cancellationToken);

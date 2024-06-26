@@ -21,7 +21,7 @@ public interface IProfileService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<List<ProfilePreviewDto>> GetProfilesByManager(int id);
+    Task<List<ProfileDto>> GetProfilesByManager(int id);
 
     /// <summary>
     /// Gets profile Preview by given id

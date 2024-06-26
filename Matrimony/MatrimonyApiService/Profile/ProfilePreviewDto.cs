@@ -1,6 +1,7 @@
 ﻿using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
 using System.Diagnostics.CodeAnalysis;
+using MatrimonyApiService.User;
 
 namespace MatrimonyApiService.Profile;
 
@@ -26,4 +27,5 @@ public record ProfilePreviewDto
     public string Ethnicity { get; init; }
 
     [ExcludeFromCodeCoverage] public byte[]? ProfilePicture { get; init; }
+    public UserDto? User { get; set; }
 }
