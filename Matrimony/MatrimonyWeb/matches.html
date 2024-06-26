@@ -5,20 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrimony Site</title>
     <link rel="stylesheet" href="css/styles.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            flex: 1;
-        }
-    </style>
     <link href="css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.html">Matrimony</a>
@@ -28,13 +17,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="user.html" >Account</a>
+                    <a class="nav-link" href="user.html">Account</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="profiles.html" >Profiles</a>
+                    <a class="nav-link" href="profiles.html">Profiles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="matches.html" >Matches</a>
+                    <a class="nav-link" href="matches.html">Matches</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-danger" href="#" onclick="logout()">Logout</a>
@@ -45,78 +34,43 @@
 </nav>
 <div class="container mt-5">
     <h2>Match Management</h2>
-    <!-- Tabs for Different Match Categories -->
     <ul class="nav nav-tabs" id="matchTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="sent-requests-tab" data-bs-toggle="tab" data-bs-target="#sent-requests" type="button" role="tab" aria-controls="sent-requests" aria-selected="true">Request Sent</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="accepted-requests-tab" data-bs-toggle="tab" data-bs-target="#accepted-requests" type="button" role="tab" aria-controls="accepted-requests" aria-selected="false">Request Accepted</button>
+            <button onclick="fetchAcceptedMatches()" class="nav-link" id="accepted-requests-tab" data-bs-toggle="tab" data-bs-target="#accepted-requests" type="button" role="tab" aria-controls="accepted-requests" aria-selected="false">Request Accepted</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="received-requests-tab" data-bs-toggle="tab" data-bs-target="#received-requests" type="button" role="tab" aria-controls="received-requests" aria-selected="false">Request Received</button>
+            <button onclick="fetchReceivedMatches()" class="nav-link" id="received-requests-tab" data-bs-toggle="tab" data-bs-target="#received-requests" type="button" role="tab" aria-controls="received-requests" aria-selected="false">
+                Request Received <span id="receivedNotification" class="badge bg-danger" style="display: none;">New</span>
+            </button>
         </li>
     </ul>
     <div class="tab-content mt-3" id="matchTabsContent">
-        <!-- Request Sent Tab -->
         <div class="tab-pane fade show active" id="sent-requests" role="tabpanel" aria-labelledby="sent-requests-tab">
-            <div id="sentMatches">
-                <!-- Example Matches -->
-                <div class="card mb-3" data-match-id="1">
-                    <div class="card-body">
-                        <h5 class="card-title">Match 1: John Doe</h5>
-                        <p class="card-text">Age: 29, Location: New York</p>
-                        <button class="btn btn-danger" onclick="removeMatch('sent', 1)">Remove Match</button>
-                    </div>
-                </div>
-                <!-- Add more sent matches here -->
-            </div>
+            <div id="sentMatches"></div>
         </div>
-        <!-- Request Accepted Tab -->
         <div class="tab-pane fade" id="accepted-requests" role="tabpanel" aria-labelledby="accepted-requests-tab">
-            <div id="acceptedMatches">
-                <!-- Example Matches -->
-                <div class="card mb-3" data-match-id="2">
-                    <div class="card-body">
-                        <h5 class="card-title">Match 2: Jane Smith</h5>
-                        <p class="card-text">Age: 32, Location: California</p>
-                        <button class="btn btn-danger" onclick="removeMatch('accepted', 2)">Remove Match</button>
-                    </div>
-                </div>
-                <!-- Add more accepted matches here -->
-            </div>
+            <div id="acceptedMatches"></div>
         </div>
-        <!-- Request Received Tab -->
         <div class="tab-pane fade" id="received-requests" role="tabpanel" aria-labelledby="received-requests-tab">
-            <div id="receivedMatches">
-                <!-- Example Matches -->
-                <div class="card mb-3" data-match-id="3">
-                    <div class="card-body">
-                        <h5 class="card-title">Match 3: Alex Johnson</h5>
-                        <p class="card-text">Age: 30, Location: Texas</p>
-                        <button class="btn btn-success" onclick="acceptMatch(3)">Accept Match</button>
-                        <button class="btn btn-danger" onclick="removeMatch('received', 3)">Remove Match</button>
-                    </div>
-                </div>
-                <!-- Add more received matches here -->
-            </div>
+            <div id="receivedMatches"></div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS Bundle with Popper (necessary for dropdowns and tooltips) -->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
-
-<!-- Footer -->
+<script src="js/match.js"></script>
+<script>
+    fetchSentMatches();
+    fetchAcceptedMatches();
+    fetchReceivedMatches();
+</script>
 <footer class="fixed-bottom bg-dark text-white text-center py-3">
     <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
 </footer>
-
-<!-- Scripts -->
-<script src="js/bootstrap.bundle.js"></script>
-<script src="js/script.js"></script>
-<script src="js/auth.js"></script>
 </body>
 </html>

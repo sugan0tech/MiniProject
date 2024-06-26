@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -12,7 +13,10 @@ namespace MatrimonyApiService.MatchRequest;
 [Route("api/[controller]")]
 [EnableCors("AllowAll")]
 [Authorize]
-public class MatchRequestController(IMatchRequestService matchRequestService, ILogger<MatchRequestController> logger)
+public class MatchRequestController(
+    IMatchRequestService matchRequestService,
+    CustomControllerValidator validator,
+    ILogger<MatchRequestController> logger)
     : ControllerBase
 {
     [HttpGet("{id}")]
@@ -51,10 +55,12 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
     [HttpGet("sent/{profileId}")]
     [ProducesResponseType(typeof(List<MatchRequestDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetSentMatchRequests(int profileId)
     {
         try
         {
+            await validator.ValidateUserPrivilegeForProfile(User.Claims, profileId);
             var matches = await matchRequestService.GetSentMatchRequests(profileId);
             return Ok(matches);
         }
@@ -62,6 +68,10 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
         {
             logger.LogError(e.Message);
             return NotFound(new ErrorModel(404, e.Message));
+        }
+        catch (AuthenticationException e)
+        {
+            return StatusCode(403, new ErrorModel(403, e.Message));
         }
     }
 
@@ -140,6 +150,7 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
     {
         try
         {
+            await validator.ValidateUserPrivilegeForProfile(User.Claims, matchRequestService.GetById(id).Result.SentProfileId);
             var match = await matchRequestService.DeleteById(id);
             return Ok(match);
         }
@@ -157,5 +168,29 @@ public class MatchRequestController(IMatchRequestService matchRequestService, IL
     {
         var matches = await matchRequestService.GetAll();
         return Ok(matches);
+    }
+
+    [HttpGet("received/{profileId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetReceived(int profileId)
+    {
+        try
+        {
+            await validator.ValidateUserPrivilegeForProfile(User.Claims, profileId);
+            var matches = await matchRequestService.GetMatchRequests(profileId);
+            return Ok(matches);
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            return NotFound(new ErrorModel(404, e.Message));
+        }
+        catch (AuthenticationException e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(403, new ErrorModel(403, e.Message));
+        }
     }
 }
