@@ -120,3 +120,13 @@ modelBuilder.Entity<Match.Match>()
 - Listing them: `dotnet user-secrets list`
 - Removing: `dotnet user-secrets remove "Movies:ConnectionString"`
 - Removes all secrets: `dotnet user-secrets clear`
+
+## Introducing 2FA via mail
+Dependencies:
+- `MailKit`
+- `Otp.Net`
+
+Flow:
+- Generate and maintain otp with Otp.Net
+- Push smtp mail via MailKit
+

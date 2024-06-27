@@ -21,6 +21,14 @@ public class UserSessionService(IBaseRepo<UserSession> repo, ILogger<UserSession
     }
 
     /// <intheritdoc/>
+    public UserSessionDto GetByToken(string token)
+    {
+        logger.LogInformation($"Fetching sessions for token");
+        var session = repo.GetAll().Result.First(s => s.RefreshToken.Equals(token));
+        return mapper.Map<UserSessionDto>(session);
+    }
+
+    /// <intheritdoc/>
     public List<UserSessionDto> GetByUserId(int userId)
     {
         logger.LogInformation($"Fetching sessions for UserId: {userId}");

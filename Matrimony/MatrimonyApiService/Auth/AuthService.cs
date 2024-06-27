@@ -72,6 +72,13 @@ public class AuthService(
         {
             if (!await userSessionService.IsValid(refreshToken))
                 throw new AuthenticationException("Invalid Token, login again please");
+            var session = userSessionService.GetByToken(refreshToken);
+            if (!session.UserAgent.Equals(GetUserAgent()))
+            {
+                await userSessionService.Invalidate(refreshToken);
+                throw new AuthenticationException(
+                    "We have detected some anomalies with your device , Please login again");
+            }
 
             var payload = tokenService.GetPayload(refreshToken);
             var user = await userService.GetById(payload.Id);
@@ -127,7 +134,7 @@ public class AuthService(
         var status = otpService.VerifyOtp(user.Email, otp);
         if (status)
             await userService.Validate(userId, true);
-        
+
         return status;
     }
 

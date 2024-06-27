@@ -8,6 +8,13 @@ public interface IUserSessionService
     /// <param name="sessionId"></param>
     /// <returns></returns>
     Task<List<UserSessionDto>> GetById(int sessionId);
+    
+    /// <summary>
+    /// Gets session by Token
+    /// </summary>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    UserSessionDto GetByToken(string token);
 
     /// <summary>
     /// Gets session of user by userId
