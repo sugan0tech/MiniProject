@@ -55,7 +55,7 @@
     <ul id="profile-list"></ul>
 </div>
 <!-- Membership Selection Popup -->
-<div class="modal fade" id="membershipSelectionModal" tabindex="-1" aria-labelledby="membershipSelectionModalLabel" aria-hidden="true">
+<div class="modal fade modal-xl" id="membershipSelectionModal" tabindex="-1" aria-labelledby="membershipSelectionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -63,9 +63,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div id="currentMembership" class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Membership</h5>
+                        <p class="card-text" id="membershipType"><strong>Type:</strong> <span></span></p>
+                        <p class="card-text" id="membershipEndsAt"><strong>Ends At:</strong> <span></span></p>
+                        <p class="card-text" id="membershipUsage"><strong>Usage:</strong> <span></span></p>
+                        <!-- Add hidden input for profileId -->
+                        <input type="hidden" id="profileIdInput" value="">
+
+                        <!-- Add hidden input for current membershipId -->
+                        <input type="hidden" id="currentMembershipId" value="">
+                    </div>
+                </div>
                 <p>Select the new membership type:</p>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-auto">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h5 class="card-title">Free Member $0</h5>
@@ -75,11 +88,11 @@
                                     <li class="list-group-item">No profile views</li>
                                     <li class="list-group-item">Only profile Preview</li>
                                 </ul>
-                                <button class="btn btn-secondary mt-3 w-100" disabled>Current Plan</button>
+                                <button class="btn btn-primary mt-3 w-100" onclick="selectMembership('FreeUser')">Select</button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-auto">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h5 class="card-title">Basic Member $5</h5>
@@ -89,11 +102,11 @@
                                     <li class="list-group-item">Up to 5 views per month</li>
                                     <li class="list-group-item">50 detailed profile lookups</li>
                                 </ul>
-                                <button class="btn btn-primary mt-3 w-100" onclick="selectMembership('Basic', 1)">Select</button>
+                                <button class="btn btn-primary mt-3 w-100" onclick="selectMembership('BasicUser')">Select</button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-auto">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h5 class="card-title">Premium Member $15</h5>
@@ -103,7 +116,7 @@
                                     <li class="list-group-item">Unlimited profile views</li>
                                     <li class="list-group-item">Unlimited detailed profile lookups</li>
                                 </ul>
-                                <button class="btn btn-primary mt-3 w-100" onclick="selectMembership('Premium', 2)">Select</button>
+                                <button class="btn btn-primary mt-3 w-100" onclick="selectMembership('PremiumUser')">Select</button>
                             </div>
                         </div>
                     </div>

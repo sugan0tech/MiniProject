@@ -20,7 +20,7 @@ function displayProfiles(profiles) {
                 <p class="card-text">User Name: ${profile.user.firstName} ${profile.user.lastName}</p>
                 <p class="card-text">Membership ID: ${profile.membershipId}</p>
                 <p class="card-text">Membership Type: ${profile.membership.type}</p>
-                <button class="btn btn-primary" onclick="openMembershipPopup(${JSON.stringify(profile.membership)})">Update Membership</button>
+                <button class="btn btn-primary" onclick="openMembershipPopup('${encodeURI(JSON.stringify(profile.membership))}')">Update Membership</button>
             </div>
         </div>
     `).join('');
@@ -34,28 +34,54 @@ function displayCurrentMembership(membership) {
 
     membershipType.querySelector('span').textContent = membership.type || 'N/A';
     membershipEndsAt.querySelector('span').textContent = membership.endsAt || 'N/A';
-    membershipUsage.querySelector('span').textContent = `${membership.viewsCount} views, ${membership.chatCount} chats`;
+    membershipUsage.querySelector('span').textContent = `${membership.viewsCount} views, ${membership.chatCount} chats, ${membership.requestCount} requests, ${membership.viewersViewCount} Viewers views`;
+
+    document.querySelector('.col-md-auto:nth-child(1) .btn').classList.replace('btn-secondary', 'btn-primary');
+    document.querySelector('.col-md-auto:nth-child(1) .btn').textContent = 'Select';
+    document.querySelector('.col-md-auto:nth-child(1) .btn').disabled = false;
+    document.querySelector('.col-md-auto:nth-child(2) .btn').classList.replace('btn-secondary', 'btn-primary');
+    document.querySelector('.col-md-auto:nth-child(2) .btn').textContent = 'Select';
+    document.querySelector('.col-md-auto:nth-child(2) .btn').disabled = false;
+    document.querySelector('.col-md-auto:nth-child(3) .btn').classList.replace('btn-secondary', 'btn-primary');
+    document.querySelector('.col-md-auto:nth-child(3) .btn').textContent = 'Select';
+    document.querySelector('.col-md-auto:nth-child(3) .btn').disabled = false;
+
+    if (membership.type === 'BasicUser') {
+        document.querySelector('.col-md-auto:nth-child(2) .btn').classList.replace('btn-primary', 'btn-secondary');
+        document.querySelector('.col-md-auto:nth-child(2) .btn').textContent = 'Current Plan';
+        document.querySelector('.col-md-auto:nth-child(2) .btn').disabled = true;
+    } else if (membership.type === 'PremiumUser') {
+        document.querySelector('.col-md-auto:nth-child(3) .btn').classList.replace('btn-primary', 'btn-secondary');
+        document.querySelector('.col-md-auto:nth-child(3) .btn').textContent = 'Current Plan';
+        document.querySelector('.col-md-auto:nth-child(3) .btn').disabled = true;
+    } else {
+        document.querySelector('.col-md-auto:nth-child(1) .btn').classList.replace('btn-primary', 'btn-secondary');
+        document.querySelector('.col-md-auto:nth-child(1) .btn').textContent = 'Current Plan';
+        document.querySelector('.col-md-auto:nth-child(1) .btn').disabled = true;
+    }
 }
 
 // Function to open the membership selection popup and populate with current membership details
-function openMembershipPopup(membership) {
-    // Display current membership details in the modal
-    membership = JSON.parse(membership)
-    displayCurrentMembership(membership);
+function openMembershipPopup(encodedMembership) {
+    // Getting membership from string
+    let membership = JSON.parse(decodeURI(encodedMembership))
 
     // Show the modal
     var myModal = new bootstrap.Modal(document.getElementById('membershipSelectionModal'), {
         keyboard: false
     });
     myModal.show();
+    displayCurrentMembership(membership);
 
-    // Update the hidden input field with the current profileId
+    document.getElementById('profileIdInput').value = membership.profileId;
+    document.getElementById('currentMembershipId').value = membership.id;
     document.getElementById('profileIdInput').value = membership.profileId;
 }
 
 // Function to handle membership selection
-async function selectMembership(membershipType, membershipId) {
+async function selectMembership(membershipType) {
     const profileId = document.getElementById('profileIdInput').value;
+    const membershipId = document.getElementById('currentMembershipId').value; // Use current membership ID
 
     // Close the modal
     var myModal = bootstrap.Modal.getInstance(document.getElementById('membershipSelectionModal'));
@@ -67,47 +93,21 @@ async function selectMembership(membershipType, membershipId) {
 
 // Function to update membership via API call
 async function updateMembership(profileId, membershipId, membershipType) {
-    const url = `http://localhost:5094/api/Membership/${membershipId}/updateMembership`;
-    const data = {
-        profileId: profileId,
-        type: membershipType,
-        isTrail: false,
-        isTrailEnded: false
-    };
-
+    var membership = makeAuthRequest('Membership/profile/' + profileId )
+    var data = await membership
+    data.type = membershipType
+    data.description = "Updated By Admins"
+    console.log(data)
     try {
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
-            body: JSON.stringify(data)
-        });
+        const response = await makeAuthRequest(`Membership`,
+            'PUT',
+            data
+        );
 
-        if (!response.ok) {
-            const errorMessage = await response.json();
-            throw new Error(errorMessage.message || 'Failed to update membership.');
-        }
-
-        // Handle success as needed (e.g., show a success message, update UI)
         showAlert('Membership updated successfully.', 'success');
         await loadProfiles(); // Refresh profiles after updating membership
     } catch (error) {
         console.error('Error updating membership:', error);
         showAlert('Failed to update membership. Please try again later.', 'danger');
     }
-}
-
-// Helper function to display alerts
-function showAlert(message, type) {
-    const alertContainer = document.getElementById('alert-container');
-    const alert = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-    alertContainer.innerHTML = alert;
 }
