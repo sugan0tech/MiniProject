@@ -12,8 +12,6 @@ namespace MatrimonyApiService.User;
 [Index(nameof(Email), Name = "Email_Ind", IsUnique = true)]
 public class User : BaseEntity
 {
-    // [Key] public int UserId { get; set; }
-
     [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")]
     [MaxLength(256)]
     public required string Email { get; set; }
@@ -35,7 +33,4 @@ public class User : BaseEntity
     [EnumTypeValidation(typeof(Role))]
     [AllowedValues(["User", "Admin"], ErrorMessage = "Invalid Role")]
     public string Role { get; set; } = Commons.Enums.Role.User.ToString();
-
-    [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesSent { get; set; }
-    [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesReceived { get; set; }
 }

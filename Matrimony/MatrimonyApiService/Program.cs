@@ -5,6 +5,7 @@ using MatrimonyApiService.AddressCQRS.Command;
 using MatrimonyApiService.AddressCQRS.Event;
 using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Auth;
+using MatrimonyApiService.Chat;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
@@ -139,6 +140,9 @@ public class Program
         builder.Services.AddScoped<CustomControllerValidator>();
         builder.Services.AddScoped<OtpService>();
 
+        builder.Services.AddScoped<NewMessageService>();
+        builder.Services.AddScoped<ChatService>();
+
         #endregion
 
         #region AuthConfig
@@ -175,8 +179,22 @@ public class Program
 
         #endregion
 
+        builder.Services.AddSignalR();
+        builder.Services.AddAuthorization(option =>
+        {
+            option.AddPolicy("ChatPolicy", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+            });
+        });
+
         var app = builder.Build();
 
+        #region ChatHub
+
+        app.MapHub<ChatHub>("/chatHub");
+        
+        #endregion
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

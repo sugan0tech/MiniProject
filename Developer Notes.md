@@ -130,3 +130,20 @@ Flow:
 - Generate and maintain otp with Otp.Net
 - Push smtp mail via MailKit
 
+
+## SignalR - Realtime Chat via web-sockets
+
+1. Terminologies
+	- Hubs: abstract communication pipeline between clients and server
+2. Protocols
+	- Two-way RPC, message based ( text & binary ) 
+3. Users
+	- A user in the system acts as an individual, but can also be part of a group. Messages can be sent to [groups](https://learn.microsoft.com/en-us/training/modules/aspnet-core-signalr/2-what-is-signalr#groups), and all group members are notified. A single user can connect from multiple client applications. For example, the same user can use a mobile device and a web browser and get real-time updates on both at the same time.
+4. Groups
+	- A group consists of one or more [connections](https://learn.microsoft.com/en-us/training/modules/aspnet-core-signalr/2-what-is-signalr#connections). The server can create groups, add connections to a group, and remove connections from a group. A group has a specified name, which acts as its unique identifier. Groups serve as a scoping mechanism to help target messages. That is, real-time functionality can only be sent to users within a named group.
+5. Connections
+	- A connection to a hub is represented by a unique identifier that's known only to the server and client. A single connection exists per hub type. Each client has a unique connection to the server. That is, a single user can be represented on multiple clients, but each client connection has its own identifier.
+	
+6. Clients
+	- The client is responsible for establishing a connection to the server's endpoint through a HubConnection object. The hub connection is represented within each target platform:
+

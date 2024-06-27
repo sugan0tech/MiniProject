@@ -272,6 +272,7 @@ async function refreshAccessToken() {
         return true;
     } catch (error) {
         console.error('Token refresh failed:', error);
+        await logout();
         return false;
     }
 }

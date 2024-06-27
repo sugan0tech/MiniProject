@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240627141536_AddChats")]
+    partial class AddChats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace MatrimonyApiService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ChatProfile", b =>
+            modelBuilder.Entity("ChatUser", b =>
                 {
                     b.Property<int>("ChatsId")
                         .HasColumnType("int");
@@ -34,7 +37,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("ParticipantsId");
 
-                    b.ToTable("ChatProfile");
+                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.AddressCQRS.Address", b =>
@@ -581,7 +584,7 @@ namespace MatrimonyApiService.Migrations
                     b.ToTable("UserSessions");
                 });
 
-            modelBuilder.Entity("ChatProfile", b =>
+            modelBuilder.Entity("ChatUser", b =>
                 {
                     b.HasOne("MatrimonyApiService.Chat.Chat", null)
                         .WithMany()
@@ -589,7 +592,7 @@ namespace MatrimonyApiService.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MatrimonyApiService.Profile.Profile", null)
+                    b.HasOne("MatrimonyApiService.User.User", null)
                         .WithMany()
                         .HasForeignKey("ParticipantsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -634,13 +637,13 @@ namespace MatrimonyApiService.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MatrimonyApiService.Profile.Profile", "Receiver")
+                    b.HasOne("MatrimonyApiService.User.User", "Receiver")
                         .WithMany("MessagesReceived")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MatrimonyApiService.Profile.Profile", "Sender")
+                    b.HasOne("MatrimonyApiService.User.User", "Sender")
                         .WithMany("MessagesSent")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -731,10 +734,6 @@ namespace MatrimonyApiService.Migrations
 
             modelBuilder.Entity("MatrimonyApiService.Profile.Profile", b =>
                 {
-                    b.Navigation("MessagesReceived");
-
-                    b.Navigation("MessagesSent");
-
                     b.Navigation("ProfileViews");
 
                     b.Navigation("ReceivedMatches");
@@ -747,6 +746,10 @@ namespace MatrimonyApiService.Migrations
             modelBuilder.Entity("MatrimonyApiService.User.User", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("MessagesReceived");
+
+                    b.Navigation("MessagesSent");
                 });
 #pragma warning restore 612, 618
         }

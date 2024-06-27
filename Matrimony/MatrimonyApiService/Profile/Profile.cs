@@ -144,6 +144,10 @@ public class Profile : BaseEntity
     [ExcludeFromCodeCoverage] public IEnumerable<MatchRequest.MatchRequest>? SentMatches { get; set; }
     [ExcludeFromCodeCoverage] public IEnumerable<MatchRequest.MatchRequest>? ReceivedMatches { get; set; }
 
+
+    [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesSent { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesReceived { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<Chat.Chat>? Chats { get; set; }
     [ForeignKey("PreferenceId")] public int? PreferenceId { get; set; }
     public Preference.Preference? Preference { get; set; }
 

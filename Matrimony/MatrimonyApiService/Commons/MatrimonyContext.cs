@@ -10,6 +10,7 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
     public DbSet<Profile.Profile> Profiles { get; set; }
     public DbSet<ProfileView.ProfileView> ProfileViews { get; set; }
     public DbSet<Message.Message> Messages { get; set; }
+    public DbSet<Chat.Chat> Chats { get; set; }
     public DbSet<Preference.Preference> Preferences { get; set; }
     public DbSet<Staff.Staff> Staffs { get; set; }
     public DbSet<AddressCQRS.Address> Addresses { get; set; }
@@ -36,16 +37,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .WithOne(address => address.User)
             .HasForeignKey<AddressCQRS.Address>(address => address.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<User.User>()
-            .HasMany<Message.Message>(user => user.MessagesSent)
-            .WithOne(message => message.Sender)
-            .HasForeignKey(message => message.SenderId)
-            .OnDelete(DeleteBehavior.SetNull);
-        modelBuilder.Entity<User.User>()
-            .HasMany<Message.Message>(user => user.MessagesReceived)
-            .WithOne(message => message.Receiver)
-            .HasForeignKey(message => message.ReceiverId)
-            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<User.User>().Navigation<AddressCQRS.Address>(user => user.Address).AutoInclude();
 
         #endregion
@@ -86,6 +77,21 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
         modelBuilder.Entity<Profile.Profile>()
             .Navigation(profile => profile.Membership)
             .AutoInclude();
+
+        #endregion
+
+        #region Chat
+
+        modelBuilder.Entity<Profile.Profile>()
+            .HasMany<Message.Message>(profile => profile.MessagesSent)
+            .WithOne(message => message.Sender)
+            .HasForeignKey(message => message.SenderId)
+            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<Profile.Profile>()
+            .HasMany<Message.Message>(profile => profile.MessagesReceived)
+            .WithOne(message => message.Receiver)
+            .HasForeignKey(message => message.ReceiverId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         #endregion
 
@@ -146,13 +152,33 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
         #region Message
 
         modelBuilder.Entity<Message.Message>()
-            .HasOne<User.User>(message => message.Sender)
+            .HasOne<Profile.Profile>(message => message.Sender)
             .WithMany(user => user.MessagesSent)
             .OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Message.Message>()
-            .HasOne<User.User>(message => message.Receiver)
+            .HasOne<Profile.Profile>(message => message.Receiver)
             .WithMany(user => user.MessagesReceived)
             .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Message.Message>()
+            .HasOne<Chat.Chat>(message => message.Chat)
+            .WithMany(chat => chat.Messages)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        #endregion
+
+        #region Chat
+
+        
+        modelBuilder.Entity<Chat.Chat>()
+                .HasMany(c => c.Messages)
+                .WithOne(m => m.Chat)
+                .HasForeignKey(m => m.ChatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Chat.Chat>()
+            .HasMany<Profile.Profile>(chat => chat.Participants)
+            .WithMany(u => u.Chats);
 
         #endregion
 

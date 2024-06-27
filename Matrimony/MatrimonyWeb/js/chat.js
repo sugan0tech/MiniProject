@@ -75,24 +75,38 @@ const messages = {
 };
 
 // Function to load chats
-function loadChats() {
+async function loadChats() {
     const chatListElement = document.getElementById('chatList');
-    chatListElement.innerHTML = '';
-    chats.forEach(chat => {
-        const chatItem = document.createElement('div');
-        chatItem.className = 'chat-item';
-        chatItem.dataset.chatId = chat.chatId;
-        chatItem.innerHTML = `
+    chatListElement.innerHTML = ''; // Clear existing chat list
+
+    try {
+        // Fetch chat data from API
+        const chats = await makeAuthRequest('/api/chat/chats', 'GET');
+
+        if (!chats) {
+            showAlert('Failed to load chats', 'danger');
+            return;
+        }
+
+        // Iterate over each chat and create chat elements
+        chats.forEach(chat => {
+            const chatItem = document.createElement('div');
+            chatItem.className = 'chat-item';
+            chatItem.dataset.chatId = chat.chatId;
+            chatItem.innerHTML = `
                 <h6>Chat with ${chat.participants.find(p => p !== '1')}</h6>
-                <p>${chat.lastMessage.content}</p>
+                <p>${chat.lastMessage ? chat.lastMessage.content : 'No messages yet'}</p>
                 <span class="badge bg-primary">${chat.unreadCount}</span>
             `;
-        chatItem.addEventListener('click', () => selectChat(chatItem, chat.chatId));
-        chatListElement.appendChild(chatItem);
-    });
+            chatItem.addEventListener('click', () => selectChat(chatItem, chat.chatId));
+            chatListElement.appendChild(chatItem);
+        });
+    } catch (error) {
+        console.error('Error loading chats:', error);
+        showAlert('Failed to load chats', 'danger');
+    }
 }
 
-// Function to select a chat
 function selectChat(chatItem, chatId) {
     // Remove 'selected' class from all chat items
     document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('selected'));
@@ -103,18 +117,83 @@ function selectChat(chatItem, chatId) {
 }
 
 // Function to load messages for a chat
-function loadMessages(chatId) {
+async function loadMessages(chatId) {
     const messageListElement = document.getElementById('messageList');
-    messageListElement.innerHTML = '';
-    if (messages[chatId]) {
-        messages[chatId].forEach(message => {
+    messageListElement.innerHTML = ''; // Clear existing messages
+
+    try {
+        // Fetch messages for the selected chat from API
+        const messages = await makeAuthRequest(`/api/chat/messages/${chatId}`, 'GET');
+
+        if (!messages) {
+            showAlert('Failed to load messages', 'danger');
+            return;
+        }
+
+        // Iterate over each message and create message elements
+        messages.forEach(message => {
             const messageElement = document.createElement('div');
-            messageElement.className = `message ${message.sender === '1' ? 'sender' : 'receiver'}`;
+            messageElement.className = `message ${message.senderId === '1' ? 'sender' : 'receiver'}`;
             messageElement.innerHTML = `
-                    <p>${message.content}</p>
-                    <small>${new Date(message.timestamp).toLocaleTimeString()}</small>
-                `;
+                <p>${message.content}</p>
+                <small>${new Date(message.sentAt).toLocaleTimeString()}</small>
+            `;
             messageListElement.appendChild(messageElement);
         });
+    } catch (error) {
+        console.error('Error loading messages:', error);
+        showAlert('Failed to load messages', 'danger');
     }
 }
+
+
+
+
+// Call loadChats when the page loads
+document.addEventListener('DOMContentLoaded', loadChats);
+
+// Create a connection to the hub
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
+
+// Start the connection
+async function start() {
+    try {
+        await connection.start();
+        console.log("SignalR Connected.");
+    } catch (err) {
+        console.error(err.toString());
+        setTimeout(start, 5000);
+    }
+}
+
+// Join a chat room
+function joinChat(chatId) {
+    connection.invoke("JoinChat", chatId).catch(err => console.error(err.toString()));
+}
+
+// Leave a chat room
+function leaveChat(chatId) {
+    connection.invoke("LeaveChat", chatId).catch(err => console.error(err.toString()));
+}
+
+// Send a message
+document.getElementById("sendButton").addEventListener("click", function () {
+    const message = document.getElementById("messageInput").value;
+    const chatId = "chat123"; // Replace with the actual chat ID
+    const senderId = "user1"; // Replace with the actual sender ID
+    connection.invoke("SendMessage", chatId, senderId, message).catch(err => console.error(err.toString()));
+    document.getElementById("messageInput").value = '';
+});
+
+// Receive messages
+connection.on("ReceiveMessage", function (senderId, message) {
+    const msg = document.createElement("div");
+    msg.textContent = `${senderId}: ${message}`;
+    document.getElementById("chatContainer").appendChild(msg);
+});
+
+// Start the connection
+start();
