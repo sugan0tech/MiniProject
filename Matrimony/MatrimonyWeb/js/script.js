@@ -9,6 +9,7 @@ function requireAuth() {
         window.location.href = 'login.html';
     }
 }
+requireAuth();
 function checkAuthForPage() {
     if (!isAuthenticated() && !window.location.href.includes('login.html') && !window.location.href.includes('register.html')) {
         window.location.href = 'login.html';

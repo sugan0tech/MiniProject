@@ -20,6 +20,32 @@ async function postAuthRequest(endpoint, data, headers) {
     }
 }
 
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+async function adminValidator(){
+    if (localStorage.getItem("isAuthenticated")){
+        var role = parseJwt(localStorage.getItem("accessToken"))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        if (role === "Admin")
+            window.location.href = 'admin-dashboard.html';
+    }
+}
+
+async function userValidator(){
+    if (localStorage.getItem("isAuthenticated")){
+        var role = parseJwt(localStorage.getItem("accessToken"))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        if (role === "User")
+            window.location.href = 'index.html';
+    }
+}
+
 async function login(email, password) {
     const loginEndpoint = 'login';
     const headers = {
@@ -39,9 +65,14 @@ async function login(email, password) {
         }
         setAuthTokens(response.accessToken, response.refreshToken);
 
+        var role = parseJwt(localStorage.getItem("accessToken"))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
         console.log("Logged in successfully");
         showAlert("Login success", 'success')
-        window.location.href = 'index.html';
+        if (role === "Admin")
+            window.location.href = 'admin-dashboard.html';
+        else
+            window.location.href = 'index.html';
     } catch (error) {
         console.error("Login failed:", error);
         alert("Login failed. Please check your credentials and try again.");
