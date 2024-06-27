@@ -43,14 +43,24 @@
         </div>
     </div>
 </nav>
+<div id="alert-container"></div>
 <div class="container mt-5">
     <h2>Profile Details</h2>
-    <div id="profileDetails" class="card">
+    <div id="profileDetails" class="card" >
         <!-- to be filled -->
     </div>
     <button onclick="editProfile()" class="btn btn-warning mt-3">Edit Profile</button>
     <button onclick="removeProfile()" class="btn btn-danger mt-3">Remove Profile</button>
     <button onclick="viewMembership()" class="btn btn-info mt-3">View Membership</button>
+    <h2 class="mt-5">Profile Views</h2>
+    <div id="profileViews" class="card">
+        <div class="card-body">
+            <p id="membershipStatus"></p>
+            <ul id="viewersList" class="list-group">
+                <!-- Viewers will be listed here -->
+            </ul>
+        </div>
+    </div>
 </div>
 <script src="js/script.js"></script>
 <script src="js/membership.js"></script>
@@ -66,7 +76,10 @@
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/profile.js"></script>
-<script>loadProfile()</script>
+<script>
+    loadProfile()
+    loadProfileViews(localStorage.getItem("currentProfile"))
+</script>
 </body>
 <script>
     adminValidator()

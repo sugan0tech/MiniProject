@@ -202,7 +202,7 @@ async function makeAuthRequest(endpoint, method = 'GET', data = null) {
         if (!response.ok) {
             console.log(response.json().then(value => showAlert(value.message, 'danger')))
             console.log(response.status)
-            return;
+            return response;
         }
         const contentType = response.headers.get('Content-Type');
         return contentType && contentType.includes('application/json') ? await response.json() : null;

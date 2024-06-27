@@ -512,3 +512,51 @@ function sortProfiles() {
     profilesList.innerHTML = ''; // Clear existing profiles
     profiles.forEach(profile => profilesList.appendChild(profile));
 }
+
+async function loadProfileViews(profileId) {
+    try {
+        const response = await makeAuthRequest(`ProfileView/profile/${profileId}`)
+
+        console.log(response)
+
+        updateViewersList(response);
+    } catch (error) {
+        console.error('Error fetching profile views:', error);
+    }
+}
+
+function updateViewersList(viewers) {
+    const viewersList = document.getElementById('viewersList');
+    viewersList.innerHTML = '';
+
+    if (viewers.length === 0) {
+        document.getElementById('membershipStatus').innerText = "No one has viewed your profile yet.";
+        return;
+    }
+
+    const viewerCountMap = {};
+
+    viewers.forEach(viewer => {
+        if (viewerCountMap[viewer.viewerId]) {
+            viewerCountMap[viewer.viewerId].count += 1;
+            viewerCountMap[viewer.viewerId].viewedAt.push(viewer.viewedAt);
+        } else {
+            viewerCountMap[viewer.viewerId] = {
+                count: 1,
+                viewedAt: [viewer.viewedAt]
+            };
+        }
+    });
+
+    Object.keys(viewerCountMap).forEach(viewerId => {
+        const viewer = viewerCountMap[viewerId];
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-group-item');
+
+        const viewTimes = viewer.viewedAt.map(viewedAt => new Date(viewedAt).toLocaleString()).join(', ');
+        listItem.innerText = `Viewer ID: ${viewerId}, Views: ${viewer.count}, Viewed At: ${viewTimes}`;
+
+        viewersList.appendChild(listItem);
+    });
+}
+

@@ -11,8 +11,8 @@ namespace MatrimonyApiService.ProfileView;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 [EnableCors("AllowAll")]
+[Authorize]
 public class ProfileViewController(
     IProfileViewService profileViewService,
     IProfileService profileService,

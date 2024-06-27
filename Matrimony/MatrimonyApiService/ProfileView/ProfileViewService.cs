@@ -75,7 +75,7 @@ public class ProfileViewService(
             var views = allViews.FindAll(view => view.ViewedProfileAt.Equals(profileId))
                 .ConvertAll(mapper.Map<ProfileViewDto>).ToList();
             if (membership == null || membership.Type.Equals(MemberShip.FreeUser.ToString()))
-                throw new NonPremiumUserException("At least you have to be a basic user to access this feature");
+                throw new NonPremiumUserException("At least you have to be a basic user to see who watched your profile ");
             if (membership.Type.Equals(MemberShip.BasicUser.ToString()))
             {
                 var filteredViews = views
