@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatrimonyApiService.Commons;
+using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Cors;
@@ -93,15 +94,15 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
     }
 
     [HttpPost("register")]
-    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
     {
         try
         {
-            var success = await authService.Register(registerDto);
-            return Ok(new { Success = success });
+            var user = await authService.Register(registerDto);
+            return Ok(user);
         }
         catch (DbUpdateException e)
         {
@@ -110,6 +111,29 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
                 message = e.InnerException.Message;
 
             return BadRequest(new ErrorModel(400, message));
+        }
+        catch (UserNotVerifiedException e)
+        {
+            return Unauthorized(new ErrorModel(401, e.Message));
+        }
+        catch (AuthenticationException e)
+        {
+            return Unauthorized(new ErrorModel(401, e.Message));
+        }
+    }
+    
+    [HttpPost("verify-otp/{userId}")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> VerifyOtp([FromBody] string otp, int userId)
+    {
+        try
+        {
+            var success = await authService.VerifyUserByOtp(userId, otp);
+            if (success)
+                return Ok(new { Success = success });
+            return BadRequest(new ErrorModel(400, "Invalid Wrong OTP"));
         }
         catch (UserNotVerifiedException e)
         {

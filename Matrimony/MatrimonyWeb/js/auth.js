@@ -99,12 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleLogin);
 });
 
+// Register function modified to redirect to OTP entry
 async function register(event) {
     event.preventDefault();
     const registerEndpoint = 'register';
     const headers = {
         'Content-Type': 'application/json',
-        'Accept': 'text/plain',
+        'Accept': 'application/json',
     };
     const data = {
         email: document.getElementById('email').value,
@@ -117,26 +118,60 @@ async function register(event) {
     try {
         const response = await postAuthRequest(registerEndpoint, data, headers);
 
-        if (response.success){
-            showAlert("Oruvaliya jeichutom maara :heart:", "success")
+        if (!response.success) {
+            showAlert("Registration successful! Redirecting to OTP entry...", "success");
+            setTimeout(() => {
+                window.location.href = `otp-entry.html?userId=${response.userId}`;
+            }, 2000);
+        } else {
+            showAlert("Registration failed. Please try again.", "danger");
         }
-        else
-        {
-            showAlert("Adutha jenmathula papom murugesa", "danger")
-        }
-
-
-        console.log("Registered in successfully");
     } catch (error) {
-        console.error("Register failed:", error);
-        alert("Login failed. Please check your credentials and try again.");
+        console.error("Registration failed:", error);
+        showAlert("Registration failed. Please try again.", "danger");
     }
 }
 
+// OTP verification function
+async function verifyOtp(event) {
+    event.preventDefault();
+    const userId = new URLSearchParams(window.location.search).get('userId');
+    const otp = document.getElementById('otp').value;
+    const otpEndpoint = `verify-otp/${userId}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    };
+
+    try {
+        const response = await postAuthRequest(otpEndpoint, otp, headers);
+
+        if (response.success) {
+            showAlert("OTP verified successfully! Redirecting to login...", "success");
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        } else {
+            showAlert("Invalid OTP. Contact Admin for activation", "danger");
+        }
+    } catch (error) {
+        console.error("OTP verification failed:", error);
+        showAlert("OTP verification failed. Please try again.", "danger");
+    }
+}
+
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
-    registerForm.addEventListener('submit', register);
-});
+    if (registerForm) {
+        registerForm.addEventListener('submit', register);
+    }
+
+    const otpForm = document.getElementById('otp-form');
+    if (otpForm) {
+        otpForm.addEventListener('submit', verifyOtp);
+    }
+})
 
 
 async function logout() {

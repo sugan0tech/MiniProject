@@ -137,6 +137,7 @@ public class Program
         builder.Services
             .AddScoped<IQueryHandler<GetAllAddressesQuery, List<AddressDto>>, GetAllAddressesQueryHandler>();
         builder.Services.AddScoped<CustomControllerValidator>();
+        builder.Services.AddScoped<OtpService>();
 
         #endregion
 

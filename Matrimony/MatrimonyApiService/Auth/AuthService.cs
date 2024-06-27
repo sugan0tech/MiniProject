@@ -10,6 +10,7 @@ namespace MatrimonyApiService.Auth;
 public class AuthService(
     IUserService userService,
     ITokenService tokenService,
+    OtpService otpService,
     IUserSessionService userSessionService,
     IHttpContextAccessor httpContextAccessor,
     ILogger<AuthService> logger) : IAuthService
@@ -86,7 +87,7 @@ public class AuthService(
     }
 
     /// <intheritdoc/>
-    public async Task<bool> Register(RegisterDTO dto)
+    public async Task<UserDto> Register(RegisterDTO dto)
     {
         try
         {
@@ -103,8 +104,9 @@ public class AuthService(
                 IsVerified = false,
                 LoginAttempts = 0
             };
-            await userService.Add(user);
-            return true;
+            user = await userService.Add(user);
+            otpService.GenerateAndSendOtp(dto.Email);
+            return user;
         }
         catch (DbUpdateException e)
         {
@@ -117,6 +119,16 @@ public class AuthService(
         }
 
         throw new AuthenticationException("Not able to register at this moment");
+    }
+
+    public async Task<bool> VerifyUserByOtp(int userId, string otp)
+    {
+        var user = await userService.GetById(userId);
+        var status = otpService.VerifyOtp(user.Email, otp);
+        if (status)
+            await userService.Validate(userId, true);
+        
+        return status;
     }
 
     /// <intheritdoc/>

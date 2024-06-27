@@ -30,7 +30,15 @@ public interface IAuthService
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<bool> Register(RegisterDTO dto);
+    Task<UserDto> Register(RegisterDTO dto);
+    
+    /// <summary>
+    ///  User account registration.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="otp"></param>
+    /// <returns></returns>
+    Task<bool> VerifyUserByOtp(int userId, string otp);
 
     /// <summary>
     ///  User password change, also invalidates all the other sessions.

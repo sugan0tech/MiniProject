@@ -100,3 +100,23 @@ modelBuilder.Entity<Match.Match>()
 [ref](https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html):w
 
 - All the legacy assertion will be under `ClassicAssert lib`
+
+
+## Refresh token based auth & token invalidation
+- After careful, Generate of two tokens have been implemented.
+- with this now a user can 
+	- Logout of other device
+	- Can opt for temporary device sign-in ( stay signed ability )
+
+
+## Handling Secrets in dotnet
+[ref](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0)
+- As for 2FA needed lot's of secrets to be handled ( more sensitive )
+- `dotnet user-secrets init` - in current project, creates secrets store for us. those secrets are store under `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
+- For that specific project new secrets key is create and added with the `App.csproj`
+
+- Adding a secret: `dotnet user-secrets set "Movies:ServiceApiKey" "12345"`
+- Getting it in app: `var movieApiKey = builder.Configuration["Movies:ServiceApiKey"];`
+- Listing them: `dotnet user-secrets list`
+- Removing: `dotnet user-secrets remove "Movies:ConnectionString"`
+- Removes all secrets: `dotnet user-secrets clear`

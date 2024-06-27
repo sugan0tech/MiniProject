@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="alert-container"></div>
+<div class="container mt-5">
+    <h2>Enter OTP</h2>
+    <form id="otp-form">
+        <input type="hidden" id="userId" name="userId" value="">
+        <div class="form-group">
+            <label for="otp">OTP:</label>
+            <input type="text" class="form-control" id="otp" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Verify OTP</button>
+    </form>
+</div>
+<div class="fixed-bottom">
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
+    </footer>
+</div>
+<script src="js/auth.js"></script>
+</body>
+</html>
