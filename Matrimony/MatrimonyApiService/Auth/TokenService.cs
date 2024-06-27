@@ -43,7 +43,7 @@ public class TokenService : ITokenService
     }
 
     /// <intheritdoc/>
-    public string GenerateRefreshToken(UserDto user)
+    public string GenerateRefreshToken(UserDto user, bool shortLived)
     {
         var claims = new List<Claim>
         {
@@ -52,17 +52,17 @@ public class TokenService : ITokenService
             new(ClaimTypes.Role, "RefreshToken")
         };
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
-        var myToken = new JwtSecurityToken(null, null, claims, expires: DateTime.Now.AddMonths(6),
+        var myToken = new JwtSecurityToken(null, null, claims, expires: shortLived? DateTime.Now.AddHours(6) : DateTime.Now.AddMonths(6),
             signingCredentials: credentials);
         var token = new JwtSecurityTokenHandler().WriteToken(myToken);
         return token;
     }
 
     /// <intheritdoc/>
-    public AuthReturnDto GenerateTokens(UserDto user)
+    public AuthReturnDto GenerateTokens(UserDto user, bool shortLived)
     {
         var accessToken = GenerateToken(user, DateTime.Now.AddMinutes(300)); // Short-lived access token
-        var refreshToken = GenerateRefreshToken(user); // Long-lived refresh token
+        var refreshToken = GenerateRefreshToken(user, shortLived); // Long-lived refresh token
         return new AuthReturnDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 

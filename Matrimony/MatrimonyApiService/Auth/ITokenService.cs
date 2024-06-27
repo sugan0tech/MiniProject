@@ -23,15 +23,17 @@ public interface ITokenService
     ///  Generates Refersh Token
     /// </summary>
     /// <param name="user"></param>
+    /// <param name="shortLived"></param>
     /// <returns></returns>
-    public string GenerateRefreshToken(UserDto user);
+    public string GenerateRefreshToken(UserDto user, bool shortLived);
 
     /// <summary>
     /// Generates sets of JWT token ( access & refresh )
     /// </summary>
     /// <param name="user"></param>
+    /// <param name="shortLived"></param>
     /// <returns></returns>
-    public AuthReturnDto GenerateTokens(UserDto user);
+    public AuthReturnDto GenerateTokens(UserDto user, bool shortLived);
 
     /// <summary>
     /// Extracts and returns payload of a token

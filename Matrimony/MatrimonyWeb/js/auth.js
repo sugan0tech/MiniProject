@@ -46,7 +46,7 @@ async function userValidator(){
     }
 }
 
-async function login(email, password) {
+async function login(email, password, staySigned) {
     const loginEndpoint = 'login';
     const headers = {
         'Content-Type': 'application/json',
@@ -54,7 +54,8 @@ async function login(email, password) {
     };
     const data = {
         email: email,
-        password: password
+        password: password,
+        staySigned: staySigned
     };
 
     try {
@@ -84,11 +85,13 @@ async function handleLogin(event) {
 
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('pwd');
+    const staySignedInput = document.getElementById('staySignedIn');
 
     const email = emailInput.value;
     const password = passwordInput.value;
+    const staySigned = staySignedInput.checked;
 
-    await login(email, password);
+    await login(email, password, staySigned);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

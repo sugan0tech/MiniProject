@@ -32,7 +32,8 @@ public class AuthService(
             if (isPasswordSame)
             {
                 logger.LogInformation($"Successfully logged as Id :{user.UserId}");
-                var tokens = tokenService.GenerateTokens(user);
+                // if staySigned => long lived token
+                var tokens = tokenService.GenerateTokens(user, !loginDto.staySigned);
                 var newSession = new UserSessionDto
                 {
                     UserId = user.UserId,
@@ -135,7 +136,7 @@ public class AuthService(
 
             // logs out from all other devices
             await userSessionService.InvalidateAllPerUser(user.UserId);
-            var tokens = tokenService.GenerateTokens(user);
+            var tokens = tokenService.GenerateTokens(user, false);
             var newSession = new UserSessionDto
             {
                 UserId = user.UserId,
