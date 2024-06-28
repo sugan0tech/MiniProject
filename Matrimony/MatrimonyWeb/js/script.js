@@ -31,7 +31,7 @@ async function removeProfile() {
 }
 
 // Function to view profile
-function viewProfile(profileId) {
+function viewUserProfile(profileId) {
     localStorage.setItem('currentProfile', JSON.stringify(profileId));
     window.location.href = 'view-profile.html';
 }

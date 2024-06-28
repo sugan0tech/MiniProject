@@ -192,6 +192,7 @@ public class Program
 
         #region ChatHub
 
+        app.UseCors("AllowAll");
         app.MapHub<ChatHub>("/chatHub");
         
         #endregion

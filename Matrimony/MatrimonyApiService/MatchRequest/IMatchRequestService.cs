@@ -3,11 +3,19 @@
 public interface IMatchRequestService
 {
     /// <summary>
-    ///  Returns All the matches Accepted matches for the profile.
+    ///  Returns All the matches Accepted matches for the profile. 
     /// </summary>
     /// <param name="profileId"></param>
     /// <returns> List of MatchRequestDTO's </returns>
     Task<List<MatchRequestDto>> GetAcceptedMatchRequests(int profileId);
+    
+    /// <summary>
+    ///  Returns All the matches Accepted matches for the profile.
+    /// </summary>
+    /// <param name="profileOneId"></param>
+    /// <param name="profileTwoId"></param>
+    /// <returns> List of MatchRequestDTO's </returns>
+    Task<MatchRequestDto> IsThereAMatch(int profileOneId, int profileTwoId);
 
     /// <summary>
     ///  Returns All the matches Requests.

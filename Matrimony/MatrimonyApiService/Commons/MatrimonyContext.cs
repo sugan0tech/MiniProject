@@ -177,9 +177,13 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
                 .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Chat.Chat>()
-            .HasMany<Profile.Profile>(chat => chat.Participants)
-            .WithMany(u => u.Chats);
-
+            .HasOne<Profile.Profile>(chat => chat.Sender)
+            .WithMany(user => user.ChatsCreated)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Chat.Chat>()
+            .HasOne<Profile.Profile>(chat => chat.Receiver)
+            .WithMany(user => user.ChatsJoined)
+            .OnDelete(DeleteBehavior.NoAction);
         #endregion
 
         #region Perference

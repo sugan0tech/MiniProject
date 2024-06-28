@@ -54,7 +54,7 @@ async function loadProfiles() {
                         <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
                         <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
                         <p class="card-text"><strong>Membership:</strong> ${profile.membership? profile.membership.type : "FreeUser"}</p>
-                        <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
+                        <button class="btn btn-info" onclick="viewUserProfile(${profile.profileId})">View Profile</button>
                         <button class="btn btn-warning" onclick="editProfile(${profile.profileId})">Edit Profile</button>
                         <button class="btn btn-danger" onclick="removeProfile(${profile.profileId})">Remove Profile</button>
                         <button class="btn btn-primary" onclick="viewMembership(${profile.profileId})">View Membership</button>

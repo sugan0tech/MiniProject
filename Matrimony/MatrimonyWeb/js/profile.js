@@ -87,10 +87,10 @@ async function sendMatchRequest(profileId) {
 
     try {
         await makeAuthRequest(endpoint, 'POST');
-        console.log("match request send")
+        showAlert("Match Request sent", 'success');
+        console.log("match request sent")
     } catch (error) {
         console.error('Error sending match request:', error);
-        alert('Failed to send match request.');
     }
 }
 
@@ -430,7 +430,6 @@ function displayProfiles(profiles) {
                     <button class="btn btn-info" onclick="viewProfile(${profile.profileId})">View Profile</button>
                     <button class="btn btn-danger" onclick="reportProfile(${profile.profileId})">Report Profile</button>
                     <button class="btn btn-primary" onclick="sendMatchRequest(${profile.profileId})">MatchRequest</button>
-                    <button class="btn btn-primary" onclick="openChat(${profile.profileId})">Chat</button>
                 </div>
             </div>
         `;

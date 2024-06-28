@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240628001603_ChatNullable")]
+    partial class ChatNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace MatrimonyApiService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ChatProfile", b =>
+                {
+                    b.Property<int>("ChatsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParticipantsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChatsId", "ParticipantsId");
+
+                    b.HasIndex("ParticipantsId");
+
+                    b.ToTable("ChatProfile");
+                });
 
             modelBuilder.Entity("MatrimonyApiService.AddressCQRS.Address", b =>
                 {
@@ -77,17 +95,7 @@ namespace MatrimonyApiService.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
 
                     b.ToTable("Chats");
                 });
@@ -183,11 +191,6 @@ namespace MatrimonyApiService.Migrations
 
                     b.Property<int>("ChatId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
 
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
@@ -580,6 +583,21 @@ namespace MatrimonyApiService.Migrations
                     b.ToTable("UserSessions");
                 });
 
+            modelBuilder.Entity("ChatProfile", b =>
+                {
+                    b.HasOne("MatrimonyApiService.Chat.Chat", null)
+                        .WithMany()
+                        .HasForeignKey("ChatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatrimonyApiService.Profile.Profile", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MatrimonyApiService.AddressCQRS.Address", b =>
                 {
                     b.HasOne("MatrimonyApiService.User.User", "User")
@@ -589,25 +607,6 @@ namespace MatrimonyApiService.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MatrimonyApiService.Chat.Chat", b =>
-                {
-                    b.HasOne("MatrimonyApiService.Profile.Profile", "Receiver")
-                        .WithMany("ChatsJoined")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MatrimonyApiService.Profile.Profile", "Sender")
-                        .WithMany("ChatsCreated")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Receiver");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.MatchRequest.MatchRequest", b =>
@@ -734,10 +733,6 @@ namespace MatrimonyApiService.Migrations
 
             modelBuilder.Entity("MatrimonyApiService.Profile.Profile", b =>
                 {
-                    b.Navigation("ChatsCreated");
-
-                    b.Navigation("ChatsJoined");
-
                     b.Navigation("MessagesReceived");
 
                     b.Navigation("MessagesSent");

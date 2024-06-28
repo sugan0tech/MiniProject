@@ -51,9 +51,12 @@ function displayMatches(matches, containerId, type) {
                     <h5 class="card-title">Match ${match.matchId}: Profile ${match.receivedProfileId}</h5>
                     <p class="card-text">Sent by Profile ${match.sentProfileId}</p>
                     ${type === 'received' ? `
-                        <button class="btn btn-success" onclick="acceptMatch(${match.matchId}, ${match.receivedProfileId})">Accept Match</button>
+                        <button class="btn btn-success" onclick="acceptMatch(${match.matchId}, ${match.receivedProfileId})" style="">Accept Match</button>
                         <button class="btn btn-danger" onclick="rejectMatch(${match.matchId}, ${match.receivedProfileId})">Reject Match</button>
-                    ` : `
+                        <button class="btn btn-primary" onclick="viewProfile(${match.sentProfileId})">View Profile</button>
+                    ` : type === 'accepted' ? `
+                        <button class="btn btn-primary" onclick="openChat(${match.sentProfileId}, ${match.receivedProfileId})">Chat</button>
+                    `: `
                         <button class="btn btn-danger" onclick="removeMatch('${type}', ${match.matchId})">Remove Match</button>
                     `}
                 </div>
@@ -100,4 +103,28 @@ async function removeMatch(type, matchId) {
     await makeAuthRequest('MatchRequest/' + matchId, 'DELETE');
 }
 
-// Initialize by fetching the data
+async function openChat(sentProfileId, receivedProfileId) {
+    try {
+        // Check if a chat already exists for these profiles
+        const existingChat = await makeAuthRequest(`Chat/findChat/${sentProfileId}/${receivedProfileId}`);
+
+        if (existingChat && existingChat.id) {
+            // Chat exists, open the existing chat
+            localStorage.setItem('currentChat', JSON.stringify(existingChat));
+            window.location.href = 'chats.html'
+        } else {
+            // No chat exists, create a new chat
+            const newChat = await makeAuthRequest(`Chat/${sentProfileId}/${receivedProfileId}`, 'POST');
+            if (newChat && newChat.chatId) {
+                // New chat created, open it
+                localStorage.setItem('currentChat', JSON.stringify(newChat));
+                window.location.href = 'chats.html'
+            } else {
+                showAlert('Failed to create or open chat', 'danger');
+            }
+        }
+    } catch (error) {
+        console.error('Error in openChat:', error);
+        showAlert('Failed to open chat', 'danger');
+    }
+}

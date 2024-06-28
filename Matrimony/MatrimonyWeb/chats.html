@@ -25,6 +25,7 @@
         .chat-window {
             flex: 2;
             display: flex;
+            height: 700px;
             flex-direction: column;
         }
         .message-list {
@@ -101,7 +102,8 @@
 
 <!-- Main Content -->
 <div class="container mt-5" style="padding-bottom: 100px" id="content">
-    <div class="chat-container mt-5">
+    <div id="alert-container"></div>
+    <div class="chat-container mt-5" id="chatContainer">
         <!-- Chat List -->
         <div class="chat-list p-3" id="chatList">
             <h5>Chats</h5>
@@ -109,13 +111,11 @@
         </div>
 
         <!-- Chat Window -->
-        <div class="chat-window">
+        <div class="chat-window" >
             <div class="message-list" id="messageList">
                 <!-- Messages will be dynamically inserted here -->
             </div>
-            <div class="message-input">
-                <input type="text" id="messageInput" class="form-control" placeholder="Type a message">
-                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+            <div class="message-input" id="messageInputBody">
             </div>
         </div>
     </div>
@@ -129,9 +129,11 @@
 <!-- Scripts -->
 <script src="js/bootstrap.bundle.js"></script>
 <!--<script src="js/signalr.js"></script> &lt;!&ndash; SignalR library &ndash;&gt;-->
-<script src="js/chat.js"></script> <!-- Custom JavaScript for chats -->
+<script src="js/chat.js"></script>
+<script src="js/auth.js"></script>
 <script>
     loadChats();
+    start();
 </script>
 </body>
 </html>

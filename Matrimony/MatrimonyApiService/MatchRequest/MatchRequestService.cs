@@ -19,15 +19,42 @@ public class MatchRequestService(
     {
         await profileService.GetProfileById(profileId); // validates profile
         var matches = await repo.GetAll();
-        return matches.Where(match => match.SentProfileId.Equals(profileId) && match.ReceiverLike).ToList()
+        return matches.Where(match => (match.SentProfileId.Equals(profileId) || match.ReceivedProfileId.Equals(profileId)) && match.ReceiverLike).ToList()
             .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
+    }
+    
+    /// <summary>
+    ///  Given two profile Id, returns if any match present
+    /// </summary>
+    /// <param name="profileOneId"></param>
+    /// <param name="profileTwoId"></param>
+    /// <returns></returns>
+    /// <exception cref="EntityNotFoundException"></exception>
+    public async Task<MatchRequestDto> IsThereAMatch(int profileOneId, int profileTwoId)
+    {
+        await profileService.GetProfileById(profileOneId); // validates profile
+        await profileService.GetProfileById(profileTwoId); // validates profile
+        var matches = await repo.GetAll();
+        try
+        {
+            var match = matches.First(match =>
+                (match.SentProfileId.Equals(profileOneId) || match.SentProfileId.Equals(profileTwoId)) &&
+                match.ReceiverLike &&
+                (match.ReceivedProfileId.Equals(profileOneId) || match.ReceivedProfileId.Equals(profileTwoId)));
+            return mapper.Map<MatchRequestDto>(match);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e);
+            throw new EntityNotFoundException("No match found for these profiles!!");
+        }
     }
 
     /// <inheritdoc/>
     public async Task<List<MatchRequestDto>> GetMatchRequests(int profileId)
     {
         var matches = await repo.GetAll();
-        return matches.Where(match => match.ReceivedProfileId.Equals(profileId)).ToList()
+        return matches.Where(match => match.ReceivedProfileId.Equals(profileId) && !match.ReceiverLike).ToList()
             .ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
     }
 

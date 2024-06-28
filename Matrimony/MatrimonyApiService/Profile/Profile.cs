@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Validations;
+using Newtonsoft.Json;
 
 namespace MatrimonyApiService.Profile;
 
@@ -147,7 +148,8 @@ public class Profile : BaseEntity
 
     [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesSent { get; set; }
     [ExcludeFromCodeCoverage] public IEnumerable<Message.Message>? MessagesReceived { get; set; }
-    [ExcludeFromCodeCoverage] public IEnumerable<Chat.Chat>? Chats { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<Chat.Chat>? ChatsCreated { get; set; }
+    [ExcludeFromCodeCoverage] public IEnumerable<Chat.Chat>? ChatsJoined { get; set; }
     [ForeignKey("PreferenceId")] public int? PreferenceId { get; set; }
     public Preference.Preference? Preference { get; set; }
 
