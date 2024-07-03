@@ -425,7 +425,7 @@ function displayProfiles(profiles) {
         const profileCard = `
             <div class="card mb-3" data-profile-id="${profile.profileId}">
                 <div class="card-body">
-                    <h5 class="card-title">Profile ${profile.profileId}: ${profile.profilePicture ? `<img src="${profile.profilePicture}" alt="Profile Picture" />` : 'No Picture'}</h5>
+                    <h5 class="card-title">Profile: ${profile.profileId}</h5>
                     <p class="card-name">Name: ${profile.user.firstName} ${profile.user.lastName}</p>
                     <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
                     <p class="card-text">Religion: ${profile.religion}, Ethnicity: ${profile.ethnicity}</p>
