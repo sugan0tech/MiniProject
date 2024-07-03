@@ -1,37 +1,62 @@
 // Function to load chats
 async function loadChats() {
     const chatListElement = document.getElementById('chatList');
-    // chatListElement.innerHTML = ''; // Clear existing chat list
+    chatListElement.innerHTML = ''; // Clear existing chat list
 
     const currentChat = JSON.parse(localStorage.getItem("currentChat"));
+    const currentProfileId = localStorage.getItem("currentProfile");
 
     try {
-        // Fetch chat data from API
-        let chats = await makeAuthRequest('chat/chats/' + localStorage.getItem("currentProfile"), 'GET');
+        const chats = await makeAuthRequest(`chat/chats/${currentProfileId}`, 'GET');
 
-
-        if (!chats || chats == null) {
-            showAlert("No messages found, start one from match", 'warning')
+        if (!chats || chats.length === 0) {
+            showAlert("No messages found, start one from match", 'warning');
             return;
         }
 
         // Iterate over each chat and create chat elements
-        chats.forEach(chat => {
-            console.log(chat)
+        for (const chat of chats) {
+            // Determine the opposite profile ID
+            const oppositeProfileId = chat.receiverId == currentProfileId ? chat.senderId : chat.receiverId;
+
+            // Fetch profile details for the opposite profile
+            const oppositeProfile = await makeAuthRequest(`profile/preview/${oppositeProfileId}`, 'GET');
+
+            // Create chat item element
             const chatItem = document.createElement('div');
             chatItem.className = 'chat-item';
             chatItem.dataset.chatId = chat.id;
+
+            // Get profile picture or use a placeholder if not available
+            const profilePictureSrc = oppositeProfile.profilePicture
+                ? `data:image/jpeg;base64,${oppositeProfile.profilePicture}`
+                : './placeholder.jpg';
+
             chatItem.innerHTML = `
-                <h6>Chat with ${chat.receiverId} ; ${chat.senderId}</h6>
-                <p>${chat.lastMessage ? chat.lastMessage.content : 'No messages yet'}</p>
-                <span class="badge bg-primary">Unreads: ${chat ? chat.unreads : 0}</span>
+                <div class="d-flex align-items-center">
+                    <img src="${profilePictureSrc}" alt="Profile Picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px;">
+                    <div>
+                        <h6>${oppositeProfile.user.firstName} ${oppositeProfile.user.lastName}</h6>
+                        <h6>Chat between ${chat.receiverId} ; ${chat.senderId}</h6>
+                        <p>Last message: ${chat.lastMessage ? chat.lastMessage.content : 'No messages yet'}</p>
+                        <span class="badge bg-primary">Unreads: ${chat.unreads || 0}</span>
+                    </div>
+                </div>
             `;
-            chatItem.addEventListener('click', () => {selectChat(chatItem, chat.id);
-            localStorage.setItem("currentChat", JSON.stringify(chat))});
-            if (currentChat && chat.id == currentChat.id)
+
+            // Add event listener to handle chat selection
+            chatItem.addEventListener('click', () => {
                 selectChat(chatItem, chat.id);
+                localStorage.setItem("currentChat", JSON.stringify(chat));
+            });
+
+            // Auto-select current chat if it matches the stored current chat
+            if (currentChat && chat.id === currentChat.id) {
+                selectChat(chatItem, chat.id);
+            }
+
             chatListElement.appendChild(chatItem);
-        });
+        }
     } catch (error) {
         console.error('Error loading chats:', error);
         showAlert('Failed to load chats', 'danger');
@@ -41,18 +66,91 @@ async function loadChats() {
 async function selectChat(chatItem, chatId) {
     document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('selected'));
     chatItem.classList.add('selected');
+
     const selectedChat = document.getElementById('messageInputBody');
     selectedChat.innerHTML = `
+        <button class="btn btn-info mt-1" onclick="viewProfileButtonClick('${chatId}')" style="margin-right: 10px">View Profile</button>
         <input type="text" id="messageInput" class="form-control" placeholder="Type a message">
-        <button class="btn btn-primary" onclick="sendMessage()">Send</button>`
+        <button class="btn btn-primary mt-1" onclick="sendMessage()">Send</button>`;
 
-    let currentChat = JSON.parse(document.getElementById("currentChat"))
-    if(currentChat){
+    let currentChat = JSON.parse(localStorage.getItem("currentChat"));
+    if (currentChat) {
         leaveChat(currentChat.id.toString());
     }
 
     await loadMessages(chatId);
     await joinChat(chatId.toString());
+}
+
+async function viewProfileButtonClick(chatId) {
+    const currentProfileId = localStorage.getItem("currentProfile");
+    const chat = JSON.parse(localStorage.getItem("currentChat"));
+
+    if (!chat) {
+        showAlert('Chat not found', 'warning');
+        return;
+    }
+
+    const oppositeProfileId = chat.receiverId == currentProfileId ? chat.senderId : chat.receiverId;
+
+    await viewProfileViaChat(oppositeProfileId);
+}
+
+
+async function viewProfileViaChat(profileId) {
+    const currentProfileId = localStorage.getItem('currentProfile');
+    const endpoint = `ProfileView/add/viewer/${currentProfileId}/profile/${profileId}`;
+
+    try {
+        const profileDetails = await makeAuthRequest(endpoint, 'POST');
+
+        if (profileDetails) {
+            displayProfileModal(profileDetails);
+        } else {
+            console.log("Profile not found.");
+        }
+    } catch (error) {
+        console.error('Error viewing profile:', error);
+    }
+}
+
+function displayProfileModal(profileDetails) {
+    const existingModal = document.getElementById('profileModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    const modalHtml = `
+        <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="profileModalLabel">Profile Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${profileDetails.profilePicture ? `<img src="${profileDetails.profilePicture}" alt="Profile Picture" class="img-thumbnail mb-3" style=""/>` : ''}
+                        <h6>${profileDetails.user.firstName} ${profileDetails.user.lastName}</h6>
+                        <p><strong>Profile ID:</strong> ${profileDetails.profileId}</p>
+                        <p><strong>Occupation:</strong> ${profileDetails.occupation}</p>
+                        <p><strong>Marital Status:</strong> ${profileDetails.maritalStatus}</p>
+                        <p><strong>Mother Tongue:</strong> ${profileDetails.motherTongue}</p>
+                        <p><strong>Religion:</strong> ${profileDetails.religion}</p>
+                        <p><strong>Ethnicity:</strong> ${profileDetails.ethnicity}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+
+    const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+    modal.show();
 }
 
 // Function to load messages for a chat
