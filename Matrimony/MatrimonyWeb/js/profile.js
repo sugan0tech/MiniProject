@@ -25,6 +25,8 @@ function displayProfileModal(profileDetails) {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        ${profileDetails.profilePicture ? `<img src="${profileDetails.profilePicture}" alt="Profile Picture" class="img-thumbnail"/>` : ''}
+                        ${profileDetails.bio ? `<p><strong>Bio:</strong> ${profileDetails.bio}</p>` : ''}
                         <p><strong>Profile ID:</strong> ${profileDetails.profileId}</p>
                         <p><strong>Name :</strong> ${profileDetails.user.firstName} ${profileDetails.user.lastName}</p>
                         <p><strong>Date of Birth:</strong> ${new Date(profileDetails.dateOfBirth).toLocaleDateString()}</p>
@@ -36,8 +38,6 @@ function displayProfileModal(profileDetails) {
                         <p><strong>Mother Tongue:</strong> ${profileDetails.motherTongue}</p>
                         <p><strong>Religion:</strong> ${profileDetails.religion}</p>
                         <p><strong>Ethnicity:</strong> ${profileDetails.ethnicity}</p>
-                        ${profileDetails.bio ? `<p><strong>Bio:</strong> ${profileDetails.bio}</p>` : ''}
-                        ${profileDetails.profilePicture ? `<img src="data:image/png;base64,${profileDetails.profilePicture}" alt="Profile Picture" class="img-thumbnail"/>` : ''}
                         <p><strong>Habit:</strong> ${profileDetails.habit}</p>
                         <p><strong>Gender:</strong> ${profileDetails.gender}</p>
                         <p><strong>Weight:</strong> ${profileDetails.weight} kg</p>
@@ -114,7 +114,7 @@ async function createProfile(event) {
         religion: document.getElementById('religion').value,
         ethnicity: document.getElementById('ethnicity').value,
         bio: document.getElementById('bio').value,
-        // profilePicture: await getBase64(document.getElementById('profilePicture').files[0]),
+        profilePicture: await getBase64(document.getElementById('profilePicture').files[0]),
         habit: document.getElementById('habit').value,
         gender: document.getElementById('gender').value,
         weight: parseInt(document.getElementById('weight').value),
@@ -274,8 +274,9 @@ function loadForEditProfile() {
     document.getElementById('profilePicture').value = profileData.profilePicture;
 }
 
-function saveChanges() {
+async function saveChanges() {
     const profileId = localStorage.getItem("currentProfileId");
+    console.log(await getBase64(document.getElementById('profilePicture').files[0]))
     const updatedProfile = {
         profileId: parseInt(document.getElementById('profileId').value),
         managedById: parseInt(document.getElementById('managedById').value),
@@ -295,7 +296,7 @@ function saveChanges() {
         weight: parseFloat(document.getElementById('weight').value),
         height: parseFloat(document.getElementById('height').value),
         managedByRelation: document.getElementById('managedByRelation').value,
-        // profilePicture: document.getElementById('profilePicture').value
+        profilePicture: await getBase64(document.getElementById('profilePicture').files[0]),
     };
 
     let response = makeAuthRequest("profile", "PUT", updatedProfile);

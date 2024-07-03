@@ -16,13 +16,18 @@ function checkAuthForPage() {
     }
 }
 // Function to edit profile
-function editProfile() {
+function editProfile(profileId) {
+    if(!profileId || localStorage.getItem("currentProfile")){
+        window.location.href = `edit-profile.html`;
+        return;
+    }
+
+    localStorage.setItem("currentProfile", profileId);
     window.location.href = `edit-profile.html`;
 }
 
 // Function to remove profile
-async function removeProfile() {
-    const profileId = localStorage.getItem('currentProfile');
+async function removeProfile(profileId) {
     let profiles = JSON.parse(localStorage.getItem('profiles'));
     await makeAuthRequest("Profile/" + profileId , "DELETE")
     localStorage.removeItem('currentProfile');

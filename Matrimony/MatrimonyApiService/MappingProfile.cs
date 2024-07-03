@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MatrimonyApiService.AddressCQRS;
+using MatrimonyApiService.Commons.converters;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Message;
@@ -53,9 +54,11 @@ public class MappingProfile : AutoMapper.Profile
         // Profile mappings
         CreateMap<Profile.Profile, ProfileDto>()
             .ForMember(dto => dto.ProfileId, act => act.MapFrom(src => src.Id))
+            .ForMember(dest => dest.ProfilePicture, opt => opt.ConvertUsing(new ByteArrayToBase64Converter(), src => src.ProfilePicture))
             .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
         CreateMap<ProfileDto, Profile.Profile>()
             .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.ProfileId))
+            .ForMember(dest => dest.ProfilePicture, opt => opt.ConvertUsing(new Base64ToByteArrayConverter(), src => src.ProfilePicture))
             .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
 
         CreateMap<Profile.Profile, ProfilePreviewDto>()

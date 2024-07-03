@@ -33,38 +33,49 @@ async function updateAccountInfo(event) {
 async function loadProfiles() {
     try {
         const profiles = await makeAuthRequest('Profile/manager');
-        console.log("stuff")
-        // flushes existing profiles dummy ones
-        const keys = Object.keys(localStorage)
-        let range = keys.length;
-        while ( range-- ){
-            if (keys[range].includes("profile") && !keys[range].includes("currentProfile"))
-                localStorage.removeItem(keys[range])
-        }
 
-        if (localStorage.getItem("currentProfile") == null){
-            localStorage.setItem("currentProfile", profiles[0].profileId)
+        // Flush existing profile data in localStorage
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.includes("profile") && !key.includes("currentProfile")) {
+                localStorage.removeItem(key);
+            }
+        });
+
+        // Set the current profile if not set
+        if (!localStorage.getItem("currentProfile")) {
+            localStorage.setItem("currentProfile", profiles[0].profileId);
         }
 
         const profilesList = document.getElementById('profilesList');
         profilesList.innerHTML = '';
+
         profiles.forEach(profile => {
             localStorage.setItem(`profile${profile.profileId}`, JSON.stringify(profile));
+
+            const profilePictureSrc = profile.profilePicture
+                ? `${profile.profilePicture}`
+                : './placeholder.jpg';
+
             const profileHTML = `
                 <div class="card mb-3" data-profile-id="${profile.profileId}">
-                    <div class="card-body">
-                        <h5 class="card-title">Profile ${profile.profileId}</h5>
-                        <p class="card-text">Name: ${profile.user.firstName + " " + profile.user.lastName}, IsVerified: ${profile.user.isVerified}</p>
-                        <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
-                        <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
-                        <p class="card-text"><strong>Membership:</strong> ${profile.membership? profile.membership.type : "FreeUser"}</p>
-                        <button class="btn btn-info" onclick="viewUserProfile(${profile.profileId})">View Profile</button>
-                        <button class="btn btn-warning" onclick="editProfile(${profile.profileId})">Edit Profile</button>
-                        <button class="btn btn-danger" onclick="removeProfile(${profile.profileId})">Remove Profile</button>
-                        <button class="btn btn-primary" onclick="viewMembershipNew(${profile.profileId})">View Membership</button>
+                    <div class="card-body d-flex align-items-start">
+                        <img src="${profilePictureSrc}" alt="Profile Picture" class="img-thumbnail me-3" style="max-width: 150px;">
+                        <div>
+                            <h5 class="card-title">Profile ${profile.profileId}</h5>
+                            <p class="card-text">Name: ${profile.user.firstName} ${profile.user.lastName}, IsVerified: ${profile.user.isVerified}</p>
+                            <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
+                            <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
+                            <p class="card-text"><strong>Membership:</strong> ${profile.membership ? profile.membership.type : "FreeUser"}</p>
+                            <button class="btn btn-info" onclick="viewUserProfile(${profile.profileId})">View Profile</button>
+                            <button class="btn btn-warning" onclick="editProfile(${profile.profileId})">Edit Profile</button>
+                            <button class="btn btn-danger" onclick="removeProfile(${profile.profileId})">Remove Profile</button>
+                            <button class="btn btn-primary" onclick="viewMembershipNew(${profile.profileId})">View Membership</button>
+                        </div>
                     </div>
                 </div>
             `;
+
             profilesList.insertAdjacentHTML('beforeend', profileHTML);
         });
     } catch (error) {

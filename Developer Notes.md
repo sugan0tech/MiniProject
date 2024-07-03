@@ -147,3 +147,48 @@ Flow:
 6. Clients
 	- The client is responsible for establishing a connection to the server's endpoint through a HubConnection object. The hub connection is represented within each target platform:
 
+
+
+## AutoMapper - Skipping null fields
+
+- For the dots with FK nullable values, will be reseted as 0 and mapped. which in turns affects the entity while update operation
+- fix:  in mapper config
+```csharp
+CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
+CreateMap<ProfileDto, Profile.Profile>()
+		.ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.ProfileId))
+		.ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
+
+```
+- Also like for mapping, fetch entity and map to it
+```csharp
+var existingProfile = await repo.GetById(dto.ProfileId);
+            
+mapper.Map(dto, existingProfile);
+var updatedProfile = await repo.Update(existingProfile);
+return mapper.Map<ProfileDto>(updatedProfile);
+
+```
+
+
+### AutoMapper for Image Conversion
+
+- **Custom Converters**:
+  - **`Base64ToByteArrayConverter`**: Converts base64 strings to byte arrays for efficient storage.
+  - **`ByteArrayToBase64Converter`**: Converts byte arrays back to base64 for easy image display.
+
+- **Integration**:
+  - Use `AutoMapper` to map profile data, including image handling.
+  - Convert `ProfileDto.ProfilePictureBase64` to `Profile.ProfilePicture` using custom converters.
+
+- **Error Handling**:
+  - Gracefully handle invalid base64 strings and empty byte arrays to prevent application crashes.
+
+- **Benefits**:
+  - Centralizes and simplifies image data conversion logic.
+  - Enhances maintainability and reduces redundancy in code.
+  - Enables efficient storage and display of profile images.
+
+- **Usage**:
+  - Import and configure `AutoMapper` with the custom converters in `MappingProfile`.
+  - Ensure image data in base64 format can be directly embedded in HTML for display.

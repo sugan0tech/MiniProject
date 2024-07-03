@@ -34,7 +34,7 @@ public record ProfileDto
     public string Ethnicity { get; init; }
 
     [ExcludeFromCodeCoverage] public string? Bio { get; init; }
-    [ExcludeFromCodeCoverage] public byte[]? ProfilePicture { get; init; }
+    [ExcludeFromCodeCoverage] public string? ProfilePicture { get; init; }
     [EnumTypeValidation(typeof(Habit))] public string Habit { get; init; }
 
     [EnumTypeValidation(typeof(Gender))] public string Gender { get; init; }
