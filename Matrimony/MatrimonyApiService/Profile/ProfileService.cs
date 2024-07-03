@@ -69,8 +69,11 @@ public class ProfileService(
     {
         try
         {
-            var profile = await repo.Update(mapper.Map<Profile>(dto));
-            return mapper.Map<ProfileDto>(profile);
+            var existingProfile = await repo.GetById(dto.ProfileId);
+            
+            mapper.Map(dto, existingProfile);
+            var updatedProfile = await repo.Update(existingProfile);
+            return mapper.Map<ProfileDto>(updatedProfile);
         }
         catch (KeyNotFoundException e)
         {

@@ -19,4 +19,6 @@ public class Chat : BaseEntity
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastMessageAt { get; set; }
+
+    public int Unreads { get; set; } = 0;
 }

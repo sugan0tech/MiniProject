@@ -1,83 +1,7 @@
-// Dummy data, soon will be integrated
-const chats = [
-    {
-        chatId: '1',
-        participants: ['1', '2'],
-        lastMessage: {
-            sender: '1',
-            content: 'How are you?',
-            timestamp: '2024-06-26T12:00:00Z'
-        },
-        unreadCount: 2
-    },
-    {
-        chatId: '2',
-        participants: ['1', '3'],
-        lastMessage: {
-            sender: '3',
-            content: 'Good morning!',
-            timestamp: '2024-06-26T08:00:00Z'
-        },
-        unreadCount: 0
-    }
-];
-
-const messages = {
-    '1': [
-        {
-            messageId: '1',
-            chatId: '1',
-            sender: '1',
-            receiver: '2',
-            content: 'Hello!',
-            timestamp: '2024-06-26T10:00:00Z',
-            isRead: true
-        },
-        {
-            messageId: '2',
-            chatId: '1',
-            sender: '2',
-            receiver: '1',
-            content: 'Hi! How are you?',
-            timestamp: '2024-06-26T11:00:00Z',
-            isRead: true
-        },
-        {
-            messageId: '3',
-            chatId: '1',
-            sender: '1',
-            receiver: '2',
-            content: 'I am fine, thank you. And you?',
-            timestamp: '2024-06-26T12:00:00Z',
-            isRead: false
-        }
-    ],
-    '2': [
-        {
-            messageId: '4',
-            chatId: '2',
-            sender: '3',
-            receiver: '1',
-            content: 'Good morning!',
-            timestamp: '2024-06-26T08:00:00Z',
-            isRead: true
-        },
-        {
-            messageId: '5',
-            chatId: '2',
-            sender: '1',
-            receiver: '3',
-            content: 'Morning! How was your night?',
-            timestamp: '2024-06-26T08:30:00Z',
-            isRead: true
-        }
-    ]
-};
-
 // Function to load chats
 async function loadChats() {
     const chatListElement = document.getElementById('chatList');
-    chatListElement.innerHTML = ''; // Clear existing chat list
+    // chatListElement.innerHTML = ''; // Clear existing chat list
 
     const currentChat = JSON.parse(localStorage.getItem("currentChat"));
 
@@ -86,23 +10,26 @@ async function loadChats() {
         let chats = await makeAuthRequest('chat/chats/' + localStorage.getItem("currentProfile"), 'GET');
 
 
-        if (!chats) {
-            showAlert('NO chats found', 'warning');
+        if (!chats || chats == null) {
+            showAlert("No messages found, start one from match", 'warning')
             return;
         }
 
         // Iterate over each chat and create chat elements
         chats.forEach(chat => {
+            console.log(chat)
             const chatItem = document.createElement('div');
             chatItem.className = 'chat-item';
             chatItem.dataset.chatId = chat.id;
             chatItem.innerHTML = `
                 <h6>Chat with ${chat.receiverId} ; ${chat.senderId}</h6>
                 <p>${chat.lastMessage ? chat.lastMessage.content : 'No messages yet'}</p>
-                <span class="badge bg-primary">Unreads: ${chat.unreadCount ? 5 : 0}</span>
+                <span class="badge bg-primary">Unreads: ${chat ? chat.unreads : 0}</span>
             `;
             chatItem.addEventListener('click', () => {selectChat(chatItem, chat.id);
             localStorage.setItem("currentChat", JSON.stringify(chat))});
+            if (currentChat && chat.id == currentChat.id)
+                selectChat(chatItem, chat.id);
             chatListElement.appendChild(chatItem);
         });
     } catch (error) {

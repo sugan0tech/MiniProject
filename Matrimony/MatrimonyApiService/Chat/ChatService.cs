@@ -69,9 +69,9 @@ public class ChatService(
     public async Task<Chat> FindChatByParticipantsAsync(int profileOneId, int profileTwoId)
     {
         var chat = await context.Chats
-            .FirstOrDefaultAsync(c => (c.SenderId.Equals(profileOneId) || c.ReceiverId.Equals(profileTwoId)) &&
+            .FirstOrDefaultAsync(c => (c.SenderId.Equals(profileOneId) || c.SenderId.Equals(profileTwoId)) &&
                                       (c.ReceiverId.Equals(profileTwoId) ||
-                                       c.SenderId.Equals(profileOneId))); // Ensure exactly two participants
+                                       c.ReceiverId.Equals(profileOneId))); // Ensure exactly two participants
         return chat ?? throw new EntityNotFoundException("No chat's found");
     }
 

@@ -17,6 +17,9 @@ public class MappingProfile : AutoMapper.Profile
 {
     public MappingProfile()
     {
+        // to fix the skip mapping for FK ids which set as optional, to skip those ( by default it's set to 0 ()
+        CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
+        
         // Address mappings
         CreateMap<AddressCQRS.Address, AddressDto>()
             .ForMember(dto => dto.AddressId, act => act.MapFrom(src => src.Id));

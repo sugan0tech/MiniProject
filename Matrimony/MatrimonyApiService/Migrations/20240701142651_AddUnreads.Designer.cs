@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240701142651_AddUnreads")]
+    partial class AddUnreads
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +60,7 @@ namespace MatrimonyApiService.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Chat.Chat", b =>
@@ -92,7 +95,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Chats", (string)null);
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.MatchRequest.MatchRequest", b =>
@@ -127,7 +130,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("SentProfileId");
 
-                    b.ToTable("Matches", (string)null);
+                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Membership.Membership", b =>
@@ -173,7 +176,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Memberships", (string)null);
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Message.Message", b =>
@@ -212,7 +215,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Preference.Preference", b =>
@@ -271,7 +274,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Preferences", (string)null);
+                    b.ToTable("Preferences");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Profile.Profile", b =>
@@ -379,7 +382,7 @@ namespace MatrimonyApiService.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Profiles", (string)null);
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.ProfileView.ProfileView", b =>
@@ -405,7 +408,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex("ViewerId");
 
-                    b.ToTable("ProfileViews", (string)null);
+                    b.ToTable("ProfileViews");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Report.Report", b =>
@@ -427,7 +430,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.Staff.Staff", b =>
@@ -478,7 +481,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasIndex(new[] { "Email" }, "Email_Ind");
 
-                    b.ToTable("Staffs", (string)null);
+                    b.ToTable("Staffs");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.User.User", b =>
@@ -535,7 +538,7 @@ namespace MatrimonyApiService.Migrations
                     b.HasIndex(new[] { "Email" }, "Email_Ind")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.UserSession.UserSession", b =>
@@ -580,7 +583,7 @@ namespace MatrimonyApiService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserSessions", (string)null);
+                    b.ToTable("UserSessions");
                 });
 
             modelBuilder.Entity("MatrimonyApiService.AddressCQRS.Address", b =>

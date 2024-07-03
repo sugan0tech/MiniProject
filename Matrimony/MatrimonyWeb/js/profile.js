@@ -323,6 +323,7 @@ function loadSelectProfiles() {
 
 function findAndSetDefaults(profile) {
     if (localStorage.getItem("currentProfile") == profile.profileId) {
+        console.log(profile)
         fetchPreferences(profile.preferenceId);
         console.log("hereee")
         return true;

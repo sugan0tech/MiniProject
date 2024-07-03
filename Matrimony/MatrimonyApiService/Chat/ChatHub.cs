@@ -27,6 +27,7 @@ namespace MatrimonyApiService.Chat
             if (chat != null)
             {
                 chat.LastMessageAt = message.SentAt;
+                chat.Unreads++;
                 await chatService.UpdateChatAsync(chat);
             }
 
@@ -36,8 +37,15 @@ namespace MatrimonyApiService.Chat
         public async Task SeenMessage(string chatId, string messageId)
         {
             var msgIdInt = int.Parse(messageId);
+            var chatIdInt = int.Parse(chatId);
             var message = await messageService.GetById(msgIdInt);
+            var chat = await chatService.GetChatByIdAsync(chatIdInt);
             message.Seen = true;
+            if (chat.Unreads > 0)
+            {
+                chat.Unreads--;
+                await chatService.UpdateChatAsync(chat);
+            }
             await messageService.UpdateMessageAsync(message);
         }
 

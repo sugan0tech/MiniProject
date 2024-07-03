@@ -58,3 +58,7 @@ function loadContent(file) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
