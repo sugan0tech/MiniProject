@@ -46,20 +46,60 @@
         </div>
     </div>
 </nav>
+<div id="alert-container"></div> <!-- Alert container -->
 <div class="container mt-5">
-    <h2>Account Info</h2>
-    <div id="alert-container"></div> <!-- Alert container -->
-    <form id="accountInfoForm">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" required>
+    <div class="row">
+        <!-- User Details -->
+        <div class="col-md-6">
+            <h2>Account Info</h2>
+            <form id="accountInfoForm">
+                <div class="form-group">
+                    <label for="id">Id:</label>
+                    <input type="number" class="form-control" id="id" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="number" class="form-control" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address:</label>
+                    <input type="email" class="form-control" id="email" disabled>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="email">Email address:</label>
-            <input type="email" class="form-control" id="email" required>
+        <!-- Address Form -->
+        <div class="col-md-6">
+            <h2>Address Info</h2>
+            <form id="addressForm">
+                <div class="form-group">
+                    <label for="addressId">Address Id:</label>
+                    <input type="number" class="form-control" id="addressId" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="street">Street:</label>
+                    <input type="text" class="form-control" id="street" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" class="form-control" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" class="form-control" id="country" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Address</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+    </div>
 </div>
 
 <div class="container mt-5" >
@@ -186,6 +226,7 @@
 <script src="js/auth.js"></script>
 <script src="js/user.js"></script>
 <script>
+    loadAccountInfo();
     loadProfiles();
     loadLoggedDevices();
 </script>

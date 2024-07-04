@@ -22,7 +22,7 @@ public class User : BaseEntity
     [MaxLength(10, ErrorMessage = "Phone number must be of 10 numbers")]
     public required string PhoneNumber { get; set; }
 
-    [ForeignKey("AddressId")] public int AddressId;
+    [ForeignKey("AddressId")] public int? AddressId;
     public AddressCQRS.Address? Address;
     public bool IsVerified { get; set; }
     public required byte[] Password { get; set; }

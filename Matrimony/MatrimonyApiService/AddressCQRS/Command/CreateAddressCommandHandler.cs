@@ -12,7 +12,6 @@ public class CreateAddressCommandHandler(IBaseRepo<Address> repository, IEventSt
 {
     public async Task Handle(CreateAddressCommand command)
     {
-        // Start a transaction
         
         if (repository.GetAll().Result.Exists(address => address.UserId.Equals(command.UserId)))
         {

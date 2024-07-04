@@ -3,7 +3,15 @@ async function loadAccountInfo() {
     try {
         const userInfo = await makeAuthRequest('User', 'GET');
         document.getElementById('name').value = `${userInfo.firstName} ${userInfo.lastName}`;
+        document.getElementById('phone').value = userInfo.phoneNumber;
         document.getElementById('email').value = userInfo.email;
+        document.getElementById('id').value = userInfo.userId;
+
+        if (!userInfo.addressId || userInfo.addressId == 0){
+        }
+        else{
+            await loadAddressInfo(userInfo.addressId);
+        }
     } catch (error) {
         showAlert("Failed to load account info. Please try again.", 'danger');
         if (error.message === '401') console.error("unauthorized");
@@ -15,6 +23,8 @@ async function updateAccountInfo(event) {
     event.preventDefault();
     const [firstName, lastName] = document.getElementById('name').value.split(' ');
     const data = {
+        userId: document.getElementById('id').value,
+        phoneNumber: document.getElementById('phone').value,
         firstName,
         lastName,
         email: document.getElementById('email').value
@@ -28,6 +38,51 @@ async function updateAccountInfo(event) {
         if (error.message === '401') console.error("unauthorized");
     }
 }
+
+async function loadAddressInfo(addressId) {
+    try {
+        const addressInfo = await makeAuthRequest(`Address/${addressId}`, 'GET');
+        document.getElementById('street').value = addressInfo.street;
+        document.getElementById('city').value = addressInfo.city;
+        document.getElementById('state').value = addressInfo.state;
+        document.getElementById('country').value = addressInfo.country;
+    } catch (error) {
+        showAlert("Failed to load address info. Please try again.", 'danger');
+        if (error.message === '404') console.error("Address not found");
+    }
+}
+
+// Function to save or update address info
+document.getElementById('addressForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const userId = document.getElementById('id').value;
+    const addressData = {
+        userId: userId,
+        street: document.getElementById('street').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        country: document.getElementById('country').value,
+    };
+
+    try {
+        // Check if user already has an address
+        const userInfo = await makeAuthRequest('User', 'GET');
+        if (userInfo.addressId) {
+            // Update existing address
+            addressData.addressId = userInfo.addressId;
+            await makeAuthRequest('Address', 'PUT', addressData);
+            showAlert("Address updated successfully.", 'success');
+        } else {
+            // Add new address
+            addressData.userId = userId;
+            await makeAuthRequest('Address', 'POST', addressData);
+            showAlert("Address added successfully.", 'success');
+        }
+    } catch (error) {
+        showAlert("Failed to save address info. Please try again.", 'danger');
+        if (error.message === '401') console.error("unauthorized");
+    }
+});
 
 // Function to load user profiles
 async function loadProfiles() {

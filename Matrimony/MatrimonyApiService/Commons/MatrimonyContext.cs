@@ -26,7 +26,7 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .HasOne<User.User>(address => address.User)
             .WithOne(user => user.Address)
             .HasForeignKey<User.User>(user => user.AddressId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.SetNull);
 
         #endregion
 
