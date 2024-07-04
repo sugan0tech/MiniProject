@@ -5,6 +5,8 @@ async function loadChats() {
 
     const currentChat = JSON.parse(localStorage.getItem("currentChat"));
     const currentProfileId = localStorage.getItem("currentProfile");
+    const currentProfile = JSON.parse(localStorage.getItem(`profile${currentProfileId}`))
+    const membershipType = currentProfile.membership.type
 
     try {
         const chats = await makeAuthRequest(`chat/chats/${currentProfileId}`, 'GET');
@@ -32,28 +34,37 @@ async function loadChats() {
                 ? `data:image/jpeg;base64,${oppositeProfile.profilePicture}`
                 : './placeholder.jpg';
 
+            const messages = await makeAuthRequest(`chat/messages/${chat.id}`, 'GET');
+            const lastMessage = messages.pop();
+            console.log(lastMessage)
             chatItem.innerHTML = `
                 <div class="d-flex align-items-center">
                     <img src="${profilePictureSrc}" alt="Profile Picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px;">
                     <div>
                         <h6>${oppositeProfile.user.firstName} ${oppositeProfile.user.lastName}</h6>
                         <h6>Chat between ${chat.receiverId} ; ${chat.senderId}</h6>
-                        <p>Last message: ${chat.lastMessage ? chat.lastMessage.content : 'No messages yet'}</p>
+                        <p>Last message: ${lastMessage ? lastMessage.content : 'No messages yet'}</p>
                         <span class="badge bg-primary">Unreads: ${chat.unreads || 0}</span>
                     </div>
                 </div>
             `;
 
-            // Add event listener to handle chat selection
-            chatItem.addEventListener('click', () => {
-                selectChat(chatItem, chat.id);
-                localStorage.setItem("currentChat", JSON.stringify(chat));
-            });
+            if (membershipType == 'PremiumUser') {
+                chatItem.addEventListener('click', () => {
+                    selectChat(chatItem, chat.id);
+                    localStorage.setItem("currentChat", JSON.stringify(chat));
+                });
 
-            // Auto-select current chat if it matches the stored current chat
-            if (currentChat && chat.id === currentChat.id) {
-                selectChat(chatItem, chat.id);
+                // Auto-select current chat if it matches the stored current chat
+                if (currentChat && chat.id === currentChat.id) {
+                    selectChat(chatItem, chat.id);
+                }
+            } else {
+                chatItem.addEventListener('click', () => {
+                    showAlert('Upgrade to Premium view messages & chat', 'warning');
+                });
             }
+
 
             chatListElement.appendChild(chatItem);
         }
@@ -176,6 +187,10 @@ async function loadMessages(chatId) {
                 <small>${new Date(message.sentAt).toLocaleTimeString()}</small>
             `;
             messageListElement.appendChild(messageElement);
+            if (message.senderId.toString() !== localStorage.getItem("currentProfile")) {
+                // Call SeenMessage via SignalR
+                connection.invoke("SeenMessage", chatId.toString(), message.id.toString());
+            }
         });
         messageListElement.scrollTop = messageListElement.scrollHeight;
     } catch (error) {
