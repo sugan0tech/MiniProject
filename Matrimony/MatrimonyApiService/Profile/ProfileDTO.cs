@@ -45,7 +45,10 @@ public record ProfileDto
     
     public Membership.Membership? Membership { get; set; }
     public int ManagedById { get; init; }
-    public int UserId { get; init; }
+    public int UserId { get; set; }
+    public string? userEmail { get; init; }
+    public string? firstName { get; init; }
+    public string? lastName { get; init; }
     public UserDto? User { get; set; }
     public string ManagedByRelation { get; init; }
     public int? PreferenceId { get; set; }

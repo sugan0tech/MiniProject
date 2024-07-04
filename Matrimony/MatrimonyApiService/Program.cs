@@ -8,6 +8,7 @@ using MatrimonyApiService.Auth;
 using MatrimonyApiService.Chat;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Services;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.MatchRequest;
 using MatrimonyApiService.Membership;
@@ -142,6 +143,7 @@ public class Program
 
         builder.Services.AddScoped<NewMessageService>();
         builder.Services.AddScoped<ChatService>();
+        builder.Services.AddScoped<EmailService>();
 
         #endregion
 

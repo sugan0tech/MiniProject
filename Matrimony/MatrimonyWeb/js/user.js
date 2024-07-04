@@ -43,6 +43,7 @@ async function loadAddressInfo(addressId) {
     try {
         const addressInfo = await makeAuthRequest(`Address/${addressId}`, 'GET');
         document.getElementById('street').value = addressInfo.street;
+        document.getElementById('addressId').value = addressId;
         document.getElementById('city').value = addressInfo.city;
         document.getElementById('state').value = addressInfo.state;
         document.getElementById('country').value = addressInfo.country;

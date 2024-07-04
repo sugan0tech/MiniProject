@@ -16,11 +16,11 @@ public class User : BaseEntity
     [MaxLength(256)]
     public required string Email { get; set; }
 
-    [MaxLength(50)] public required string FirstName { get; set; }
-    [MaxLength(50)] public required string LastName { get; set; }
+    [MaxLength(50)] public string? FirstName { get; set; }
+    [MaxLength(50)] public string? LastName { get; set; }
 
     [MaxLength(10, ErrorMessage = "Phone number must be of 10 numbers")]
-    public required string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     [ForeignKey("AddressId")] public int? AddressId;
     public AddressCQRS.Address? Address;

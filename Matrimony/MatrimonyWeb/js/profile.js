@@ -16,6 +16,10 @@ async function viewProfile(profileId) {
 }
 
 function displayProfileModal(profileDetails) {
+    const existingModal = document.getElementById('profileModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
     const modalHtml = `
         <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -120,8 +124,10 @@ async function createProfile(event) {
         weight: parseInt(document.getElementById('weight').value),
         height: parseInt(document.getElementById('height').value),
         managedByRelation: document.getElementById('managedByRelation').value,
-        managedById: parseInt(document.getElementById('managedById').value),
-        userId: parseInt(document.getElementById('userId').value)
+        managedById: parseJwt(localStorage.getItem("accessToken"))["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        userEmail: document.getElementById('email').value,
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
     };
 
     try {

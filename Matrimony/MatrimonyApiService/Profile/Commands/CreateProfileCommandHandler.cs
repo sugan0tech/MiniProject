@@ -1,14 +1,21 @@
-﻿using MatrimonyApiService.Commons;
+﻿using System.Security.Cryptography;
+using System.Text;
+using MatrimonyApiService.Auth;
+using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
+using MatrimonyApiService.Commons.Services;
+using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
 using MatrimonyApiService.Membership.Commands;
 using MatrimonyApiService.Preference;
 using MatrimonyApiService.Preference.Commands;
+using MatrimonyApiService.User;
 using MediatR;
+using OtpNet;
 
 namespace MatrimonyApiService.Profile.Commands;
 
-public class CreateProfileCommandHandler(IProfileService profileService, IMediator mediator, MatrimonyContext context)
+public class CreateProfileCommandHandler(IProfileService profileService,EmailService emailService, IUserService userService, IMediator mediator, MatrimonyContext context)
     : IRequestHandler<CreateProfileCommand, ProfileDto>
 {
     public async Task<ProfileDto> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
@@ -17,6 +24,37 @@ public class CreateProfileCommandHandler(IProfileService profileService, IMediat
         await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
+            var userEmail = request.ProfileDto.userEmail;
+            if (userEmail != null)
+            {
+                try
+                {
+                    var user = await userService.GetByEmail(userEmail);
+                    request.ProfileDto.UserId = user.UserId;
+                }
+                // Creating new user and sending login mail
+                catch (UserNotFoundException)
+                {
+                    var hasher = new HMACSHA512();
+                    var key = KeyGeneration.GenerateRandomKey(20);
+                    var totp = new Totp(key);
+                    var passwordPlain = totp.ComputeTotp();
+                    var user = new UserDto
+                    {
+                        Email = userEmail,
+                        FirstName = request.ProfileDto.firstName,
+                        LastName = request.ProfileDto.lastName,
+                        IsVerified = true,
+                        Password = hasher.ComputeHash(Encoding.UTF8.GetBytes(passwordPlain)),
+                        HashKey = hasher.Key
+                    };
+                    
+                    var newUser = await userService.Add(user);
+                    await userService.Validate(newUser.UserId, true);
+                    emailService.SendEmail(user.Email, "Account Registration", $"Welcome! Your password is {passwordPlain}. Please change it after logging in.");
+                    request.ProfileDto.UserId = newUser.UserId;
+                }
+            }
             var profile = await profileService.AddProfile(request.ProfileDto);
 
             // Creating membership

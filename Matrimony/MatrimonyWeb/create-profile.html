@@ -179,13 +179,24 @@
                 <option value="Other">Other</option>
             </select>
         </div>
-        <div class="mb-3">
-            <label for="managedById" class="form-label">ManagedById :</label>
-            <input type="number" class="form-control" id="managedById" required>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="col-md-4">
+                <label for="firstName" class="form-label">First Name:</label>
+                <input type="text" class="form-control" id="firstName" required>
+            </div>
+            <div class="col-md-4">
+                <label for="lastName" class="form-label">Last Name:</label>
+                <input type="text" class="form-control" id="lastName" required>
+            </div>
         </div>
         <div class="mb-3">
-            <label for="userId" class="form-label">userId:</label>
-            <input type="number" class="form-control" id="userId" required>
+            <small class="form-text text-muted">
+                If the user doesn't exist, a new one will be created and an account verification will be sent to the entered email address.
+            </small>
         </div>
         <button type="submit" class="btn btn-primary">Create Profile</button>
     </form>
