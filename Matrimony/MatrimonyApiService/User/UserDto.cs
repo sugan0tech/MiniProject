@@ -10,8 +10,8 @@ public record UserDto
     public string FirstName { get; init; }
     public string LastName { get; init; }
     public string PhoneNumber { get; init; }
-    public int AddressId { get; set; }
-    public bool IsVerified { get; init; }
+    public int? AddressId { get; set; }
+    public bool IsVerified { get; set; }
 
     [JsonIgnore] public byte[] Password { get; set; }
     [JsonIgnore] public byte[] HashKey { get; set; }

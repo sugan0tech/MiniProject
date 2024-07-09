@@ -79,6 +79,10 @@ body {
     padding-bottom: 56px; /* Space for fixed footer */
 }
 
+li{
+    margin-right: 10px;
+}
+
 /* Media query for small screens */
 @media (max-width: 576px) {
     .navbar-nav {

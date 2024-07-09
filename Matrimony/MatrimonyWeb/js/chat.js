@@ -164,6 +164,12 @@ function displayProfileModal(profileDetails) {
     modal.show();
 }
 
+function sanitizeHTML(str) {
+    const tempDiv = document.createElement('div');
+    tempDiv.textContent = str;
+    return tempDiv.innerHTML;
+}
+
 // Function to load messages for a chat
 async function loadMessages(chatId) {
     const messageListElement = document.getElementById('messageList');
@@ -183,7 +189,7 @@ async function loadMessages(chatId) {
             const messageElement = document.createElement('div');
             messageElement.className = `message ${message.senderId.toString() === localStorage.getItem("currentProfile") ? 'sender' : 'receiver'}`;
             messageElement.innerHTML = `
-                <p>${message.content}</p>
+                <p>${sanitizeHTML(message.content)}</p>
                 <small>${new Date(message.sentAt).toLocaleTimeString()}</small>
             `;
             messageListElement.appendChild(messageElement);

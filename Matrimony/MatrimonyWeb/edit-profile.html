@@ -14,6 +14,9 @@
         .container {
             flex: 1;
         }
+        li {
+            margin-right: 10px;
+        }
     </style>
     <link href="css/bootstrap.css" rel="stylesheet">
 </head>
@@ -46,7 +49,7 @@
         </div>
     </div>
 </nav>
-<div class="container mt-5">
+<div class="container mt-5" style="padding-bottom: 100px;">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Edit Profile Details</h5>
@@ -56,16 +59,17 @@
                     <input type="text" class="form-control" id="profileId" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="managedById" class="form-label">ManagedById :</label>
+                    <label for="managedById" class="form-label">Managed By Id</label>
                     <input type="number" class="form-control" id="managedById" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="userId" class="form-label">userId:</label>
+                    <label for="userId" class="form-label">User ID</label>
                     <input type="number" class="form-control" id="userId" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="dateOfBirth" class="form-label">Date of Birth</label>
                     <input type="date" class="form-control" id="dateOfBirth">
+                    <div class="invalid-feedback">You must be at least 21 years old.</div>
                 </div>
                 <div class="mb-3">
                     <label for="age" class="form-label">Age</label>
@@ -86,6 +90,7 @@
                 <div class="mb-3">
                     <label for="annualIncome" class="form-label">Annual Income</label>
                     <input type="number" class="form-control" id="annualIncome">
+                    <div class="invalid-feedback">Annual income must be a positive number.</div>
                 </div>
                 <div class="mb-3">
                     <label for="occupation" class="form-label">Occupation</label>
@@ -178,10 +183,12 @@
                 <div class="mb-3">
                     <label for="weight" class="form-label">Weight (kg)</label>
                     <input type="number" class="form-control" id="weight">
+                    <div class="invalid-feedback">Weight must be greater than 25 kg.</div>
                 </div>
                 <div class="mb-3">
                     <label for="height" class="form-label">Height (cm)</label>
                     <input type="number" class="form-control" id="height">
+                    <div class="invalid-feedback">Height must be greater than 50 cm.</div>
                 </div>
                 <div class="mb-3">
                     <label for="managedByRelation" class="form-label">Managed By Relation</label>
@@ -194,11 +201,11 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                <div class="mb-3">
-                    <label for="profilePicture" class="form-label">Profile Picture:</label>
-                    <input type="file" class="form-control" id="profilePicture" accept=".jpg, .jpeg">
+                    <label for="profilePicture" class="form-label">Profile Picture</label>
+                    <input type="file" class="form-control" id="profilePicture" accept=".jpg, .jpeg" required>
+                    <div class="invalid-feedback">Profile picture is required.</div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+                <button type="button" class="btn btn-primary" onclick="validateAndSave()">Save Changes</button>
             </form>
         </div>
     </div>
@@ -216,11 +223,10 @@
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/profile.js"></script>
+<script src="js/validators/edit-profile-validator.js"></script>
 <script>
     loadForEditProfile();
-</script>
-</body>
-<script>
     adminValidator()
 </script>
+</body>
 </html>

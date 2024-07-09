@@ -46,12 +46,13 @@
         </div>
     </div>
 </nav>
-<div class="container mt-5">
+<div class="container mt-5" style="padding-bottom: 100px" >
     <h2>Create Profile</h2>
     <form id="createProfileForm">
         <div class="mb-3">
             <label for="dateOfBirth" class="form-label">Date of Birth:</label>
             <input type="date" class="form-control" id="dateOfBirth" required>
+            <div class="invalid-feedback">You must be at least 21 years old.</div>
         </div>
         <div class="mb-3">
             <label for="education" class="form-label">Education:</label>
@@ -68,6 +69,7 @@
         <div class="mb-3">
             <label for="annualIncome" class="form-label">Annual Income:</label>
             <input type="number" class="form-control" id="annualIncome" required>
+            <div class="invalid-feedback">Annual income must be a positive number.</div>
         </div>
         <div class="mb-3">
             <label for="occupation" class="form-label">Occupation:</label>
@@ -132,7 +134,8 @@
         </div>
         <div class="mb-3">
             <label for="profilePicture" class="form-label">Profile Picture:</label>
-            <input type="file" class="form-control" id="profilePicture" accept=".jpg, .jpeg">
+            <input type="file" class="form-control" id="profilePicture" accept=".jpg, .jpeg" required>
+            <div class="invalid-feedback">Profile picture is required.</div>
         </div>
         <div class="mb-3">
             <label for="habit" class="form-label">Habit:</label>
@@ -164,10 +167,12 @@
         <div class="mb-3">
             <label for="weight" class="form-label">Weight (kg):</label>
             <input type="number" class="form-control" id="weight" required>
+            <div class="invalid-feedback">Weight must be greater than 25 kg.</div>
         </div>
         <div class="mb-3">
             <label for="height" class="form-label">Height (cm):</label>
             <input type="number" class="form-control" id="height" required>
+            <div class="invalid-feedback">Height must be a positive number and within reasonable limits.</div>
         </div>
         <div class="mb-3">
             <label for="managedByRelation" class="form-label">Managed By Relation:</label>
@@ -183,14 +188,17 @@
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
                 <input type="email" class="form-control" id="email" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
             </div>
             <div class="col-md-4">
                 <label for="firstName" class="form-label">First Name:</label>
                 <input type="text" class="form-control" id="firstName" required>
+                <div class="invalid-feedback">First name must only contain letters.</div>
             </div>
             <div class="col-md-4">
                 <label for="lastName" class="form-label">Last Name:</label>
                 <input type="text" class="form-control" id="lastName" required>
+                <div class="invalid-feedback">Last name must only contain letters.</div>
             </div>
         </div>
         <div class="mb-3">
@@ -201,19 +209,9 @@
         <button type="submit" class="btn btn-primary">Create Profile</button>
     </form>
 </div>
-<script src="js/script.js"></script>
-<script src="js/auth.js"></script>
-
-<!-- Footer -->
-<footer class="fixed-bottom bg-dark text-white text-center py-3">
-    <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
-</footer>
-
-<!-- Scripts -->
 <script src="js/bootstrap.bundle.js"></script>
-<script src="js/script.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/profile.js"></script>
+<script src="js/profile.js"></script><script src="js/validators/create-profile-validator.js"></script>
 </body>
 <script>
     adminValidator()

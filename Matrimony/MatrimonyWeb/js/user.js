@@ -27,6 +27,7 @@ async function updateAccountInfo(event) {
         phoneNumber: document.getElementById('phone').value,
         firstName,
         lastName,
+        isVerified: true,
         email: document.getElementById('email').value
     };
 
@@ -52,6 +53,47 @@ async function loadAddressInfo(addressId) {
         if (error.message === '404') console.error("Address not found");
     }
 }
+
+// update button disable handler, if there is no change
+document.addEventListener("DOMContentLoaded", function() {
+    const accountInfoForm = document.getElementById("accountInfoForm");
+    const addressForm = document.getElementById("addressForm");
+
+    function setOriginalValues(form) {
+        const inputs = form.querySelectorAll("input");
+        inputs.forEach(input => {
+            input.setAttribute("data-original-value", input.value);
+        });
+    }
+
+    function checkForModifications(form, button) {
+        const inputs = form.querySelectorAll("input");
+        let isModified = false;
+        inputs.forEach(input => {
+            if (input.value !== input.getAttribute("data-original-value")) {
+                isModified = true;
+            }
+        });
+        button.disabled = !isModified;
+    }
+
+    setOriginalValues(accountInfoForm);
+    setOriginalValues(addressForm);
+
+    const accountInfoButton = accountInfoForm.querySelector("button[type='submit']");
+    const addressButton = addressForm.querySelector("button[type='submit']");
+
+    accountInfoForm.addEventListener("input", function() {
+        checkForModifications(accountInfoForm, accountInfoButton);
+    });
+
+    addressForm.addEventListener("input", function() {
+        checkForModifications(addressForm, addressButton);
+    });
+
+    accountInfoButton.disabled = true;
+    addressButton.disabled = true;
+});
 
 // Function to save or update address info
 document.getElementById('addressForm').addEventListener('submit', async function(event) {
