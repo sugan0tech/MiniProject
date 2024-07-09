@@ -45,10 +45,12 @@ function displayMatches(matches, containerId, type) {
     container.innerHTML = '';
 
     matches.forEach(match => {
+        const matchPercentage = (match.level / 7) * 100;
         const matchCard = `
             <div class="card mb-3 ${match.isRejected ? 'border-danger' : match.receiverLike ? 'border-success' : ''}" data-match-id="${match.matchId}">
                 <div class="card-body">
                     <h5 class="card-title">Match ${match.matchId}: Profile ${match.receivedProfileId}</h5>
+                    <p class="card-text">Match Percentage: ${matchPercentage.toFixed(2)}%</p>
                     <p class="card-text">Sent by Profile ${match.sentProfileId}</p>
                     ${type === 'received' ? `
                         <button class="btn btn-success" onclick="acceptMatch(${match.matchId}, ${match.receivedProfileId})" style="">Accept Match</button>
@@ -70,10 +72,8 @@ function displayMatches(matches, containerId, type) {
 async function acceptMatch(matchId, profileId) {
     try {
         const response = await makeAuthRequest(`MatchRequest/approve/${matchId}/${profileId}`, 'POST');
-        if (response) {
-            alert('Match accepted successfully!');
+            showAlert("Match Accepted", "success")
             await fetchReceivedMatches(); // Refresh the list
-        }
     } catch (error) {
         console.error('Error accepting match:', error);
     }
@@ -100,6 +100,7 @@ async function removeMatch(type, matchId) {
     if (matchCard) {
         matchCard.remove();
     }
+    showAlert("match removed", "success")
     await makeAuthRequest('MatchRequest/' + matchId, 'DELETE');
 }
 

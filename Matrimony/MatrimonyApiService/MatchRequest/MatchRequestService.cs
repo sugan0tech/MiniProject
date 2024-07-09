@@ -3,6 +3,7 @@ using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.Membership;
+using MatrimonyApiService.Preference;
 using MatrimonyApiService.Profile;
 
 namespace MatrimonyApiService.MatchRequest;
@@ -11,6 +12,7 @@ public class MatchRequestService(
     IBaseRepo<MatchRequest> repo,
     IProfileService profileService,
     IMembershipService membershipService,
+    IPreferenceService preferenceService,
     IMapper mapper,
     ILogger<MatchRequestService> logger) : IMatchRequestService
 {
@@ -122,7 +124,7 @@ public class MatchRequestService(
 
 
         // validations
-        await profileService.GetProfileById(senderId);
+        var senderProfile = await profileService.GetProfileById(senderId);
         await profileService.GetProfileById(targetId);
 
         var membership = await membershipService.GetByProfileId(senderId);
@@ -142,12 +144,20 @@ public class MatchRequestService(
             if (matchDto.SentProfileId == senderId && matchDto.ReceivedProfileId == targetId)
                 throw new DuplicateRequestException($"You have already sent request for this Profile {targetId}");
         }
-
+        
+        // Fetch sender's preferences
+        var preference = await preferenceService.GetByProfileId(targetId);
+        if (preference == null)
+            throw new Exception("Target's preferences not found.");
+        
+        int level = CalculateMatchLevel(preference, senderProfile);
+                    
         var match = new MatchRequestDto
         {
             SentProfileId = senderId,
             ReceivedProfileId = targetId,
-            FoundAt = DateTime.Now
+            FoundAt = DateTime.Now,
+            Level = level
         };
 
         var entity = mapper.Map<MatchRequest>(match);
@@ -176,5 +186,19 @@ public class MatchRequestService(
     {
         var matches = await repo.GetAll();
         return matches.ConvertAll(input => mapper.Map<MatchRequestDto>(input)).ToList();
+    }
+    private int CalculateMatchLevel(PreferenceDto preference,ProfileDto receiverProfile)
+    {
+        int level = 0;
+    
+        if (preference.Gender == receiverProfile.Gender) level++;
+        if (preference.MotherTongue == "ALL" || preference.MotherTongue == receiverProfile.MotherTongue) level++;
+        if (preference.Religion == "ALL" || preference.Religion == receiverProfile.Religion) level++;
+        if (preference.Education == "ALL" || preference.Education == receiverProfile.Education) level++;
+        if (preference.Occupation == "ALL" || preference.Occupation == receiverProfile.Occupation) level++;
+        if (receiverProfile.Height >= preference.MinHeight && receiverProfile.Height <= preference.MaxHeight) level++;
+        if (receiverProfile.Age >= preference.MinAge && receiverProfile.Age <= preference.MaxAge) level++;
+    
+        return level;
     }
 }
