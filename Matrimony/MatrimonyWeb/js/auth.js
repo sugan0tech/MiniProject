@@ -99,6 +99,43 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleLogin);
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Show the forgot password modal when the link is clicked
+    document.getElementById('forgot-password-link').addEventListener('click', function (event) {
+        event.preventDefault();
+        var forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+        forgotPasswordModal.show();
+    });
+
+    // Handle the forgot password form submission
+    document.getElementById('forgot-password-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('forgotEmail').value;
+
+        try {
+            const response = await fetch(baseUrl + 'Auth/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (response.ok) {
+                alert('Password reset email sent successfully.');
+                var forgotPasswordModal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
+                forgotPasswordModal.hide();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while sending the password reset email.');
+        }
+    });
+});
+
 // Register function modified to redirect to OTP entry
 async function register(event) {
     event.preventDefault();

@@ -1,9 +1,11 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using MatrimonyApiService.Commons.Services;
 using MatrimonyApiService.Exceptions;
 using MatrimonyApiService.User;
 using MatrimonyApiService.UserSession;
 using Microsoft.EntityFrameworkCore;
+using OtpNet;
 
 namespace MatrimonyApiService.Auth;
 
@@ -11,6 +13,7 @@ public class AuthService(
     IUserService userService,
     ITokenService tokenService,
     OtpService otpService,
+    EmailService emailService,
     IUserSessionService userSessionService,
     IHttpContextAccessor httpContextAccessor,
     ILogger<AuthService> logger) : IAuthService
@@ -58,6 +61,25 @@ public class AuthService(
             throw;
         }
     }
+     public async Task ForgotPassword(string email)
+     {
+         var user = await userService.GetByEmail(email);
+         if (user == null)
+         {
+             throw new UserNotFoundException("User not found");
+         }
+ 
+         var hasher = new HMACSHA512();
+         var key = KeyGeneration.GenerateRandomKey(20);
+         var totp = new Totp(key);
+         var newPasswordPlain = totp.ComputeTotp();
+         
+         user.Password = hasher.ComputeHash(Encoding.UTF8.GetBytes(newPasswordPlain));
+         user.HashKey = hasher.Key;
+ 
+         await userService.Update(user);
+         emailService.SendEmail(user.Email, "Password Reset", $"Your new password is {newPasswordPlain}. Please change it after logging in.");
+     }   
 
     /// <intheritdoc/>
     public async Task Logout(string accessToken)

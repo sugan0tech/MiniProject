@@ -44,6 +44,27 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         }
     }
 
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+    {
+        try
+        {
+            await authService.ForgotPassword(forgotPasswordDto.Email);
+            return Ok();
+        }
+        catch (UserNotFoundException e)
+        {
+            return NotFound(new ErrorModel(404, e.Message));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
+    }
+    
     [HttpPost("logout")]
     [ProducesResponseType(typeof(Ok), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]

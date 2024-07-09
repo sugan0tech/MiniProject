@@ -10,6 +10,13 @@ public interface IAuthService
     /// <param name="loginDto"></param>
     /// <returns></returns>
     Task<AuthReturnDto> Login(LoginDTO loginDto);
+    
+    /// <summary>
+    ///  forgot password handler
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    Task ForgotPassword(string email);
 
     /// <summary>
     ///  Logs out user ( invalidate that session )
