@@ -2,6 +2,7 @@
 using MatrimonyApiService.Membership.Commands;
 using MatrimonyApiService.Preference.Commands;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Profile.Commands;
 
@@ -15,8 +16,9 @@ public class DeleteProfileCommandHandler(IProfileService profileService, IMediat
         try
         {
             var profile = await profileService.DeleteProfileById(request.profileId);
-            profile.Membership = null;
 
+            context.Entry(profile.Membership).State = EntityState.Detached;
+            profile.Membership = null;
             await mediator.Send(new DeleteMembershipCommand((int)profile.MembershipId), cancellationToken);
             await mediator.Send(new DeletePreferenceCommand((int)profile.PreferenceId), cancellationToken);
 
