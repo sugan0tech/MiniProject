@@ -1,4 +1,4 @@
-document.getElementById('createProfileForm').addEventListener('submit', function(event) {
+document.getElementById('createProfileForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     let valid = true;
 
@@ -66,6 +66,6 @@ document.getElementById('createProfileForm').addEventListener('submit', function
     }
 
     if (valid) {
-        this.submit();
+        await createProfile(event)
     }
 });

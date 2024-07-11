@@ -138,6 +138,9 @@ namespace MatrimonyApiService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal?>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("ChatCount")
                         .HasColumnType("int");
 
@@ -153,6 +156,17 @@ namespace MatrimonyApiService.Migrations
 
                     b.Property<bool>("IsTrailEnded")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PaymentStatus")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("ProfileId")
                         .HasColumnType("int");

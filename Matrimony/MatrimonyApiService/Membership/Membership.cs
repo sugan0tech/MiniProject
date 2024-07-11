@@ -30,4 +30,14 @@ public class Membership : BaseEntity
     public int ChatCount { get; set; }
     public int RequestCount { get; set; }
     public int ViewersViewCount { get; set; }
+    
+    [MaxLength(50)]
+    public string? PaymentId { get; set; }
+        
+    [MaxLength(20)]
+    public string? PaymentStatus { get; set; }
+        
+    public DateTime? PaymentDate { get; set; }
+        
+    public decimal? AmountPaid { get; set; }
 }

@@ -135,6 +135,7 @@ async function createProfile(event) {
         showAlert("Profile created successfully.", 'success');
     } catch (error) {
         showAlert("Failed to create profile. Please try again.", 'danger');
+        console.log(error)
         if (error.message === '401') await handleUnauthorizedError();
     }
 }
@@ -242,14 +243,14 @@ async function deleteProfile(profileId) {
 async function handleUnauthorizedError() {
     const refreshSuccess = await refreshAccessToken();
     if (!refreshSuccess) {
-        logout();
+        await logout();
     } else {
         initialize(); // Reinitialize the app with new token
     }
 }
 
-// Event listener for form submission
-document.getElementById('createProfileForm').addEventListener('submit', createProfile);
+// Event listener for form commented out since the use of external validators, will be called from there
+// document.getElementById('createProfileForm').addEventListener('submit', createProfile);
 
 
 function loadForEditProfile() {

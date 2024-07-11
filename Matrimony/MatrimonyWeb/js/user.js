@@ -162,7 +162,7 @@ async function loadProfiles() {
                         <div>
                             <h5 class="card-title">Profile ${profile.profileId}</h5>
                             <p class="card-text">Name: ${profile.user.firstName} ${profile.user.lastName}, IsVerified: ${profile.user.isVerified}</p>
-                            <p class="card-text">Age: ${profile.age}, Location: ${profile.location}</p>
+                            <p class="card-text">Age: ${profile.age}, MaritalStatus: ${profile.maritalStatus}</p>
                             <p class="card-text">Education: ${profile.education}, Occupation: ${profile.occupation}</p>
                             <p class="card-text"><strong>Membership:</strong> ${profile.membership ? profile.membership.type : "FreeUser"}</p>
                             <button class="btn btn-info" onclick="viewUserProfile(${profile.profileId})">View Profile</button>
@@ -261,62 +261,6 @@ async function initialize() {
 }
 
 document.addEventListener('DOMContentLoaded', initialize);
-
-async function viewMembershipNew(currentProfile) {
-    if (!currentProfile ) {
-        showAlert("No profile selected", 'danger');
-        return;
-    }
-
-    try {
-        const membership = await makeAuthRequest(`Membership/profile/${currentProfile}`);
-        if (membership) {
-            document.getElementById('membershipType').querySelector('span').textContent = membership.type;
-            document.getElementById('membershipEndsAt').querySelector('span').textContent = new Date(membership.endsAt).toLocaleDateString();
-            document.getElementById('membershipViewsCount').querySelector('span').textContent = membership.viewsCount;
-            document.getElementById('membershipChatCount').querySelector('span').textContent = membership.chatCount;
-            document.getElementById('membershipRequestCount').querySelector('span').textContent = membership.requestCount;
-            document.getElementById('membershipViewersViewCount').querySelector('span').textContent = membership.viewersViewCount;
-
-            // Hide all buttons initially
-            const buttons = ['freeButton', 'basicButton', 'premiumButton'];
-            buttons.forEach(btn => {
-                document.getElementById(btn).classList.add('d-none');
-            });
-
-            // Show and style the current plan button
-            let currentButton;
-            switch(membership.type.toLowerCase()) {
-                case 'free':
-                    currentButton = document.getElementById('freeButton');
-                    break;
-                case 'basic':
-                case 'basicuser':
-                    currentButton = document.getElementById('basicButton');
-                    break;
-                case 'premium':
-                case 'premiumuser':
-                    currentButton = document.getElementById('premiumButton');
-                    break;
-            }
-
-            if (currentButton) {
-                currentButton.classList.remove('d-none');
-                currentButton.classList.replace('btn-primary', 'btn-secondary');
-                currentButton.textContent = 'Current Plan';
-                currentButton.disabled = true;
-            }
-
-            let membershipModal = new bootstrap.Modal(document.getElementById('membershipModal'));
-            membershipModal.show();
-        } else {
-            showAlert("Failed to fetch membership details", 'danger');
-        }
-    } catch (error) {
-        console.error('Error fetching membership:', error);
-        showAlert("An error occurred while fetching membership details", 'danger');
-    }
-}
 
 function contactAdmin() {
     // Implement the logic to contact admin here

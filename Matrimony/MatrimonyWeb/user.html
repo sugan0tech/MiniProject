@@ -151,86 +151,12 @@
     <p>&copy; 2024 MatrimonySite. All rights reserved.</p>
 </footer>
 
-<!-- Membership view Modal -->
-<div class="modal fade" id="membershipModal" tabindex="-1" aria-labelledby="membershipModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="membershipModalLabel">Membership Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentMembership" class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Current Membership</h5>
-                        <p class="card-text" id="membershipType"><strong>Type:</strong> <span></span></p>
-                        <p class="card-text" id="membershipEndsAt"><strong>Ends At:</strong> <span></span></p>
-                        <p class="card-text" id="membershipViewsCount"><strong>Views Count:</strong> <span></span></p>
-                        <p class="card-text" id="membershipChatCount"><strong>Chat Count:</strong> <span></span></p>
-                        <p class="card-text" id="membershipRequestCount"><strong>Request Count:</strong> <span></span></p>
-                        <p class="card-text" id="membershipViewersViewCount"><strong>Viewers View Count:</strong> <span></span></p>
-                        <p class="card-text" id=""> <span> Please Contact admins if you want to update your membership.</span></p>
-                    </div>
-                </div>
-                <h5>Available Plans</h5>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Free Member $0</h5>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">5 matches per month</li>
-                                    <li class="list-group-item">No private chat</li>
-                                    <li class="list-group-item">No profile views</li>
-                                    <li class="list-group-item">Only profile Preview</li>
-                                </ul>
-                                <button class="btn btn-primary mt-3 w-100 d-none" id="freeButton">Current Plan</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Basic Member $5</h5>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">15 matches per month</li>
-                                    <li class="list-group-item">No private chats</li>
-                                    <li class="list-group-item">Up to 5 views per month</li>
-                                    <li class="list-group-item">50 detailed profile lookups</li>
-                                </ul>
-                                <button class="btn btn-primary mt-3 w-100 d-none" id="basicButton">Current Plan</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Premium Member $15</h5>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Unlimited matches per month</li>
-                                    <li class="list-group-item">Up to 25 private chats</li>
-                                    <li class="list-group-item">Unlimited profile views</li>
-                                    <li class="list-group-item">Unlimited detailed profile lookups</li>
-                                </ul>
-                                <button class="btn btn-primary mt-3 w-100 d-none" id="premiumButton">Current Plan</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="contactAdmin()">Contact Admin</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Scripts -->
 <script src="js/bootstrap.bundle.js"></script>
 <script src="js/script.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/user.js"></script>
+<script src="js/membership.js"></script>
 <script>
     loadAccountInfo();
     loadProfiles();
