@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using MatrimonyApiService.Auth;
 using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Services;
@@ -11,11 +10,12 @@ using MatrimonyApiService.Preference;
 using MatrimonyApiService.Preference.Commands;
 using MatrimonyApiService.User;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using OtpNet;
 
 namespace MatrimonyApiService.Profile.Commands;
 
-public class CreateProfileCommandHandler(IProfileService profileService,EmailService emailService, IUserService userService, IMediator mediator, MatrimonyContext context)
+public class CreateProfileCommandHandler(IProfileService profileService,EmailService emailService, IUserService userService, IMediator mediator, MatrimonyContext context, ILogger<CreateProfileCommandHandler> logger)
     : IRequestHandler<CreateProfileCommand, ProfileDto>
 {
     public async Task<ProfileDto> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
@@ -30,6 +30,11 @@ public class CreateProfileCommandHandler(IProfileService profileService,EmailSer
                 try
                 {
                     var user = await userService.GetByEmail(userEmail);
+                    var userProfile = await profileService.GetProfileByUserId(user.UserId);
+                    if (userProfile != null)
+                    {
+                        throw new DuplicateRequestException("This user already have a profile");
+                    }
                     request.ProfileDto.UserId = user.UserId;
                 }
                 // Creating new user and sending login mail
@@ -98,10 +103,16 @@ public class CreateProfileCommandHandler(IProfileService profileService,EmailSer
 
             return profile;
         }
+        catch (DuplicateRequestException)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw ;
+        }
         catch (Exception ex)
         {
             await transaction.RollbackAsync(cancellationToken);
-            throw new Exception("Transaction failed, rolling back.", ex);
+            logger.LogError(ex.Message);
+            throw new DbUpdateException("Transaction failed, rolling back." + ex.Message);
         }
     }
 }

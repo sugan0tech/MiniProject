@@ -18,13 +18,13 @@ async function validateAndSave() {
         dateOfBirth.classList.remove('is-invalid');
     }
 
-    const profilePicture = document.getElementById('profilePicture').files.length;
-    if (profilePicture === 0) {
-        document.getElementById('profilePicture').classList.add('is-invalid');
-        valid = false;
-    } else {
-        document.getElementById('profilePicture').classList.remove('is-invalid');
-    }
+    // const profilePicture = document.getElementById('profilePicture').files.length;
+    // if (profilePicture === 0) {
+    //     document.getElementById('profilePicture').classList.add('is-invalid');
+    //     valid = false;
+    // } else {
+    //     document.getElementById('profilePicture').classList.remove('is-invalid');
+    // }
 
     // Validate Annual Income
     let annualIncome = document.getElementById('annualIncome');
@@ -56,4 +56,5 @@ async function validateAndSave() {
     if (isValid) {
         await saveChanges();
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }

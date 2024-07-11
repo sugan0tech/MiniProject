@@ -48,6 +48,10 @@ public class ProfileController(
         {
             var userId = validator.ValidateAndGetUserId(User.Claims);
             var profile = await profileService.GetProfileByUserId(userId);
+            if (profile == null)
+            {
+                throw new KeyNotFoundException("No profile found for this user");
+            }
             return Ok(profile);
         }
         catch (KeyNotFoundException ex)
@@ -116,6 +120,11 @@ public class ProfileController(
             var value = await mediator.Send(command);
             return StatusCode(201, value);
         }
+        catch (DuplicateRequestException ex)
+        {
+            logger.LogError(ex.Message);
+            return BadRequest(new ErrorModel(StatusCodes.Status400BadRequest, ex.Message));
+        }
         catch (DbUpdateException ex)
         {
             logger.LogError(ex.Message);
@@ -174,6 +183,11 @@ public class ProfileController(
         {
             logger.LogError(ex.Message);
             return StatusCode(403, new ErrorModel(StatusCodes.Status403Forbidden, ex.Message));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return StatusCode(500, new ErrorModel(StatusCodes.Status500InternalServerError, ex.Message));
         }
     }
 

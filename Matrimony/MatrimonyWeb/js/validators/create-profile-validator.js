@@ -32,7 +32,7 @@ document.getElementById('createProfileForm').addEventListener('submit', async fu
 
     // Height validation
     const height = document.getElementById('height').value;
-    if (height <= 0 || height > 272) { // Considering 272 cm (8 feet 11.1 inches) as max height
+    if (height <= 65 || height > 272) { // Considering 272 cm (8 feet 11.1 inches) as max height
         document.getElementById('height').classList.add('is-invalid');
         valid = false;
     } else {
@@ -68,4 +68,5 @@ document.getElementById('createProfileForm').addEventListener('submit', async fu
     if (valid) {
         await createProfile(event)
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });

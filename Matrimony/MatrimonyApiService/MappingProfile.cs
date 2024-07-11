@@ -93,7 +93,9 @@ public class MappingProfile : AutoMapper.Profile
             .ForMember(dto => dto.SessionId, act => act.MapFrom(src => src.Id));
 
         // Report mappings
-        CreateMap<Report.Report, ReportDto>();
-        CreateMap<ReportDto, Report.Report>();
+        CreateMap<Report.Report, ReportDto>()
+            .ForMember(dto => dto.ReportId, act => act.MapFrom(src => src.Id));
+        CreateMap<ReportDto, Report.Report>()
+            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.ReportId));
     }
 }

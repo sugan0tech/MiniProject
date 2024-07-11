@@ -17,7 +17,7 @@ function checkAuthForPage() {
 }
 // Function to edit profile
 function editProfile(profileId) {
-    if(!profileId || localStorage.getItem("currentProfile")){
+    if(!profileId && localStorage.getItem("currentProfile")){
         window.location.href = `edit-profile.html`;
         return;
     }

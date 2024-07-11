@@ -132,7 +132,7 @@ async function createProfile(event) {
 
     try {
         await makeAuthRequest('Profile', 'POST', profileData);
-        showAlert("Profile created successfully.", 'success');
+        showAlert("Profile created successfully. We have sent a mail verification to the user.", 'success');
     } catch (error) {
         showAlert("Failed to create profile. Please try again.", 'danger');
         console.log(error)
@@ -142,6 +142,9 @@ async function createProfile(event) {
 
 // Convert file to base64
 async function getBase64(file) {
+    if (!file){
+        return null
+    }
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -306,7 +309,13 @@ async function saveChanges() {
         profilePicture: await getBase64(document.getElementById('profilePicture').files[0]),
     };
 
-    let response = makeAuthRequest("profile", "PUT", updatedProfile);
+    try {
+        await makeAuthRequest("profile", "PUT", updatedProfile);
+        showAlert("Profile updated successfully.", "success");
+    }
+    catch(error){
+        showAlert("Profile updated failed. Please try again.", "danger");
+    }
 }
 
 function loadSelectProfiles() {

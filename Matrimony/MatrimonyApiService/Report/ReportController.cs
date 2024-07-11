@@ -1,6 +1,7 @@
 ﻿using MatrimonyApiService.Commons;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.Exceptions;
+using MatrimonyApiService.Profile;
 using MatrimonyApiService.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -14,6 +15,7 @@ namespace MatrimonyApiService.Report;
 [Authorize]
 public class ReportController(
     IBaseService<Report, ReportDto> reportService,
+    IProfileService profileService,
     CustomControllerValidator validator,
     ILogger<ReportController> logger)
     : ControllerBase
@@ -42,7 +44,23 @@ public class ReportController(
     public async Task<IActionResult> GetAll()
     {
         var reports = await reportService.GetAll();
-        return Ok(reports);
+        var validReports = new List<ReportDto>();
+        foreach (var report in reports)
+        {
+            try
+            {
+                var profile = await profileService.GetProfileById(report.ProfileId);
+                if (profile != null)
+                {
+                    validReports.Add(report);
+                }
+            }
+            catch (EntityNotFoundException)
+            {
+                Console.WriteLine($"Profile with ID {report.ProfileId} not found.");
+            }
+        }
+        return Ok(validReports);
     }
 
     [HttpPost]

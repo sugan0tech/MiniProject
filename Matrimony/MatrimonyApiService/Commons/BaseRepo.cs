@@ -33,7 +33,7 @@ public abstract class BaseRepo<TBaseEntity>(MatrimonyContext context)
     /// <returns>A list of all entities.</returns>
     public Task<List<TBaseEntity>> GetAll()
     {
-        return context.Set<TBaseEntity>().ToListAsync();
+        return context.Set<TBaseEntity>().AsNoTracking().ToListAsync();
     }
 
     /// <summary>
