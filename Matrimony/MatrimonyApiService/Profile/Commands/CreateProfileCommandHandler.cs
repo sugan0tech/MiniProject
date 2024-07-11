@@ -56,7 +56,7 @@ public class CreateProfileCommandHandler(IProfileService profileService,EmailSer
                     
                     var newUser = await userService.Add(user);
                     await userService.Validate(newUser.UserId, true);
-                    emailService.SendEmail(user.Email, "Account Registration", $"Welcome! Your password is {passwordPlain}. Please change it after logging in.");
+                    emailService.SendEmail(user.Email, "Account Registration", $"Welcome, You have been invited to joint profile account on Matrimony! Your password is {passwordPlain}. Please change it after logging in.");
                     request.ProfileDto.UserId = newUser.UserId;
                 }
             }

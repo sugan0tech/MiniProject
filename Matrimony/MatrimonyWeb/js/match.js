@@ -47,7 +47,7 @@ function displayMatches(matches, containerId, type) {
     matches.forEach(match => {
         const matchPercentage = (match.level / 7) * 100;
         const matchCard = `
-            <div class="card mb-3 ${match.isRejected ? 'border-danger' : match.receiverLike ? 'border-success' : ''}" data-match-id="${match.matchId}">
+            <div class="card mb-3 ${match.isRejected ? 'border-danger' : match.receiverLike ? 'border-success' : ''}" data-match-id="${match.matchId}" style="border-width: 5px">
                 <div class="card-body">
                     <h5 class="card-title">Match ${match.matchId}: Profile ${match.receivedProfileId}</h5>
                     <p class="card-text">Match Percentage: ${matchPercentage.toFixed(2)}%</p>

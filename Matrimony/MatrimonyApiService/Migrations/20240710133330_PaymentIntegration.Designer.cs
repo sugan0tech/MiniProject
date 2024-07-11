@@ -4,6 +4,7 @@ using MatrimonyApiService.Commons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatrimonyApiService.Migrations
 {
     [DbContext(typeof(MatrimonyContext))]
-    partial class MatrimonyContextModelSnapshot : ModelSnapshot
+    [Migration("20240710133330_PaymentIntegration")]
+    partial class PaymentIntegration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -616,7 +619,7 @@ namespace MatrimonyApiService.Migrations
                     b.HasOne("MatrimonyApiService.Profile.Profile", "Sender")
                         .WithMany("ChatsCreated")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Receiver");

@@ -141,6 +141,10 @@ public class MatchRequestController(
         {
             return BadRequest(new ErrorModel(400, e.Message));
         }
+        catch (ExhaustedMaximumRequestsException e)
+        {
+            return BadRequest(new ErrorModel(400, e.Message));
+        }
     }
 
     [HttpDelete("{id}")]

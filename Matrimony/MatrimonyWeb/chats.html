@@ -28,11 +28,6 @@
             height: 700px;
             flex-direction: column;
         }
-
-        li{
-            margin-right: 10px;
-        }
-
         .message-list {
             flex: 1;
             overflow-y: auto;
@@ -73,6 +68,18 @@
             text-align: left;
             background-color: #fff8dc;
         }
+        .d-none {
+            display: none !important;
+        }
+        @media (min-width: 768px) {
+            .chat-container {
+                flex-direction: row;
+            }
+            .chat-list {
+                display: block; /* Show for desktop view */
+            }
+
+        }
     </style>
 </head>
 <body>
@@ -108,7 +115,13 @@
 <!-- Main Content -->
 <div class="container mt-5" style="padding-bottom: 100px" id="content">
     <div id="alert-container"></div>
+    <button class="btn btn-primary d-md-none mb-3 bi bi-back" onclick="toggleChatList()" style="margin-top: 10px">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-back" viewBox="0 0 16 16">
+            <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+        </svg>
+    </button>
     <div class="chat-container mt-5" id="chatContainer">
+        <!-- Chat List Toggle for mobile view-->
         <!-- Chat List -->
         <div class="chat-list p-3" id="chatList">
             <h5>Chats</h5>
@@ -133,12 +146,26 @@
 
 <!-- Scripts -->
 <script src="js/bootstrap.bundle.js"></script>
-<!--<script src="js/signalr.js"></script> &lt;!&ndash; SignalR library &ndash;&gt;-->
 <script src="js/chat.js"></script>
 <script src="js/auth.js"></script>
 <script>
     loadChats();
     start();
+
+    let previousWidth = window.innerWidth;
+    function getWindowSize() {
+        const width = window.innerWidth;
+
+        if (width <= 768 && previousWidth > 768) {
+            console.log(width)
+            location.reload();
+        } else if (width > 768 && previousWidth <= 768) {
+            location.reload();
+        }
+
+        previousWidth = width;
+    }
+    window.addEventListener('resize', getWindowSize);
 </script>
 </body>
 </html>

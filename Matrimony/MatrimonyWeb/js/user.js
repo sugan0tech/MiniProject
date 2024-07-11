@@ -235,6 +235,7 @@ async function resetPassword(event) {
     }
 
     try {
+        await refreshAccessToken()
         await makeAuthRequest('Auth/ResetPassword', "POST", data);
         showAlert("Password reset successfully. please login again", 'success');
         await sleep(3000)

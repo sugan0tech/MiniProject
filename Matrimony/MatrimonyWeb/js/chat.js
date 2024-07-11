@@ -1,5 +1,6 @@
 // Function to load chats
 async function loadChats() {
+    await refreshAccessToken()
     const chatListElement = document.getElementById('chatList');
     chatListElement.innerHTML = ''; // Clear existing chat list
 
@@ -75,6 +76,8 @@ async function loadChats() {
 }
 
 async function selectChat(chatItem, chatId) {
+    if (window.innerWidth <= 768)
+        toggleChatList()
     document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('selected'));
     chatItem.classList.add('selected');
 
@@ -274,5 +277,18 @@ async function sendMessage() {
         document.getElementById("messageInput").value = '';
     } catch (err) {
         console.error("Send message error:", err.toString());
+    }
+}
+function toggleChatList() {
+    const chatList = document.getElementById('chatList');
+    let chatWindow = document.getElementsByClassName("chat-window").item(0)
+    if (chatWindow){
+        if (chatWindow.classList.contains('d-none')){
+            chatWindow.classList.remove('d-none');
+            chatList.classList.add('d-none');
+        }else {
+            chatWindow.classList.add('d-none');
+            chatList.classList.remove('d-none');
+        }
     }
 }

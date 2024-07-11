@@ -130,10 +130,10 @@ public class MatchRequestService(
         var membership = await membershipService.GetByProfileId(senderId);
         if (!membership.IsTrail)
         {
-            if (membership.Type.Equals(MemberShip.FreeUser.ToString()) && membership.RequestCount > 5)
+            if (membership.Type.Equals(MemberShip.FreeUser.ToString()) && membership.RequestCount >= 5)
                 throw new ExhaustedMaximumRequestsException(
                     "You have exhausted out of your monthly quot of 5 requests, Consider upgrading to high tier membership");
-            if (membership.Type.Equals(MemberShip.BasicUser.ToString()) && membership.RequestCount > 15)
+            if (membership.Type.Equals(MemberShip.BasicUser.ToString()) && membership.RequestCount >= 15)
                 throw new ExhaustedMaximumRequestsException(
                     "You have exhausted out of your monthly quot of 15 requests, Consider upgrading to high tier membership");
         }

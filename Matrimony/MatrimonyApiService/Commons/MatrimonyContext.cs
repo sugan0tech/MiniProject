@@ -179,11 +179,14 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
         modelBuilder.Entity<Chat.Chat>()
             .HasOne<Profile.Profile>(chat => chat.Sender)
             .WithMany(user => user.ChatsCreated)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(chat => chat.SenderId )
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Chat.Chat>()
             .HasOne<Profile.Profile>(chat => chat.Receiver)
             .WithMany(user => user.ChatsJoined)
+            .HasForeignKey(chat => chat.ReceiverId )
             .OnDelete(DeleteBehavior.NoAction);
+        
         #endregion
 
         #region Perference

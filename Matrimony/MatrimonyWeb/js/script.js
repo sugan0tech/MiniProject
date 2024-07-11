@@ -16,7 +16,8 @@ function checkAuthForPage() {
     }
 }
 // Function to edit profile
-function editProfile(profileId) {
+async function editProfile(profileId) {
+    await refreshAccessToken()
     if(!profileId && localStorage.getItem("currentProfile")){
         window.location.href = `edit-profile.html`;
         return;
@@ -28,6 +29,7 @@ function editProfile(profileId) {
 
 // Function to remove profile
 async function removeProfile(profileId) {
+    await refreshAccessToken()
     let profiles = JSON.parse(localStorage.getItem('profiles'));
     await makeAuthRequest("Profile/" + profileId , "DELETE")
     localStorage.removeItem('currentProfile');

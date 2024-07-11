@@ -97,6 +97,10 @@ async function updateMembership(profileId, membershipId, membershipType) {
     var data = await membership
     data.type = membershipType
     data.description = "Updated By Admins"
+    data.viewsCount= 0
+    data.chatCount= 0
+    data.requestCount= 0
+    data.viewersViewCount= 0
     console.log(data)
     try {
         const response = await makeAuthRequest(`Membership`,
