@@ -192,3 +192,10 @@ return mapper.Map<ProfileDto>(updatedProfile);
 - **Usage**:
   - Import and configure `AutoMapper` with the custom converters in `MappingProfile`.
   - Ensure image data in base64 format can be directly embedded in HTML for display.
+### Intra service communication using Kafka
+- As for the address separation, now it's time to make it as a dedicated service for the read-replica service
+- So created address events will be pushed into kafka topic `address-events` 
+- So The consumer end will be dedicated service to de-serialise those events and update the read-replica
+
+### keys for DotNet integration
+- As the consumers need to poll, we have to create consumer service with longrunning using [BackgroundService](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-8.0&tabs=net-cli)

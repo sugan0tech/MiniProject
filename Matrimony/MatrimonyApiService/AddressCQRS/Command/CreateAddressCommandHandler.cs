@@ -7,7 +7,7 @@ using MediatR;
 
 namespace MatrimonyApiService.AddressCQRS.Command;
 
-public class CreateAddressCommandHandler(IBaseRepo<Address> repository, IEventStore eventStore, IMediator mediator)
+public class CreateAddressCommandHandler(IBaseRepo<Address> repository, IEventStore eventStore, EventProducerService eventProducer, IMediator mediator)
     : ICommandHandler<CreateAddressCommand>
 {
     public async Task Handle(CreateAddressCommand command)
@@ -30,6 +30,18 @@ public class CreateAddressCommandHandler(IBaseRepo<Address> repository, IEventSt
             Country = command.Country
         };
 
+        var payload = new EventPayload
+        {
+            Address = address,
+            EventType = "AddressCreatedEvent"
+        };
+        var @event = new AddressProducerEvent
+        {
+            AddressId = address.Id,
+            EventPayload = payload
+        };
+        eventProducer.Produce(@event);
+        
         await repository.Add(address);
 
         user.AddressId = address.Id;

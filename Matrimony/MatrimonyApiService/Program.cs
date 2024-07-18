@@ -144,6 +144,7 @@ public class Program
         builder.Services.AddScoped<NewMessageService>();
         builder.Services.AddScoped<ChatService>();
         builder.Services.AddScoped<EmailService>();
+        builder.Services.AddScoped<EventProducerService>();
 
         #endregion
 
