@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using Keycloak.AuthServices.Authentication;
+using Keycloak.AuthServices.Authorization;
 using MatrimonyApiService.AddressCQRS;
 using MatrimonyApiService.AddressCQRS.Command;
 using MatrimonyApiService.AddressCQRS.Event;
@@ -7,7 +8,6 @@ using MatrimonyApiService.AddressCQRS.Query;
 using MatrimonyApiService.Auth;
 using MatrimonyApiService.Chat;
 using MatrimonyApiService.Commons;
-using MatrimonyApiService.Commons.Enums;
 using MatrimonyApiService.Commons.Services;
 using MatrimonyApiService.Commons.Validations;
 using MatrimonyApiService.MatchRequest;
@@ -19,10 +19,7 @@ using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.Staff;
 using MatrimonyApiService.User;
-using MatrimonyApiService.UserSession;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace MatrimonyApiService;
@@ -96,7 +93,6 @@ public class Program
 
         builder.Services.AddScoped<IBaseRepo<AddressCQRS.Address>, AddressRepo>();
         builder.Services.AddScoped<IBaseRepo<User.User>, UserRepo>();
-        builder.Services.AddScoped<IBaseRepo<UserSession.UserSession>, UserSessionRepo>();
         builder.Services.AddScoped<IBaseRepo<Profile.Profile>, ProfileRepo>();
         builder.Services.AddScoped<IBaseRepo<Staff.Staff>, StaffRepo>();
         builder.Services.AddScoped<IBaseRepo<ProfileView.ProfileView>, ProfileViewRepo>();
@@ -126,9 +122,6 @@ public class Program
         builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IUserSessionService, UserSessionService>();
-        builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();
         builder.Services.AddScoped<IBaseService<Report.Report, ReportDto>, ReportService>();
 
@@ -150,24 +143,16 @@ public class Program
 
         #region AuthConfig
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey:JWT"]))
-                };
-            });
-        builder.Services.AddAuthorization(options =>
+        builder.Services.AddKeycloakAuthorization(builder.Configuration);
+        builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
+        builder.Services.AddAuthorization(option =>
         {
-            options.AddPolicy("AdminPolicy", policyBuilder => policyBuilder.RequireRole(Role.Admin.ToString()));
-            options.AddPolicy("UserPolicy",
-                policyBuilder => policyBuilder.RequireRole(Role.User.ToString(), Role.Admin.ToString()));
+            option.AddPolicy("ChatPolicy", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+            });
+            option.AddPolicy("AdminPolicy", policy => policy.RequireRealmRoles("admin"));
+            option.AddPolicy("UserPolicy", policy => policy.RequireRealmRoles("user"));
         });
 
         #endregion
@@ -183,13 +168,6 @@ public class Program
         #endregion
 
         builder.Services.AddSignalR();
-        builder.Services.AddAuthorization(option =>
-        {
-            option.AddPolicy("ChatPolicy", policy =>
-            {
-                policy.RequireAuthenticatedUser();
-            });
-        });
 
         var app = builder.Build();
 
@@ -208,6 +186,7 @@ public class Program
 
         app.UseCors();
         app.UseAuthorization();
+        app.UseAuthentication();
 
 
         app.MapControllers();

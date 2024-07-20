@@ -1,12 +1,10 @@
-﻿using MatrimonyApiService.Commons.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MatrimonyApiService.Commons;
 
 public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbContext(options)
 {
     public DbSet<User.User> Users { get; set; }
-    public DbSet<UserSession.UserSession> UserSessions { get; set; }
     public DbSet<Profile.Profile> Profiles { get; set; }
     public DbSet<ProfileView.ProfileView> ProfileViews { get; set; }
     public DbSet<Message.Message> Messages { get; set; }
@@ -38,12 +36,6 @@ public class MatrimonyContext(DbContextOptions<MatrimonyContext> options) : DbCo
             .HasForeignKey<AddressCQRS.Address>(address => address.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User.User>().Navigation<AddressCQRS.Address>(user => user.Address).AutoInclude();
-
-        #endregion
-
-        #region UserSession
-
-        modelBuilder.Entity<UserSession.UserSession>();
 
         #endregion
 

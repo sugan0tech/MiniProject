@@ -9,7 +9,6 @@ using MatrimonyApiService.Profile;
 using MatrimonyApiService.ProfileView;
 using MatrimonyApiService.Report;
 using MatrimonyApiService.User;
-using MatrimonyApiService.UserSession;
 
 namespace MatrimonyApiService;
 
@@ -78,19 +77,11 @@ public class MappingProfile : AutoMapper.Profile
             .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
         CreateMap<UserDto, User.User>()
             .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.UserId))
-            .ForMember(entity => entity.Password, opt => opt.Condition(src => src.Password is { Length: > 0 }))
-            .ForMember(entity => entity.HashKey, opt => opt.Condition(src => src.HashKey is { Length: > 0 }))
             .ForAllMembers(opts => { opts.Condition((src, dest, srcMember) => srcMember != null); });
 
 
         CreateMap<User.User, RegisterDTO>();
         CreateMap<RegisterDTO, User.User>();
-
-        // User sessions
-        CreateMap<UserSessionDto, UserSession.UserSession>()
-            .ForMember(entity => entity.Id, act => act.MapFrom(dto => dto.SessionId));
-        CreateMap<UserSession.UserSession, UserSessionDto>()
-            .ForMember(dto => dto.SessionId, act => act.MapFrom(src => src.Id));
 
         // Report mappings
         CreateMap<Report.Report, ReportDto>()

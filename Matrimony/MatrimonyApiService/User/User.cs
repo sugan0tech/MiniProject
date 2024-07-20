@@ -25,8 +25,6 @@ public class User : BaseEntity
     [ForeignKey("AddressId")] public int? AddressId;
     public AddressCQRS.Address? Address;
     public bool IsVerified { get; set; }
-    public required byte[] Password { get; set; }
-    public required byte[] HashKey { get; set; }
     public int LoginAttempts { get; set; }
 
     [Required]
